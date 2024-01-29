@@ -5,11 +5,8 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
+
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useTheme } from '@emotion/react';
@@ -34,7 +31,7 @@ export default function MenuAppBar() {
 
       <AppBar position="static"  >
         <Toolbar sx={{
-        width:"80%",
+        width:"90%",
         margin:"0 auto"
       }}>
           <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
