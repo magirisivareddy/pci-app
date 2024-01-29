@@ -1,6 +1,8 @@
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import MenuAppBar from "@/components/header/Header";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ThemeRegistry>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <div className="app">
+            <MenuAppBar />
+            <main className="content">
+              {children}
+            </main>
+          </div>
+        </body>
       </ThemeRegistry>
     </html>
   );

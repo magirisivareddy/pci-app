@@ -2,49 +2,25 @@
 
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeOptions, ThemeProvider } from "@mui/material/styles";
-import { Roboto } from "next/font/google";
+import { ThemeProvider } from "@mui/material/styles";
 import { NextAppDirEmotionCacheProvider } from "./EmotionCache";
-import theme from "@/theme/theme";
+import { ColorModeContext, useMode } from "./theme";
 
-const roboto = Roboto({
-  weight: ["300", "400", "500", "700"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-});
-
-// const themeOptions: ThemeOptions = {
-//   typography: {
-//     fontSize: 12,
-//     fontFamily: roboto.style.fontFamily,
-//   },
-//   palette: {
-//     background: {
-//       // pink
-//       default: "#f8bbd0",
-//     },
-//     primary: {
-//       main: "#1976d2",
-//     },
-//     text: {
-//       primary: "#300000",
-//     },
-// //   },
-// // };
-
-// const theme1 = createTheme(theme);
 
 export default function ThemeRegistry({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </NextAppDirEmotionCacheProvider>
-  );
+    const [theme, colorMode] = useMode();
+    return (
+        <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
+            <ColorModeContext.Provider value={colorMode}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    {children}
+                </ThemeProvider>
+            </ColorModeContext.Provider>
+        </NextAppDirEmotionCacheProvider>
+    );
 }
