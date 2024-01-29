@@ -9,6 +9,10 @@ body,
   width: 100%;
   font-family: "Source Sans Pro", sans-serif;
 }
+.content{
+  width: 80%;
+  margin: 0 auto;
+}
 
 /* .app {
   display: flex;

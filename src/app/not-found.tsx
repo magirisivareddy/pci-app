@@ -1,10 +1,14 @@
+"use client"
 import React from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
+import { Box, Typography, Button, Container, useTheme } from '@mui/material';
 import Link from 'next/link';
+import { tokens } from '@/theme/theme';
 
 const NotFoundPage = () => {
+    const theme = useTheme();
+    const colors = tokens(theme?.palette.mode);
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" >
       <Box
         sx={{
           marginTop: 8,
@@ -22,18 +26,15 @@ const NotFoundPage = () => {
         <Link href="/" passHref>
           <Button
             variant="contained"
-            sx={{ 
-              mt: 3, 
-              mb: 2,
-              color: "#fff",
-              background: "#4A2D25",
-              "&:hover": {
-                background: "#5A3D35",
-              },
-              "&:focus": {
-                outline: "2px solid #5A3D35",
-              }
-            }}
+            color='primary'
+            sx={{
+                backgroundColor: theme.palette.primary.main, // use theme's primary color
+                color: 'white', // assuming you want white text
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark // darker shade on hover
+                }
+              }}
+         
           >
             Go Back to Home
           </Button>

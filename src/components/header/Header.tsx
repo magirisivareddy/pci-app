@@ -16,54 +16,29 @@ import { useTheme } from '@emotion/react';
 import { tokens } from '@/theme/theme';
 
 export default function MenuAppBar() {
-    const theme = useTheme();
-    const colors = tokens(theme?.palette.mode);
-    console.log("colors",colors)
+  const theme = useTheme();
+  const colors = tokens(theme?.palette.mode);
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? 'Logout' : 'Login'}
-        />
-      </FormGroup> */}
-      <AppBar position="static" sx={{
-        background:`${colors.primary[500] } !important`,
-        color:colors.grey[500]
+
+      <AppBar position="static"  >
+        <Toolbar sx={{
+        width:"80%",
+        margin:"0 auto"
       }}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Photos
+          <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
+            KC PCI INSPECTION
           </Typography>
           {auth && (
             <div>
@@ -75,7 +50,7 @@ export default function MenuAppBar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                <AccountCircle sx={{ width: "35px", height: "35px" }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
