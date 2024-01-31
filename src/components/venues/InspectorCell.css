@@ -1,0 +1,33 @@
+.inspector-cell-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .scroll-container {
+    overflow: auto;
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    max-width: 300px;
+    margin-right: 30px;
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+  }
+  
+  .scroll-container {
+    -ms-overflow-style: none; /* for Internet Explorer and Edge */
+    scrollbar-width: none; /* for Firefox */
+  }
+  
+  .add-inspector-btn {
+    position: absolute;
+    right: 0;
+    top: 15px;
+    transform: translateY(-50%);
+    white-space: nowrap;
+  }
+  

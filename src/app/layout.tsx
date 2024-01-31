@@ -2,7 +2,8 @@ import ThemeRegistry from "@/theme/ThemeRegistry";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import MenuAppBar from "@/components/header/Header";
-import FullWidthTabs from "@/components/tabs/Tabs";
+import PciTabs from "@/components/tabs/Tabs";
+import PciSideBar from "@/components/pci-sidebar/PciSideBar";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,13 +19,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <ThemeRegistry>
-        <body className={inter.className}>
+        <body className={inter.className}  >
+          <MenuAppBar />
           <div className="app">
-            <MenuAppBar />
+            <PciSideBar />
             <main className="content">
-            <FullWidthTabs/>
+
               {children}
             </main>
           </div>

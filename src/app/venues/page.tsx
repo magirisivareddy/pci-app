@@ -1,8 +1,10 @@
 import React from 'react'
 
+import Venues from '@/components/venues/Venues'
+
 const VenuesPage = () => {
   return (
-    <div>VenuesPage</div>
+    <Venues />
   )
 }
 

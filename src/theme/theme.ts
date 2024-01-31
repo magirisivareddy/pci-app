@@ -59,7 +59,7 @@ export const tokens = (mode: 'dark' | 'light'): ColorTokens => ({
           600: "#8dd2e9",
           700: "#a4dbed",
           800: "#bae4f2",
-          900: "#d1edf6",
+          900: "#00FFFF",
         },
         blueAccent: {
           100: "#e1e2fe",
@@ -115,6 +115,7 @@ export const tokens = (mode: 'dark' | 'light'): ColorTokens => ({
 export const themeSettings: ThemeSettings = (mode) => {
   const colors = tokens(mode);
   console.log("mode====>",mode)
+  console.log("color",colors.primary[500])
   return {
     palette: {
       mode: mode,
