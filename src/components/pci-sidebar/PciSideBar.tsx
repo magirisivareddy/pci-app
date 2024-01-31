@@ -3,7 +3,7 @@
 import React, { Fragment } from 'react'
 import Link from 'next/link';
 import { Sidebar, Menu, MenuItem, SubMenu, menuClasses } from 'react-pro-sidebar';
-import { Box, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { tokens } from '@/theme/theme';
 
 const PciSideBar = () => {
@@ -19,7 +19,9 @@ const PciSideBar = () => {
     const clicktest = (e) => {
         console.log("e", e)
     }
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     return (
+
         <Box className='test'
             sx={{
                 "& .pro-sidebar-inner": {
@@ -38,8 +40,9 @@ const PciSideBar = () => {
                     color: "#6870fa !important",
                 },
             }}
+            
         >
-            <Sidebar>
+            <Sidebar breakPoint={!isMobile ? "sm":""}>
                 <Menu>
                     <Menu>
                         <SubMenu
@@ -75,6 +78,7 @@ const PciSideBar = () => {
                 </Menu>
             </Sidebar>
         </Box>
+ 
     )
 }
 

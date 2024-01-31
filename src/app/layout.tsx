@@ -26,7 +26,6 @@ export default function RootLayout({
           <div className="app">
             <PciSideBar />
             <main className="content">
-
               {children}
             </main>
           </div>

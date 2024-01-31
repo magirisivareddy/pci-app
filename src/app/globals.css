@@ -9,14 +9,29 @@ body,
   width: 100%;
   font-family: "Source Sans Pro", sans-serif;
 }
-.content{
+
+.content {
   padding: 20px
+}
+
+@media only screen and (max-width: 768px) {
+  .sidebar {
+    position: relative;
+    z-index: 1;
+  }
+  .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+
+  }
 }
 
 .app {
   display: flex;
   position: relative;
-} 
+}
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -33,6 +48,6 @@ body,
 }
 
 /* Handle on hover */
- ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

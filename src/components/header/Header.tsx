@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useTheme } from '@emotion/react';
 import { tokens } from '@/theme/theme';
+import { useMediaQuery } from '@mui/material';
 
 
 export default function MenuAppBar() {
@@ -25,15 +26,12 @@ export default function MenuAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static"  >
-        <Toolbar sx={{
-          width: "90%",
-          margin: "0 auto"
-        }}>
+      <Toolbar sx={{ width: isMobile ? "100%" : "90%", margin: "0 auto" }}>
           <Typography variant="h3" component="div" sx={{ flexGrow: 1, fontWeight: "600" }}  >
             KC PCI INSPECTION
           </Typography>
