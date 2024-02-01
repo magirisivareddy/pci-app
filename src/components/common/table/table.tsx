@@ -1,6 +1,7 @@
 "use client"
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TableFooter } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TableFooter, useTheme } from '@mui/material';
+import { tokens } from '@/theme/theme';
 // import "./table.css";
 
 interface TableRowData {
@@ -17,9 +18,10 @@ interface CustomTableProps {
 }
 
 const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
+    const theme = useTheme();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+    const colors = tokens(theme?.palette.mode);
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -34,7 +36,9 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
     return (
         <TableContainer component={Paper}>
             <Table >
-                <TableHead >
+                <TableHead
+                    sx={{ background:'#9ddbe0' ,}}
+                >
                     <TableRow>
                         {headers.map((header) => (
                             <TableCell key={header.id}>
@@ -45,7 +49,11 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
                 </TableHead>
                 <TableBody>
                     {paginatedData.map((row, index) => (
-                        <TableRow key={index}>
+                        <TableRow  sx={{
+                            '&:hover': {
+                                backgroundColor: colors.primary.light, // change to your preferred hover color
+                            },
+                        }} key={index}>
                             {headers.map((header) => (
                                 <TableCell key={header.id}>
                                     {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
@@ -54,10 +62,10 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
                         </TableRow>
                     ))}
                 </TableBody>
-                <TableFooter>
+                <TableFooter  sx={{ background: '#9ddbe0' }}>
                     <TableRow>
                         <TablePagination
-                        rowsPerPageOptions={[5, 10, 25,50,100]}
+                            rowsPerPageOptions={[5, 10, 25, 50, 100]}
                             count={data.length}
                             page={page}
                             onPageChange={handleChangePage}

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import MenuAppBar from "@/components/header/Header";
 import PciTabs from "@/components/tabs/Tabs";
 import PciSideBar from "@/components/pci-sidebar/PciSideBar";
+import StoreProvider from "@/StoreProvider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <ThemeRegistry>
+        <StoreProvider>
         <body className={inter.className}  >
           <MenuAppBar />
           <div className="app">
@@ -30,6 +32,7 @@ export default function RootLayout({
             </main>
           </div>
         </body>
+        </StoreProvider>
       </ThemeRegistry>
     </html>
   );
