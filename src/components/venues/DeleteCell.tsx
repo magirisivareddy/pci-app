@@ -10,7 +10,7 @@ const DeleteCell: React.FC<DeleteCellProps> = ({ onDelete }) => {
   return (
 
       <IconButton onClick={onDelete} sx={{padding:0}}>
-        <DeleteIcon />
+        <DeleteIcon color='primary' fontSize='small' />
       </IconButton>
 
   );

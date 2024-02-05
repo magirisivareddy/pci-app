@@ -1,8 +1,11 @@
+import CustomBreadcrumbs from '@/components/common/breadcrumb/Breadcrumb'
 import React from 'react'
 
 const GroupinspectorsPage = () => {
   return (
-    <div>GroupinspectorsPage</div>
+    <div>
+      <CustomBreadcrumbs/>
+      GroupinspectorsPage</div>
   )
 }
 

@@ -25,18 +25,21 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectors, onAdd, onDele
                     inspectors.map((inspector: any, index: any) => (
                         <Chip
                             key={index}
+                            color='default'
+                            sx={{
+                                background:"#c8ebef",
+                                fontSize:" 0.75rem",
+                                height:"24px"
+                            }}
                             label={inspector.name}
                             onDelete={() => inspector.id ? onDelete(inspector.id) : undefined}
-                            deleteIcon={<DeleteIcon />}
+                            deleteIcon={<DeleteIcon color='info' />}
                         />
                     ))
                 )}
             </div>
             <Button
-                sx={{
-                    color: "#000",
-                    border: "1px solid"
-                }}
+          
                 size='small'
                 className="add-inspector-btn"
                 variant="outlined"

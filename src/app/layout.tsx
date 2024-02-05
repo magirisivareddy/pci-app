@@ -1,10 +1,8 @@
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import MenuAppBar from "@/components/header/Header";
-import PciTabs from "@/components/tabs/Tabs";
-import PciSideBar from "@/components/pci-sidebar/PciSideBar";
 import StoreProvider from "@/StoreProvider";
+import Layout from "@/components/header/Layout";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,15 +21,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <ThemeRegistry>
         <StoreProvider>
-        <body className={inter.className}  >
-          <MenuAppBar />
-          <div className="app">
-            <PciSideBar />
-            <main className="content">
+          <body >
+            <Layout>
               {children}
-            </main>
-          </div>
-        </body>
+            </Layout>
+          </body>
         </StoreProvider>
       </ThemeRegistry>
     </html>

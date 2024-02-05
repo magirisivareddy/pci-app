@@ -37,7 +37,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
         <TableContainer component={Paper}>
             <Table >
                 <TableHead
-                    sx={{ background:'#9ddbe0' ,}}
+                    sx={{ background:'#9ddbe0'}}
                 >
                     <TableRow>
                         {headers.map((header) => (
@@ -55,7 +55,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
                             },
                         }} key={index}>
                             {headers.map((header) => (
-                                <TableCell key={header.id}>
+                                <TableCell key={header.id} sx={{color:""}}>
                                     {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
                                 </TableCell>
                             ))}
@@ -71,6 +71,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers }) => {
                             onPageChange={handleChangePage}
                             rowsPerPage={rowsPerPage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
+                            color='rgba(0, 0, 0, 0.6'
                         />
                     </TableRow>
                 </TableFooter>

@@ -1,11 +1,10 @@
 "use client"
 import React from "react";
-import CustomTable from "../common/table/table";
+import CustomTable from "../common/table/Table";
 import InspectorCell from "./InspectorCell";
 import EditableCell from "./EditableCell";
 import DeleteCell from "./DeleteCell";
-import { usePathname } from "next/navigation";
-import CustomSeparator from "../common/breadcrumb/Breadcrumb";
+import CustomBreadcrumbs from "../common/breadcrumb/Breadcrumb";
 
 interface TableRowData {
     id: number;
@@ -49,8 +48,6 @@ const tableldata = [
 
 const Venues = () => {
     const [data, setData] = React.useState<TableRowData[]>(tableldata);
-    const pathname = usePathname();
-    const pathSegments = pathname.split('/').filter(p => p);
     const handleAddInspector = (rowId: number, newInspector: { name: string }) => {
         const row = data.find(r => r.id === rowId);
         const maxId = row ? Math.max(0, ...row.inspector.map((ins: { id: any; }) => ins.id)) : 0;
@@ -112,7 +109,7 @@ const Venues = () => {
     ];
     return (
         <>
-            <CustomSeparator/>
+            <CustomBreadcrumbs/>
             <CustomTable data={data} headers={myHeaders} />
         </>
 

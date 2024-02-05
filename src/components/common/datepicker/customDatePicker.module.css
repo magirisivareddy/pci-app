@@ -1,0 +1,92 @@
+/* Custom styles for the date picker container */
+.date-picker-container {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+}
+
+.date-picker-container label {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: Source Sans Pro, sans-serif;
+  font-weight: 400;
+  font-size: 0.6428571428571428rem;
+  line-height: 1.66;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 14px;
+  margin-bottom: 0;
+  margin-left: 14px;
+}
+
+.custom-date-picker {
+  width: 100%;
+  min-width: 100px;
+  padding: 7px 10px;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.5;
+  outline: none;
+  border: 1px solid rgba(0, 140, 153, 0.5);
+  transition: border-color 0.3s;
+}
+
+.custom-date-picker:focus {
+  border: 1px solid rgba(0, 140, 153, 0.5);
+}
+
+/* Customizing the placeholder text */
+.custom-date-picker::placeholder {
+  font-size: 12px;
+  /* Adjust the size as needed */
+  font-family: "Source Sans Pro", sans-serif;
+  /* Change the font family */
+  color: rgb(0, 140, 153);
+  /* Placeholder text color */
+  text-transform: uppercase;
+}
+
+/* Adjusting the position of the date picker popup */
+.custom-datepicker-popper {
+  z-index: 9999 !important;
+  margin-top: 10px;
+
+}
+
+.react-datepicker .react-datepicker__close-icon::after {
+  background-color: rgb(0, 140, 153) !important;
+}
+
+/* Style for the selected start and end dates */
+.react-datepicker__day--selected,
+.react-datepicker__day--range-start,
+.react-datepicker__day--range-end {
+  background-color: rgb(0, 140, 153);
+  color: white;
+}
+
+/* Style for the days in range (between the start and end dates) */
+.react-datepicker__day--in-range {
+  background-color: rgb(0, 140, 153);
+  color: white;
+}
+
+/* You may also want to style the hover state */
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--range-start:hover,
+.react-datepicker__day--range-end:hover,
+.react-datepicker__day--in-range:hover {
+  background-color: rgb(0, 140, 153);
+}
+
+.react-datepicker .react-datepicker__day--selected {
+  background-color: rgb(0, 140, 153) !important;
+}
+
+@media screen and (max-width: 600px) {
+  .date-picker-container {
+    width: 100%;
+  }
+}

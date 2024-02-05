@@ -9,7 +9,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ onEdit }) => {
   return (
 
     <IconButton onClick={onEdit} sx={{padding:0}}>
-      <EditIcon />
+      <EditIcon color='primary'  fontSize='small' />
     </IconButton>
   );
 };

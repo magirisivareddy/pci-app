@@ -1,8 +1,11 @@
+import CustomBreadcrumbs from '@/components/common/breadcrumb/Breadcrumb'
 import React from 'react'
 
 const DevicesPage = () => {
   return (
-    <div>DevicesPage</div>
+    <div>
+      <CustomBreadcrumbs/>
+      DevicesPage</div>
   )
 }
 
