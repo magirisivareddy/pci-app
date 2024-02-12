@@ -1,10 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { headerSlice } from "../redux/features/headerSlice"
+import { modalSlice } from "./features/ModalSlice"
+import {exportSlice} from "../redux/features/exportSlice"
+import {inspectFormSlice} from "../redux/features/inspectSlice"
+
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       header: headerSlice.reducer,
+      modal: modalSlice.reducer,
+      export:exportSlice.reducer,
+      inspectFormData:inspectFormSlice.reducer
     },
   })
 }

@@ -4,7 +4,7 @@ import React from 'react'
 const DevicesPage = () => {
   return (
     <div>
-      <CustomBreadcrumbs/>
+      <CustomBreadcrumbs />
       DevicesPage</div>
   )
 }

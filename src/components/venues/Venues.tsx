@@ -5,6 +5,7 @@ import InspectorCell from "./InspectorCell";
 import EditableCell from "./EditableCell";
 import DeleteCell from "./DeleteCell";
 import CustomBreadcrumbs from "../common/breadcrumb/Breadcrumb";
+import { useAppDispatch } from "@/redux/hooks";
 
 interface TableRowData {
     id: number;
@@ -107,10 +108,11 @@ const Venues = () => {
 
 
     ];
+    const dispatch = useAppDispatch();
     return (
         <>
             <CustomBreadcrumbs/>
-            <CustomTable data={data} headers={myHeaders} />
+            <CustomTable data={data} headers={myHeaders} dispatch={dispatch} />
         </>
 
     )

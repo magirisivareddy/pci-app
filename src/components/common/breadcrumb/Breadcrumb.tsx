@@ -27,7 +27,7 @@ export default function CustomSeparator() {
 
   // Check if pathSegments is empty, if so, set a default breadcrumb for "Home"
   if (pathSegments.length === 0) {
-    pathSegments.push('Home'); // Assuming you want to display "Home" for the root path
+    pathSegments.push('Inspections'); // Assuming you want to display "Home" for the root path
   }
 
   // Generate the breadcrumbs dynamically based on the path segments

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, CssBaseline, Toolbar, useMediaQuery, useTheme } from '@mui/material';
-import Header from './Header1';
+import Header from './Header';
 import Sidebar from './Sidebar';
 
 export default function Layout({ children }: any) {
