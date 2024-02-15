@@ -1,8 +1,9 @@
 import React from 'react'
 import { Sidebar, Menu, MenuItem, SubMenu, menuClasses } from 'react-pro-sidebar';
 import Link from 'next/link';
-
+import { usePathname } from "next/navigation";
 const SideBarTabs = () => {
+    const path = usePathname()
     return (
         <Sidebar transitionDuration={1000} backgroundColor={"#f1fafb"} style={{height:"100%"}} >
             <Menu >

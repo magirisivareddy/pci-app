@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { FormControl, MenuItem, Select, InputLabel, SelectChangeEvent } from '@mui/material';
+import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+
+interface Option {
+    value: string;
+    label: string;
+}
 
 interface SelectInputProps {
     label: string;
     name: string;
     id: string;
-    options: string[];
-    onChange?: (value: string) => void;
+    selectedOption: string;
+    options: Option[];
+    onChange: (value: string, name: string) => void;
 }
 
-const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, onChange, id }) => {
-    const [selectedOption, setSelectedOption] = useState<string>('All');
-
+const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selectedOption, onChange, id }) => {
     const handleChange = (event: SelectChangeEvent<string>) => {
-        setSelectedOption(event.target.value);
-
         if (onChange) {
-            onChange(event.target.value);
+            onChange(event.target.value, name);
         }
     };
 
@@ -53,16 +55,14 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, onChang
                         color: "rgb(157 148 148)",
                         '&:hover': {
                             border: '1px solid #008c99',
-                            borderColor: 'none', // Add your desired additional hover color here
+                            borderColor: 'none',
                         },
                     }}
                 >
-                    <MenuItem value="All">
-                        All
-                    </MenuItem>
-                    {options.map((name) => (
-                        <MenuItem key={name} value={name}>
-                            {name}
+                    <MenuItem value="All">All</MenuItem>
+                    {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
                         </MenuItem>
                     ))}
                 </Select>

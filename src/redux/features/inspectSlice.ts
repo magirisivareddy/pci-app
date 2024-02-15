@@ -1,30 +1,73 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
+interface Row {
+  id: string;
+  status?: string;
+  notes?: string;
+}
 
-import { createSlice } from '@reduxjs/toolkit'
-import { RootState } from '../store'
+interface InspectorFormState {
+  inspectorData: {
+    [key: string]: string | null;
+  };
+  devices: Row[];
+  selectedInspector:any
+}
+
+const initialState: InspectorFormState = {
+  inspectorData: {
+    inspector: "Venkat Nayak",
+    employee: "111111",
+    venue: "Accounting- Casino",
+  },
+  devices: [],
+  selectedInspector:{}
+};
 
 export const inspectFormSlice = createSlice({
-    name: 'inspectFormData',
-    // `createSlice` will infer the state type from the `initialState` argument
-    initialState: [],
-    reducers: {
-        updateRow: (state, action) => {
-            const rowIndex = state.findIndex(row => row.id === action.payload.id);
-            if (rowIndex !== -1) {
-              // If the row exists, update it
-              state[rowIndex] = action.payload;
-            } else {
-              // If the row doesn't exist, push a new object
-              state.push(action.payload);
-            }
-          },
-          
+  name: 'inspectFormData',
+  initialState,
+  reducers: {
+    updateInspectorData: (state, action: PayloadAction<{ name: string; value: string | null }>) => {
+      state.inspectorData[action.payload.name] = action.payload.value;
     },
-})
+    updateRow: (state, action: PayloadAction<Partial<Row>>) => {
+      const { id, status, notes } = action.payload;
+      const deviceIndex = state.devices.findIndex(device => device.id === id);
+      if (deviceIndex !== -1) {
+        if (status !== undefined) {
+          state.devices[deviceIndex].status = status;
+        }
+        if (notes !== undefined) {
+          state.devices[deviceIndex].notes = notes;
+        }
+      }
+    },
+    
+    setInitialValues: (state, action: PayloadAction<{ id: string; status: string; notes: string }>) => {
+      const { id, status, notes } = action.payload;
 
-export const { updateRow } = inspectFormSlice.actions
+      const deviceIndex = state.devices.findIndex(device => device.id === id);
 
-// Other code such as selectors can use the imported `RootState` type
-export const selectInspectFormData = (state: RootState) => state.inspectFormData
+      if (deviceIndex !== -1) {
+        state.devices[deviceIndex] = {
+          ...state.devices[deviceIndex],
+          status: status || '',
+          notes: notes || '',
+        };
+      } else {
+        state.devices.push({ id, status: status || '', notes: notes || '' });
+      }
+    },
+    setSelectedInspector: (state, action: PayloadAction<{ reportId: string; venueId: string | null }>) => {
+      state.selectedInspector = action.payload;
+    },
+  },
+});
 
-export default inspectFormSlice.reducer
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector } = inspectFormSlice.actions;
+
+export const selectInspectFormData = (state: RootState) => state.inspectFormData;
+
+export default inspectFormSlice.reducer;

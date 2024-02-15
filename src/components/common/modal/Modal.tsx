@@ -19,7 +19,8 @@ interface ScrollDialogProps {
   showCloseIcon?: boolean;
   fullWidth?: boolean;
   maxWidth?: false | Breakpoint | undefined;
-  buttonType?: string
+  buttonType?:  'button' | 'submit' | 'reset' |'Okay'
+  buttonText?: string
 
 }
 
@@ -34,7 +35,8 @@ const Modal: FC<ScrollDialogProps> = ({
   handleSubscribe,
   maxWidth,
   showCloseIcon = true,
-  buttonType = "",
+  buttonText,
+  buttonType ,
 }: ScrollDialogProps): ReactElement => {
   const ContentComponent = contentComponent || (() => null);
 
@@ -45,21 +47,14 @@ const Modal: FC<ScrollDialogProps> = ({
         onClose={handleClose}
         fullWidth={fullWidth}
         maxWidth={maxWidth}
+        PaperProps={{
+          sx: {
+            overflowX: 'hidden',
+          },
+        }}
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
-      // PaperProps={{
-      //   sx: {
-      //     // Add styles for the header
-      //     '& .MuiDialogTitle-root': {
-      //       background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)'
-      //     },
-      //     // Add styles for the footer
-      //     '& .MuiDialogActions-root': {
-      //       background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)',
-      //     },
-      //   },
-      // }}
       >
         {showCloseIcon && (
           <IconButton
@@ -72,17 +67,17 @@ const Modal: FC<ScrollDialogProps> = ({
             <CloseIcon />
           </IconButton>
         )}
-        <DialogTitle id="scroll-dialog-title">{title}</DialogTitle>
-        <DialogContent dividers={true}>
+        <DialogTitle  color={"primary"} id="scroll-dialog-title"> <span><b>{title}</b></span></DialogTitle>
+        <DialogContent dividers={true} sx={{ overflowX: 'hidden' }}>
           <ContentComponent />
         </DialogContent>
         {(handleCancel || handleSubscribe) && (
           <DialogActions>
             {handleCancel && <Button variant='outlined' onClick={handleCancel}>Cancel</Button>}
             {handleSubscribe && (
-            <Button type={buttonType} onClick={handleSubscribe} variant="contained" color="primary">
-              Save
-            </Button>
+              <Button sx={{ marginRight: "20px" }} type={buttonType} onClick={handleSubscribe} variant="contained" color="primary">
+                {buttonText ?? "Save"}
+              </Button>
             )}
           </DialogActions>
         )}

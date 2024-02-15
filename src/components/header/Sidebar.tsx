@@ -13,6 +13,7 @@ import {
     Divider,
     Theme,
 } from '@mui/material';
+import { usePathname } from "next/navigation";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
@@ -41,11 +42,13 @@ const miniDrawerWidth = 73;
 
 const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
     const theme: Theme = useTheme();
+    const path = usePathname()
     const router = useRouter(); // Use the useRouter hook
     const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
 
     const iconColor = "#008c99";
-    const hoverBackgroundColor = "#9ddbe0";
+    const hoverBackgroundColor = "#f1fafb";
+    const activeBackgroundColor = "#9ddbe0";
     const handleSubMenuClick = (index: string, item: MenuItem) => {
         // Copy the current state to a new object to modify.
         const newOpenSubMenusState = { ...openSubMenus };
@@ -126,9 +129,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                         sx={{
                             pl: theme.spacing(level * 2),
                             '&:hover': {
-                                backgroundColor: hoverBackgroundColor,
-                                color: "#fff"
+                                backgroundColor: path === item.path ? activeBackgroundColor : hoverBackgroundColor,
                             },
+                            backgroundColor: path === item.path ? activeBackgroundColor : "inherit",
+                            color: path === item.path ? "#fff" : "inherit"
                         }}
                     >
                         <ListItemIcon sx={{ color: iconColor, paddingLeft: !open ? "5px" : "16px", }}>

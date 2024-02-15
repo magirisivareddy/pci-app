@@ -1,10 +1,12 @@
 import React from 'react'
 
 import Venues from '@/components/venues/Venues'
+import { fetchInspectors, fetchVenue } from '@/actions/api';
 
-const VenuesPage = () => {
+const VenuesPage = async() => {
+  const [venues, inspectors] = await Promise.all([fetchVenue(), fetchInspectors()]);
   return (
-    <Venues />
+    <Venues dropdowns={{venueDropdown: venues, inspectorsDropdown: inspectors}} />
   )
 }
 

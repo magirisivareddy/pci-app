@@ -14,7 +14,6 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     '& .MuiInputBase-input': {
         borderRadius: 4,
         position: 'relative',
-
         border: '1px solid',
         borderColor: theme.palette.mode === 'light' ? '#E0E3E7' : '',
         fontSize: 12,
@@ -27,7 +26,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
         },
         '&:hover': {
             border: '1px solid #008c99',
-            borderColor: 'none', // Add your desired additional hover color here
+            borderColor: 'none', 
         },
     },
 }));
@@ -37,8 +36,6 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         const name = e.target.name
-
-
         if (onChange) {
             onChange(name, value);
         }
