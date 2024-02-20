@@ -3,6 +3,7 @@ import React from "react";
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 import { useAppDispatch } from "@/redux/hooks";
 import { updateRow } from "@/redux/features/inspectSlice";
+import DeviceActions from "@/components/devices/devices-table/devices-table/DeviceActions";
 
 
 
@@ -11,37 +12,7 @@ type Header = {
     label: string;
     customRender?: (_value: any, row: any) => JSX.Element;
 };
-export const inspectionsTableHeaders: Header[] = [
-    {
-        id: 'status',
-        label: 'Status',
-        customRender: (value: any, row: any): JSX.Element => (
-            <span>{row.status === 'Active' ? 'Active' : 'Inactive'}</span>
-        )
-    },
-    { id: 'reportDate', label: 'Report Date' },
-    { id: 'weekNumber', label: 'Week' },
-    { id: 'venue', label: 'Venue' },
-    { id: 'inspectorEmployeeNumber', label: 'Employee Number' },
-    { id: 'totalDevices', label: 'Total Devices' },
-    { id: 'totalQuestionableDevices', label: 'Total Questionable Devices' },
-    { id: 'totalFailedDevices', label: 'Total Failed Devices' },
-    {
-        id: 'inspect', label: 'Inspect', customRender: (value: any, row: any): JSX.Element => {
 
-            const handleInspectClick = (row: any) => {
-                 dispatch(setSelectedRow(row));
-                dispatch(setModalInspectOpen(true));
-            };
-            const dispatch = useAppDispatch(); // Use the useAppDispatch hook here
-            return (
-                <Button size="small" variant="outlined" onClick={() => handleInspectClick(row)}>
-                    Inspect
-                </Button>
-            );
-        }
-    },
-];
 export const inspectionDeviceHeader: Header[] = [
     { id: 'commonAssetName', label: 'Device', },
     { id: 'serialNumber', label: 'Serial' },
@@ -50,7 +21,6 @@ export const inspectionDeviceHeader: Header[] = [
         id: 'status', label: 'Status', customRender: (value: any, row: any): JSX.Element => {
             const dispatch = useAppDispatch(); // Use the useAppDispatch hook here
             const handleStatusChange = (event: any) => {
-                console.log("row", row)
                 dispatch(updateRow({ id: row.deviceId, status: event.target.value }));
             }
             return (
@@ -96,7 +66,7 @@ export const inspectionDeviceHeader: Header[] = [
     },
 ];
 
-export const devicesHeader: Header[] =[
+export const devicesHeader: Header[] = [
     { id: 'commonAssetName', label: 'Common Asset Name', },
     { id: 'model', label: 'Model' },
     { id: 'assetSerial', label: 'Asset Serial' },
@@ -104,9 +74,9 @@ export const devicesHeader: Header[] =[
     { id: 'ipAddress', label: 'IP Address /Slot' },
     { id: 'assignedVenue', label: 'Assigned Venue' },
     { id: 'location', label: 'Location' },
-    { id: 'action', label: 'Action' },
+    {
+        id: 'action', label: 'Action',  customRender: (_: any, row: any) => (
+            <DeviceActions row={row} />
+        )
+    },
 ]
-
-function setSelectedRow(row: any): any {
-    throw new Error("Function not implemented.");
-}

@@ -3,6 +3,9 @@
 const nextConfig = {
     reactStrictMode: false,
     swcMinify: true,
+    env: {
+      PCI_API_URL: 'https://pciapplication.azurewebsites.net/api/',
+    },
     async rewrites() {
       return [
         {
@@ -15,7 +18,7 @@ const nextConfig = {
         },
         {
           source: "/api/common/GetVenues",
-          destination: `${process.env.NEXT_PUBLIC_PCI_API_URL}common/GetVenues`,
+          destination: `${process.env.PCI_API_URL}common/GetVenues`,
         },
         {
           source: "/api/common/GetInspectors",
@@ -23,6 +26,7 @@ const nextConfig = {
         },
       ];
     },
+  
   };
   module.exports = nextConfig;
   

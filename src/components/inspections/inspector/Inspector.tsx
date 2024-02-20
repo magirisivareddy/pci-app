@@ -4,7 +4,7 @@ import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded
 
 import { Box, Grid, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import DevicesTable from '../devices-table/DevicesTable'
+import DevicesTable from '../../devices/devices-table/devices-table/DevicesTable'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setInitialValues, updateInspectorData } from '@/redux/features/inspectSlice';
 import Modal from '@/components/common/modal/Modal';
@@ -33,12 +33,14 @@ const Inspector = () => {
     const fetchDataAndSetDate = async () => {
         try {
             setLoading(true);
-            dispatch(setInitialValues({ id: "", status: "", notes: "" }));
+            dispatch(setInitialValues([]));
             const viewReport = await fetchviewReport(selectedInspector);
-            await Promise.all(viewReport.map(async (device: { deviceId: any; }) => {
-                const { deviceId } = device; // Capture the current value of deviceId
-                await dispatch(setInitialValues({ id: deviceId, status: "", notes: "" }));
+            const initialFormData = viewReport.map((report: { deviceId: string; }) => ({
+                id: report.deviceId,
+                status: null,
+                notes: null
             }));
+            dispatch(setInitialValues(initialFormData));
             setViewReport(viewReport);
         } finally {
             setLoading(false);

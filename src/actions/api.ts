@@ -29,11 +29,32 @@ export async function fetchInspections(payload: any) {
 export async function fetchviewReport(payload: any) {
     return fetchData('viewReport', 'POST', payload);
 }
+// export async function fetchVenue(payload: any) {
+//     try {
+//         const result = await fetchData('common/GetInspectors');  // Add 'await' here
+//         if (result) {
+//             const data = result.map((inspector: { inspectorId: any; inspectorName: any; }) => {
+//                 return {
+//                     ...inspector,
+//                     label: inspector.inspectorName,
+//                     value: inspector.inspectorId
+//                 };
+//             });
+//             console.log("data", data);
+//             return data;  // Return the mapped data
+//         }
+//     } catch (error) {
+//         console.error("Error fetching inspectors:", error);
+//         throw error;  // Re-throw the error to let the calling code handle it
+//     }
+// }
 
 
-//Common apis
+
+
+// //Common apis
 export const fetchVenue = async () => {
-    const res = await fetch(`https://pciapplication.azurewebsites.net/api/common/GetVenues`, { method: 'GET' });
+    const res = await fetch(`${process.env.PCI_API_URL}/common/GetVenues`, { method: 'GET' });
     if (res.ok) {
         const venues = await res.json();  // Wait for the JSON data to be resolved
         const data = venues.map((venue: { venueId: any; venueName: any; }) => {
@@ -43,14 +64,13 @@ export const fetchVenue = async () => {
                 value: venue.venueId
             };
         });
-        console.log("data", data);
         return data;  // Return the mapped data
     }
 
     return [];
 }
 export const fetchInspectors = async () => {
-    const res = await fetch(`https://pciapplication.azurewebsites.net/api/common/GetInspectors`, { method: 'GET' });
+    const res = await fetch(`${process.env.PCI_API_URL}/common/GetInspectors`, { method: 'GET' });
     if (res.ok) {
         const inspectors = await res.json();  // Wait for the JSON data to be resolved
         const data = inspectors.map((inspector: { inspectorId: any; inspectorName: any; }) => {
@@ -60,7 +80,6 @@ export const fetchInspectors = async () => {
                 value: inspector.inspectorId
             };
         });
-        console.log("data", data);
         return data;  // Return the mapped data
     }
 

@@ -10,7 +10,7 @@ interface SelectInputProps {
     label: string;
     name: string;
     id: string;
-    selectedOption: string;
+    selectedOption: any;
     options: Option[];
     onChange: (value: string, name: string) => void;
 }

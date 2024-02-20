@@ -12,7 +12,7 @@ interface InspectorFormState {
     [key: string]: string | null;
   };
   devices: Row[];
-  selectedInspector:any
+  selectedInspector: any
 }
 
 const initialState: InspectorFormState = {
@@ -22,7 +22,7 @@ const initialState: InspectorFormState = {
     venue: "Accounting- Casino",
   },
   devices: [],
-  selectedInspector:{}
+  selectedInspector: {}
 };
 
 export const inspectFormSlice = createSlice({
@@ -44,22 +44,22 @@ export const inspectFormSlice = createSlice({
         }
       }
     },
-    
-    setInitialValues: (state, action: PayloadAction<{ id: string; status: string; notes: string }>) => {
-      const { id, status, notes } = action.payload;
 
-      const deviceIndex = state.devices.findIndex(device => device.id === id);
+    // Inside inspectSlice.ts
+    setInitialValues: (state, action: PayloadAction<Row[]>) => {
+      const initialValues = action.payload;
 
-      if (deviceIndex !== -1) {
-        state.devices[deviceIndex] = {
-          ...state.devices[deviceIndex],
-          status: status || '',
-          notes: notes || '',
-        };
-      } else {
-        state.devices.push({ id, status: status || '', notes: notes || '' });
+      if (Array.isArray(initialValues)) {
+        // Clear existing devices
+        state.devices = [];
+
+        // Set initial values for each device
+        initialValues.forEach(device => {
+          state.devices.push({ ...device });
+        });
       }
     },
+
     setSelectedInspector: (state, action: PayloadAction<{ reportId: string; venueId: string | null }>) => {
       state.selectedInspector = action.payload;
     },

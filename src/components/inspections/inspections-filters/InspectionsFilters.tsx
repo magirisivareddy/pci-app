@@ -19,13 +19,18 @@ interface FormData {
 function getDefaultWeekRange(): DateRange {
   const currentDate = new Date();
   const startOfWeek = new Date(currentDate);
-  startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Set to Monday of the current week
+  const dayOfWeek = currentDate.getDay();
+  const diff = (dayOfWeek + 6) % 7; // Calculate the difference from Sunday to Monday
+
+  startOfWeek.setDate(currentDate.getDate() - diff);
 
   const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6); // Set to Saturday of the current week
+  endOfWeek.setDate(startOfWeek.getDate() + 5); // Set to Saturday of the current week
 
   return [startOfWeek, endOfWeek];
 }
+
+
 const InspectionsFilters = ({ venueDropdown, inspectorsDropdown }: any) => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));

@@ -2,7 +2,22 @@
 import CustomTable from '@/components/common/table/Table'
 import { devicesHeader } from '@/utils/table-heders'
 import React from 'react'
-function generateMockData(numRecords:any) {
+
+interface FormData {
+  commonAssetName: string;
+  associatedVenue: string;
+  asset: string;
+  manufacturer: string;
+  vendor: string;
+  model: string;
+  serial: string;
+  location: string;
+  terminalId: string;
+  profileId: string;
+  ipAddress: string
+  assetStatus: boolean
+}
+function generateMockData(numRecords: any) {
   const mockData = [];
 
   for (let i = 1; i <= numRecords; i++) {
@@ -15,12 +30,9 @@ function generateMockData(numRecords:any) {
       ipAddress: `192.168.1.${i}`,
       assignedVenue: `Venue${i % 3 + 1}`,
       location: `Location${String.fromCharCode(65 + (i % 3))}`,
-      action: `Action${String.fromCharCode(65 + (i % 3))}`
     };
-
     mockData.push(record);
   }
-
   return mockData;
 }
 

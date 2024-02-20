@@ -29,12 +29,16 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
   const handlePreviousWeek = () => {
     const newEndDate = new Date(startDate || new Date());
     const newStartDate = new Date(newEndDate);
-
-    newStartDate.setDate(newStartDate.getDate() - (newStartDate.getDay() + 6) % 7); // Set to Monday of the previous week
-    newEndDate.setDate(newEndDate.getDate() - (newEndDate.getDay() + 1) % 7); // Set to Sunday of the previous week
-
+    
+    const daysToMonday = (newStartDate.getDay() + 6) % 7; // Calculate days from current day to Monday
+    const daysToSunday = (newEndDate.getDay() + 7) % 7; // Calculate days from current day to Sunday
+    
+    newStartDate.setDate(newStartDate.getDate() - daysToMonday - 7); // Set to Monday of the previous week
+    newEndDate.setDate(newEndDate.getDate() - daysToSunday - 7); // Set to Sunday of the previous week
+    
     setDateRange([newStartDate, newEndDate]);
   };
+  
 
   const handleNextWeek = () => {
     const newStartDate = new Date(endDate || new Date());

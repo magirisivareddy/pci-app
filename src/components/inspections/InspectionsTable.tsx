@@ -5,11 +5,12 @@ import Alert from '@mui/material/Alert';
 import CustomTable from '../common/table/Table';
 // import { inspectionsTableHeaders } from '@/utils/table-heders';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import Popover from '@mui/material/Popover';
 import Modal from '../common/modal/Modal';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 import { downloadExcel } from 'react-export-table-to-excel';
 import Inspector from './inspector/Inspector';
-import { Button, Tooltip } from '@mui/material';
+import { Button, Tooltip, Typography } from '@mui/material';
 import InspectionNotes from './inspection-notes/InspectionNotes';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -49,6 +50,17 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     severity: ''
 
   })
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const openPopOver = Boolean(anchorEl);
   const handleCloseAlert = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -161,6 +173,15 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     {/* <Box display="flex" justifyContent="flex-end" marginBottom={1}>
       <Button onClick={handleExport} sx={{ marginRight: '16px', marginTop: '8px' }}>Export to Excel</Button>
     </Box> */}
+      <Typography
+      variant='caption'
+        aria-owns={open ? 'mouse-over-popover' : undefined}
+        aria-haspopup="true"
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose}
+      >
+        Inspections status notes
+      </Typography>
 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />
     {isInspect ?
@@ -181,7 +202,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
         />
       </form> : null}
-    <InspectionNotes />
+  
     <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom' }} open={status.open} autoHideDuration={6000} onClose={handleCloseAlert}>
       <Alert
         onClose={handleCloseAlert}
@@ -192,6 +213,26 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         {status.message}
       </Alert>
     </Snackbar>
+    <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={openPopOver}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+          <InspectionNotes />
+      </Popover>
 
   </>
   )

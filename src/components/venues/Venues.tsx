@@ -11,6 +11,7 @@ import Modal from "../common/modal/Modal";
 import AddInspector from "./add-inspector/AddInspector";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import SelectInput from "../common/input/SelectInput";
+import TextInput from "../common/input/Input";
 
 type Dropdowns = {
     venueDropdown: any; // replace with the actual type
@@ -44,7 +45,7 @@ function generateMockData(numRecords: any) {
         mockData.push(record);
     }
 
-    console.log('mockData', mockData);
+
     return mockData;
 }
 const numberOfRecords = 30;
@@ -57,12 +58,15 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const [isDeletVenueModal, setDeletVenueModal] = useState(false)
     const [isDeletInspectionModal, setDeletInspectionModal] = useState(false)
     const [modalType, setModalTyep] = useState("")
+    const [selectedRow, setSelectedRow] = useState(null)
 
-    const onEditVenue = () => {
+    const onEditVenue = (row:any) => {
+        setSelectedRow(row)
         setModalTyep("Edit")
         setAddOrEditVenueModal(true)
     }
     const onAddVenue = () => {
+        setSelectedRow(null)
         setModalTyep("Add")
         setAddOrEditVenueModal(true)
     }
@@ -111,14 +115,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         return (
             <Grid container spacing={2} mb={2} pr={2}>
                 <Grid item xs={12} md={9}>
-                    <SelectInput
-                        selectedOption={"All"}
-                        onChange={onChange}
-                        label={'Venue'}
-                        options={dropdowns.venueDropdown}
-                        name={'venue'}
-                        id={'venue'}
-                    />
+                 <TextInput label={"Venue Name"} defaultValue={selectedRow?.venue ??""} name={"venue"} id={"venue"}/>
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <Button sx={{ marginTop: "22px" }} variant='contained'>{modalType === "Edit" ? "Update Venue" : "Add Venue"}</Button>
@@ -130,7 +127,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                 <Typography variant="body1">
-                    Are You Sure You want to delete this inspections?
+                    Are you sure tou want to delete this inspector?
                 </Typography>
                 <Box display="flex" gap={2} mt={2} justifyContent="center">
                     <Button variant="outlined">Yes</Button>
@@ -170,8 +167,8 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         {
             id: 'Edit',
             label: 'Edit',
-            customRender: (rowData: TableRowData) => (
-                <EditableCell onEdit={() => onEditVenue()} />
+            customRender: (_value: any, row: any) => (
+                <EditableCell onEdit={() => onEditVenue(row)} />
             ),
         },
         {

@@ -22,6 +22,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Diversity1OutlinedIcon from '@mui/icons-material/Diversity1Outlined';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import DeviceHubOutlinedIcon from '@mui/icons-material/DeviceHubOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MailIcon from '@mui/icons-material/Mail';
 import StarBorder from '@mui/icons-material/StarBorder';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -94,23 +95,25 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues' },
         { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices' },
         { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors' },
-        {
-            text: 'Admins',
-            icon: <PersonAddAltOutlinedIcon />,
-            path: '/admins',
-            children: [
-                {
-                    text: 'Submenu 1',
-                    icon: <StarBorder />,
-                    path: '/admins/submenu1',
-                    children: [
-                        { text: 'Sub-child 1', icon: <StarBorder />, path: '/admins/submenu1/subchild1' },
-                        { text: 'Sub-child 2', icon: <StarBorder />, path: '/admins/submenu1/subchild2' },
-                    ],
-                },
-                { text: 'Submenu 2', icon: <StarBorder />, path: '/admins/submenu2' },
-            ],
-        },
+        { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information' },
+        { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/admins' },
+        // {
+        //     text: 'Admins',
+        //     icon: <PersonAddAltOutlinedIcon />,
+        //     path: '/admins',
+        //     children: [
+        //         {
+        //             text: 'Submenu 1',
+        //             icon: <StarBorder />,
+        //             path: '/admins/submenu1',
+        //             children: [
+        //                 { text: 'Sub-child 1', icon: <StarBorder />, path: '/admins/submenu1/subchild1' },
+        //                 { text: 'Sub-child 2', icon: <StarBorder />, path: '/admins/submenu1/subchild2' },
+        //             ],
+        //         },
+        //         { text: 'Submenu 2', icon: <StarBorder />, path: '/admins/submenu2' },
+        //     ],
+        // },
 
 
     ];

@@ -37,7 +37,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
         const value = e.target.value;
         const name = e.target.name
         if (onChange) {
-            onChange(name, value);
+            onChange(value,name);
         }
     };
 

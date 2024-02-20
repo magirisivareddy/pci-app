@@ -3,7 +3,10 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput'
 import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
+import { downloadExcel } from 'react-export-table-to-excel';
 import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setDeviceInfo } from '@/redux/features/devicesSlice';
 
 interface FormData {
   commonAssetName: string;
@@ -15,7 +18,9 @@ interface FormData {
 }
 const DeviceFilter = () => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const { header, body } = useAppSelector(state => state.export.value)
   const [formData, setFormData] = useState<FormData>({
     commonAssetName: 'All',
     assignedVenue: 'All',
@@ -30,12 +35,28 @@ const DeviceFilter = () => {
       [name]: value,
     }));
   }
+  const addDevice = () => {
+    dispatch(setDeviceInfo({
+      isDeviceModal: true,
+      deviceModalType: "Add"
+    }))
+  }
   const handelSubmit = (event: any) => { }
+  const handleExport = () => {
+    downloadExcel({
+      fileName: "devices",
+      sheet: "data",
+      tablePayload: {
+        header,
+        body
+      }
+    });
+  };
   return (
     <>
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
-        <Button onClick={()=>{console.log("add device")}} size="small" variant="outlined">Add Device</Button>
-        <Button onClick={()=>{console.log("add device")}} size="small" variant="outlined">Export to Excel</Button>
+        <Button onClick={() => addDevice()} size="small" variant="outlined">Add Device</Button>
+        <Button onClick={handleExport} size="small" variant="outlined">Export to Excel</Button>
       </Box>
       <Grid container spacing={2} mb={2}>
 

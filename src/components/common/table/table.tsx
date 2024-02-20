@@ -23,8 +23,9 @@ interface CustomTableProps {
 
 const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isPagination = true }) => {
     const theme = useTheme();
+    const dispatch = useAppDispatch();
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(25);
+    const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
     const colors = tokens(theme?.palette.mode);
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -42,18 +43,22 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
         });
     });
 
-    // useEffect(() => {
-    //     dispatch(setBodyData(body))
-    //     dispatch(setHeaderData(header))
-    // }, [])
+    useEffect(() => {
+        const bodyData = body.map(row => row.map(cell => {
+            // Extract relevant information from React elements if necessary
+            return typeof cell === 'object' && cell !== null && 'props' in cell ? cell.props.children : cell;
+        }));
+        dispatch(setBodyData(bodyData));
+        dispatch(setHeaderData(header));
+    }, []);
     return (
         <>
-            <TableContainer component={Paper} sx={{ maxHeight: "350px" }}>
+            <TableContainer component={Paper} >
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
-                                <TableCell sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)' }} key={header.id}>
+                                <TableCell key={header.id} sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600" }} key={header.id}>
                                     {header.label}
                                 </TableCell>
                             ))}
@@ -65,7 +70,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                         ) : paginatedData.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={headers.length} align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
-                                No data available!
+                                    No data available!
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -91,7 +96,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                         <TableFooter sx={{ background: '#9ddbe0' }}>
                             <TableRow>
                                 <TablePagination
-                                    rowsPerPageOptions={[25, 50, 100, 200, 300]}
+                                    rowsPerPageOptions={[15, 30, 60, 120, { value: -1, label: 'All' }]}
                                     count={data.length}
                                     page={page}
                                     onPageChange={handleChangePage}

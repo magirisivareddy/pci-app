@@ -3,6 +3,8 @@ import { headerSlice } from "../redux/features/headerSlice"
 import { modalSlice } from "./features/ModalSlice"
 import {exportSlice} from "../redux/features/exportSlice"
 import {inspectFormSlice} from "../redux/features/inspectSlice"
+import {devicesSlice} from "../redux/features/devicesSlice"
+import {groupInspectorsSlice} from "../redux/features/groupInspectorsSlice"
 
 
 export const makeStore = () => {
@@ -11,7 +13,9 @@ export const makeStore = () => {
       header: headerSlice.reducer,
       modal: modalSlice.reducer,
       export:exportSlice.reducer,
-      inspectFormData:inspectFormSlice.reducer
+      inspectFormData:inspectFormSlice.reducer,
+      devices:devicesSlice.reducer,
+      groupInspector:groupInspectorsSlice.reducer
     },
   })
 }
