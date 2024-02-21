@@ -71,7 +71,7 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
             [name]: value,
         }));
     }
-    const handelSubmit = async (event: any) => {
+    const handelSubmit = async () => {
         const obj = {
             FromDate: selectedDateRange[0],
             ToDate: selectedDateRange[1],

@@ -13,7 +13,6 @@ export default async function Home() {
       {/* <CustomBreadcrumbs /> */}
       <Suspense fallback={<Loading />}>
         <Inspections venueDropdown={venues} inspectorsDropdown={inspectors}/>
-        {/* <InspectionsFilters venueDropdown={venues} inspectorsDropdown={inspectors} /> */}
       </Suspense>
 
     </main>
