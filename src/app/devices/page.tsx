@@ -1,13 +1,16 @@
 import CustomBreadcrumbs from '@/components/common/breadcrumb/Breadcrumb'
 import Devices from '@/components/devices/Devices'
-import React from 'react'
+import React, { Suspense } from 'react'
+import Loading from '../Loading'
 
 const DevicesPage = () => {
   return (
     <div>
       {/* <CustomBreadcrumbs /> */}
-      <Devices/>
-      </div>
+      <Suspense fallback={<Loading />}>
+        <Devices />
+      </Suspense>
+    </div>
   )
 }
 

@@ -6,19 +6,18 @@ import { Box, Grid, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import DevicesTable from '../../devices/devices-table/devices-table/DevicesTable'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setInitialValues, updateInspectorData } from '@/redux/features/inspectSlice';
+import { setInitialValues, updateInspectorData } from '@/redux/features/inspectionsSlice';
 import Modal from '@/components/common/modal/Modal';
 import WhatToInspectModal from '../what-to-inspect/WhatToInspectModal';
 import { fetchviewReport } from '@/actions/api';
 interface Device {
-    deviceId: string; // or number, depending on your data
-    // other properties...
-}
+    deviceId: string;
 
+}
 const Inspector = () => {
     const dispatch = useAppDispatch();
     const [isModal, setModal] = useState(false)
-    const { inspectorData, selectedInspector } = useAppSelector(state => state.inspectFormData)
+    const { inspectorData, selectedInspector } = useAppSelector(state => state.Inspections)
     const [isLoading, setLoading] = useState(true)
     const [viewReport, setViewReport] = useState<Device[]>([]);
     const inspectorHandlechange = (name: string, value: string) => {

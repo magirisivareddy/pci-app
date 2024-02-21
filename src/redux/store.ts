@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { headerSlice } from "../redux/features/headerSlice"
-import { modalSlice } from "./features/ModalSlice"
 import {exportSlice} from "../redux/features/exportSlice"
-import {inspectFormSlice} from "../redux/features/inspectSlice"
+import {InspectionsSlice} from "./features/inspectionsSlice"
 import {devicesSlice} from "../redux/features/devicesSlice"
 import {groupInspectorsSlice} from "../redux/features/groupInspectorsSlice"
+import {inspectorAdminSlice} from "../redux/features/inspectorAdminSlice"
+import { modalSlice } from './features/modalSlice'
 
 
 export const makeStore = () => {
@@ -13,9 +14,10 @@ export const makeStore = () => {
       header: headerSlice.reducer,
       modal: modalSlice.reducer,
       export:exportSlice.reducer,
-      inspectFormData:inspectFormSlice.reducer,
+      Inspections:InspectionsSlice.reducer,
       devices:devicesSlice.reducer,
-      groupInspector:groupInspectorsSlice.reducer
+      groupInspector:groupInspectorsSlice.reducer,
+      inspectorAdmin:inspectorAdminSlice.reducer
     },
   })
 }

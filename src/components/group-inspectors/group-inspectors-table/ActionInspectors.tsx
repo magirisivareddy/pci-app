@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, IconButton, Tooltip } from '@mui/material'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useAppDispatch } from '@/redux/hooks';
 import { setDeleteInspectorModal, setInspectorModal, setSelectedGroupInspectors } from '@/redux/features/groupInspectorsSlice';
@@ -18,7 +19,7 @@ const ActionInspectors = ({ row }: any) => {
         <Box display={'flex'} gap={'10px'}>
             <Tooltip color='primary' title="Delete Inspector">
                 <IconButton onClick={onDelete} sx={{ padding: 0 }}>
-                    <DeleteOutlineIcon color='primary' fontSize='medium' />
+                    <RemoveCircleRoundedIcon color='warning' fontSize='medium' />
                 </IconButton>
             </Tooltip>
         </Box>

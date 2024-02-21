@@ -1,6 +1,6 @@
 import React from 'react';
 import {  IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 
 interface DeleteCellProps {
   onDelete: () => void; // Callback function for the delete action
@@ -10,7 +10,7 @@ const DeleteCell: React.FC<DeleteCellProps> = ({ onDelete }) => {
   return (
 
       <IconButton onClick={onDelete} sx={{padding:0}}>
-        <DeleteIcon color='primary' fontSize='small' />
+        <RemoveCircleRoundedIcon color='warning' fontSize='small' />
       </IconButton>
 
   );

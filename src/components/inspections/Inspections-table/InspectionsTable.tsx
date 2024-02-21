@@ -2,21 +2,26 @@
 import React, { useState } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import CustomTable from '../common/table/Table';
+
 // import { inspectionsTableHeaders } from '@/utils/table-heders';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Popover from '@mui/material/Popover';
-import Modal from '../common/modal/Modal';
-import { setModalInspectOpen } from '@/redux/features/ModalSlice';
+
+
 import { downloadExcel } from 'react-export-table-to-excel';
-import Inspector from './inspector/Inspector';
+
 import { Button, Tooltip, Typography } from '@mui/material';
-import InspectionNotes from './inspection-notes/InspectionNotes';
+
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { format } from 'date-fns';
-import { setSelectedInspector } from '@/redux/features/inspectSlice';
+import { setSelectedInspector } from '@/redux/features/inspectionsSlice';
+import { setModalInspectOpen } from '@/redux/features/ModalSlice';
+import CustomTable from '@/components/common/table/Table';
+import Modal from '@/components/common/modal/Modal';
+import Inspector from '../inspector/Inspector';
+import InspectionNotes from '../inspection-notes/InspectionNotes';
 
 interface InspectionsTableProps {
   data: TableRowData[];
@@ -41,8 +46,8 @@ interface TableRowData {
 const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
-  const { inspectorData, devices } = useAppSelector(state => state.inspectFormData)
-  const { header, body } = useAppSelector(state => state.export.value)
+  const { devices } = useAppSelector(state => state.Inspections)
+
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState({
     open: false,
@@ -82,8 +87,8 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
   };
   const handleInspectClick = (row: any) => {
     dispatch(setSelectedInspector({
-      reportId:row.reportId.toString(),
-      venueId:row.venue_id
+      reportId: row.reportId.toString(),
+      venueId: row.venue_id
 
     }))
     dispatch(setModalInspectOpen(true));
@@ -104,23 +109,12 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     setStatus({
       ...status,
       open: true,
-      // You can also update other properties if needed
-      // For example, message and severity
       message: "Data submitted successfully!",
       severity: "success"
     });
 
   }
-  const handleExport = () => {
-    downloadExcel({
-      fileName: "Inspections",
-      sheet: "data",
-      tablePayload: {
-        header,
-        body
-      }
-    });
-  };
+
   const inspectionsTableHeaders: Header[] = [
     {
       id: 'status',
@@ -139,7 +133,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         </span>
       )
     },
-    
+
     { id: 'reportId', label: 'Report Id' },
     { id: 'weekNumber', label: 'Week' },
     {
@@ -170,18 +164,16 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     },
   ];
   return (<>
-    {/* <Box display="flex" justifyContent="flex-end" marginBottom={1}>
-      <Button onClick={handleExport} sx={{ marginRight: '16px', marginTop: '8px' }}>Export to Excel</Button>
-    </Box> */}
-      <Typography
+
+    <Typography
       variant='caption'
-        aria-owns={open ? 'mouse-over-popover' : undefined}
-        aria-haspopup="true"
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-      >
-        Inspections status notes
-      </Typography>
+      aria-owns={open ? 'mouse-over-popover' : undefined}
+      aria-haspopup="true"
+      onMouseEnter={handlePopoverOpen}
+      onMouseLeave={handlePopoverClose}
+    >
+      Inspections status notes
+    </Typography>
 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />
     {isInspect ?
@@ -202,7 +194,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
         />
       </form> : null}
-  
+
     <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom' }} open={status.open} autoHideDuration={6000} onClose={handleCloseAlert}>
       <Alert
         onClose={handleCloseAlert}
@@ -214,25 +206,25 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       </Alert>
     </Snackbar>
     <Popover
-        id="mouse-over-popover"
-        sx={{
-          pointerEvents: 'none',
-        }}
-        open={openPopOver}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-      >
-          <InspectionNotes />
-      </Popover>
+      id="mouse-over-popover"
+      sx={{
+        pointerEvents: 'none',
+      }}
+      open={openPopOver}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      onClose={handlePopoverClose}
+      disableRestoreFocus
+    >
+      <InspectionNotes />
+    </Popover>
 
   </>
   )

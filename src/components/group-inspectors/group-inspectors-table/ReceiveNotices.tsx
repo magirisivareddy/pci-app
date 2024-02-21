@@ -9,7 +9,7 @@ export const ReceiveNotices = ({ row }: any) => {
   const label = { inputProps: { 'aria-label': 'receive notices' } };
   return (
     <div>
-      <Checkbox {...label} checked={row.receive_notices === "Yes" ? true : false} />
+      <Checkbox sx={{paddingTop:"0",paddingBottom:"0"}} {...label} checked={row.receive_notices === "Yes" ? true : false} />
     </div>
   )
 }

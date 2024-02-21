@@ -24,7 +24,7 @@ type VenuesProps = {
 interface TableRowData {
     id: number;
     venue: string;
-    inspector: any;
+    inspector: [];
     totalDevices: number;
 }
 function generateMockData(numRecords: any) {
@@ -49,7 +49,13 @@ function generateMockData(numRecords: any) {
     return mockData;
 }
 const numberOfRecords = 30;
-const mockData = generateMockData(numberOfRecords);
+const mockData = [
+    { id: 1, venue: 'Venue A', inspector: [{ id: 1, name: "Inspector 1" }, { id: 2, name: "Inspector 2" },{ id: 3, name: "Inspector 3" },{ id: 4, name: "Inspector 4" },{ id: 5, name: "Inspector 5" }], totalDevices: 10 },
+    { id: 2, venue: 'Venue B', inspector: [{ id: 1, name: "Inspector 3" }], totalDevices: 5 },
+    { id: 3, venue: 'Venue C', inspector: [{ id: 1, name: "Inspector 4" }, { id: 2, name: "Inspector 5" },], totalDevices: 8 },
+    { id: 4, venue: 'Venue D', inspector: [{ id: 1, name: "Inspector 6" }, { id: 2, name: "Inspector 7" },], totalDevices: 12 },
+    { id: 5, venue: 'Venue E', inspector: [], totalDevices: 15 },
+];
 
 const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const [data, setData] = useState<TableRowData[]>(mockData);
@@ -60,7 +66,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState(null)
 
-    const onEditVenue = (row:any) => {
+    const onEditVenue = (row: any) => {
         setSelectedRow(row)
         setModalTyep("Edit")
         setAddOrEditVenueModal(true)
@@ -115,7 +121,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         return (
             <Grid container spacing={2} mb={2} pr={2}>
                 <Grid item xs={12} md={9}>
-                 <TextInput label={"Venue Name"} defaultValue={selectedRow?.venue ??""} name={"venue"} id={"venue"}/>
+                    <TextInput label={"Venue Name"} defaultValue={selectedRow?.venue ?? ""} name={"venue"} id={"venue"} />
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <Button sx={{ marginTop: "22px" }} variant='contained'>{modalType === "Edit" ? "Update Venue" : "Add Venue"}</Button>

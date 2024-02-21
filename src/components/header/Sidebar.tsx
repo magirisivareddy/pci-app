@@ -96,7 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices' },
         { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors' },
         { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information' },
-        { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/admins' },
+        { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin' },
         // {
         //     text: 'Admins',
         //     icon: <PersonAddAltOutlinedIcon />,

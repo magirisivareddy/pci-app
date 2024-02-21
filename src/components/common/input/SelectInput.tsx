@@ -12,10 +12,12 @@ interface SelectInputProps {
     id: string;
     selectedOption: any;
     options: Option[];
+    size:"small"| "medium";
     onChange: (value: string, name: string) => void;
 }
 
-const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selectedOption, onChange, id }) => {
+
+const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selectedOption,size="small", onChange, id }) => {
     const handleChange = (event: SelectChangeEvent<string>) => {
         if (onChange) {
             onChange(event.target.value, name);
@@ -35,7 +37,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selecte
                     marginLeft: "13px"
                 }}>{label}</label>
                 <Select
-                    size='small'
+                    size={size}
                     name={name}
                     id={id}
                     value={selectedOption}
@@ -50,9 +52,13 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selecte
                         '&.Mui-focused': {
                             border: '1px solid #008c99',
                         },
+                        '&.MuiSelect-outlined':{
+                            padding:"4px 14px"
+                        },
                         borderRadius: '4px',
                         border: '1px solid #ddd',
                         color: "rgb(157 148 148)",
+                      
                         '&:hover': {
                             border: '1px solid #008c99',
                             borderColor: 'none',

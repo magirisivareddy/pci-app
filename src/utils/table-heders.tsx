@@ -1,8 +1,8 @@
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, useTheme } from "@mui/material";
 import React from "react";
-import { setModalInspectOpen } from '@/redux/features/ModalSlice';
+import { setModalInspectOpen } from '@/redux/features/modalSlice';
 import { useAppDispatch } from "@/redux/hooks";
-import { updateRow } from "@/redux/features/inspectSlice";
+import { updateRow } from "@/redux/features/inspectionsSlice";
 import DeviceActions from "@/components/devices/devices-table/devices-table/DeviceActions";
 
 

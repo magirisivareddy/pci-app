@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Chip, IconButton, Tooltip } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import DeleteIcon from '@mui/icons-material/Delete';
+
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import "./DeleteVenue.css"
 import { setInspectorModal, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/groupInspectorsSlice';
 import { useAppDispatch } from '@/redux/hooks';
@@ -27,7 +28,7 @@ const DeleteVenue: React.FC = ({ row }: any) => {
                 ) : (
                     venues.map((venue: any, index: any) => (
                         <>
-                            <DeleteIcon sx={{ cursor: "pointer" }} color='warning' onClick={() => onDeleteVenue(venue)} /> {venue.name}</>
+                            <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} color='warning' onClick={() => onDeleteVenue(venue)} /> {venue.name}</>
 
                     ))
                 )}

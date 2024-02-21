@@ -25,8 +25,8 @@ const initialState: InspectorFormState = {
   selectedInspector: {}
 };
 
-export const inspectFormSlice = createSlice({
-  name: 'inspectFormData',
+export const InspectionsSlice = createSlice({
+  name: 'Inspections',
   initialState,
   reducers: {
     updateInspectorData: (state, action: PayloadAction<{ name: string; value: string | null }>) => {
@@ -66,8 +66,8 @@ export const inspectFormSlice = createSlice({
   },
 });
 
-export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector } = inspectFormSlice.actions;
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector } = InspectionsSlice.actions;
 
-export const selectInspectFormData = (state: RootState) => state.inspectFormData;
+export const selectInspections = (state: RootState) => state.Inspections;
 
-export default inspectFormSlice.reducer;
+export default InspectionsSlice.reducer;

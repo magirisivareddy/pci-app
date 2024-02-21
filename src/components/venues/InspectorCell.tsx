@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Chip } from '@mui/material';
+import { Box, Button, Chip, Tooltip } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
+
 import "./InspectorCell.css"
 
 interface Inspector {
@@ -23,31 +24,31 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectors, onAdd, onDele
                     <span>No Inspector</span>
                 ) : (
                     inspectors.map((inspector: any, index: any) => (
-                        <Chip
-                            key={index}
-                            color='default'
-                            sx={{
-                                background:"#c8ebef",
-                                fontSize:" 0.75rem",
-                                height:"24px"
-                            }}
-                            label={inspector.name}
-                            onDelete={() => inspector.id ? onDelete(inspector.id) : undefined}
-                            deleteIcon={<DeleteIcon color='info' />}
-                        />
+                        // <Chip
+                        //     key={index}
+                        //     // color='default'
+                        //     sx={{
+                        //         // background:"#c8ebef",
+                        //         fontSize:" 0.75rem",
+                        //         height:"24px"
+                        //     }}
+                        //     label={inspector.name}
+                        //     onDelete={() => inspector.id ? onDelete(inspector.id) : undefined}
+                        //     deleteIcon={<RemoveCircleRoundedIcon color='warning' />}
+                        // />
+                        <Box sx={{display:"flex", gap:"5px", textWrap:"nowrap"}}>
+                        <RemoveCircleRoundedIcon sx={{cursor:"pointer"}} onClick={() => inspector.id ? onDelete(inspector.id) : undefined} color='warning' /> {inspector.name}
+                        </Box>
+                        
                     ))
                 )}
             </div>
-            <Button
-          
-                size='small'
-                className="add-inspector-btn"
-                variant="outlined"
-                startIcon={<AddCircleOutlineIcon />}
-                onClick={() => onAdd({ name: "New Inspector" })}
-            >
-                Add Inspector...
-            </Button>
+               <Box className='add-inspector-btn'>
+               <Tooltip color='primary' title="Add Inspector...">
+               <AddCircleOutlineIcon sx={{cursor:"pointer"}} color='primary' onClick={() => onAdd({ name: "New Inspector" })} />
+               </Tooltip>
+               </Box>
+           
         </div>
     );
 };

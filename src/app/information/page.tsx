@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import Loading from '../Loading'
 
 const InformationPage = () => {
   return (
-    <div>InformationPage</div>
+    <Suspense fallback={<Loading />}>
+       <div>InformationPage</div>
+    </Suspense>
+   
   )
 }
 
