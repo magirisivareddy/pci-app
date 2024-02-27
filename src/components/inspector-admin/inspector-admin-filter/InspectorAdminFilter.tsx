@@ -6,7 +6,7 @@ import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { downloadExcel } from 'react-export-table-to-excel';
 import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setDeviceInfo } from '@/redux/features/devicesSlice';
+import { setDeviceInfo } from '@/redux/features/DevicesSlice';
 
 interface FormData {
     lastName: string;

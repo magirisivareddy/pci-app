@@ -6,7 +6,7 @@ import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { downloadExcel } from 'react-export-table-to-excel';
 import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setDeviceInfo } from '@/redux/features/devicesSlice';
+import { setDeviceInfo } from '@/redux/features/DevicesSlice';
 
 interface FormData {
   commonAssetName: string;
@@ -72,8 +72,7 @@ const DeviceFilter = () => {
               { label: "To Be Inspected", value: "to_be_inspected" }
             ]}
             name={'commonAssetName'}
-            id={'commonAssetName'}
-          />
+            id={'commonAssetName'} size={'small'} />
         </Grid>
         <Grid item xs={12} md={1.8}>
           <SelectInput
@@ -87,7 +86,7 @@ const DeviceFilter = () => {
               { label: "To Be Inspected", value: "to_be_inspected" }
             ]}
             name={'assignedVenue'}
-            id={'assignedVenue'} />
+            id={'assignedVenue'} size={'small'} />
         </Grid>
         <Grid item xs={12} md={1.8}>
           <TextInput

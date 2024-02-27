@@ -1,17 +1,15 @@
 "use client"
-import React, { useState } from "react";
-import CustomTable from "../common/table/Table";
+import React, { ReactNode, useState } from "react";
 import InspectorCell from "./InspectorCell";
 import EditableCell from "./EditableCell";
 import DeleteCell from "./DeleteCell";
-import CustomBreadcrumbs from "../common/breadcrumb/Breadcrumb";
-import { useAppDispatch } from "@/redux/hooks";
 import VenuesFilters from "./venues-filters/VenuesFilters";
 import Modal from "../common/modal/Modal";
 import AddInspector from "./add-inspector/AddInspector";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import SelectInput from "../common/input/SelectInput";
+import { Box, Button, Grid, Paper, Popover, Typography } from "@mui/material";
 import TextInput from "../common/input/Input";
+import VenuesNotes from "./notes/VenuesNotes";
+import CustomTable from "../common/table/Table";
 
 type Dropdowns = {
     venueDropdown: any; // replace with the actual type
@@ -27,44 +25,35 @@ interface TableRowData {
     inspector: [];
     totalDevices: number;
 }
-function generateMockData(numRecords: any) {
-    const mockData = [];
-    const inspectorNames = ['siva', 'magiri', 'example', 'john', 'doe', 'alice', 'bob', 'charlie']; // Add more unique names
-
-    for (let i = 1; i <= numRecords; i++) {
-        const randomInspectorIndex = Math.floor(Math.random() * inspectorNames.length);
-        const inspectorName = inspectorNames[randomInspectorIndex];
-
-        const record = {
-            id: i,
-            venue: `Location ${String.fromCharCode(65 + (i % 3))}`,
-            inspector: [{ id: 1, name: inspectorName }],
-            totalDevices: 50,
-        };
-
-        mockData.push(record);
-    }
 
 
-    return mockData;
-}
-const numberOfRecords = 30;
 const mockData = [
-    { id: 1, venue: 'Venue A', inspector: [{ id: 1, name: "Inspector 1" }, { id: 2, name: "Inspector 2" },{ id: 3, name: "Inspector 3" },{ id: 4, name: "Inspector 4" },{ id: 5, name: "Inspector 5" }], totalDevices: 10 },
-    { id: 2, venue: 'Venue B', inspector: [{ id: 1, name: "Inspector 3" }], totalDevices: 5 },
-    { id: 3, venue: 'Venue C', inspector: [{ id: 1, name: "Inspector 4" }, { id: 2, name: "Inspector 5" },], totalDevices: 8 },
-    { id: 4, venue: 'Venue D', inspector: [{ id: 1, name: "Inspector 6" }, { id: 2, name: "Inspector 7" },], totalDevices: 12 },
+    { id: 1, venue: 'Venue A', inspector: [{ id: 1, name: "Inspector 1", type: "MI" }, { id: 2, name: "Inspector 2", type: "BI" }, { id: 3, name: "Inspector 3" }, { id: 4, name: "Inspector 4" }, { id: 5, name: "Inspector 5" }], totalDevices: 10 },
+    { id: 2, venue: 'Venue B', inspector: [{ id: 1, name: "Inspector 3", type: "GI" }], totalDevices: 5 },
+    { id: 3, venue: 'Venue C', inspector: [{ id: 1, name: "Inspector 4", type: "BI" }, { id: 2, name: "Inspector 5" },], totalDevices: 8 },
+    { id: 4, venue: 'Venue D', inspector: [{ id: 1, name: "Inspector 6", type: "MI" }, { id: 2, name: "Inspector 7" },], totalDevices: 12 },
     { id: 5, venue: 'Venue E', inspector: [], totalDevices: 15 },
 ];
 
 const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
-    const [data, setData] = useState<TableRowData[]>(mockData);
+    // const [data, setData] = useState<TableRowData[]>(mockData);
     const [showInspector, setShowInspector] = useState(false)
     const [isAddOrEditVenueModal, setAddOrEditVenueModal] = useState(false)
     const [isDeletVenueModal, setDeletVenueModal] = useState(false)
     const [isDeletInspectionModal, setDeletInspectionModal] = useState(false)
     const [modalType, setModalTyep] = useState("")
-    const [selectedRow, setSelectedRow] = useState(null)
+    const [selectedRow, setSelectedRow] = useState<any>(null)
+
+
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const openPopOver = Boolean(anchorEl);
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
 
     const onEditVenue = (row: any) => {
         setSelectedRow(row)
@@ -133,7 +122,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                 <Typography variant="body1">
-                    Are you sure tou want to delete this inspector?
+                    Are you sure you want to delete this inspector?
                 </Typography>
                 <Box display="flex" gap={2} mt={2} justifyContent="center">
                     <Button variant="outlined">Yes</Button>
@@ -156,14 +145,14 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         // });
         // setData(newData);
     };
-    const myHeaders = [
-        { id: 'venue', label: 'Venue', },
+    const myHeaders: any = [
+        { id: 'venue', label: 'Venue' },
         {
             id: 'inspector',
             label: 'Inspector',
-            customRender: (_value: any, row: any) => (
+            customRender: (data: any, row: TableRowData): ReactNode => (
                 <InspectorCell
-                    inspectors={row.inspector} // pass the array of inspectors
+                    inspectors={row.inspector}
                     onAdd={(newInspector) => handleAddInspector(row.id, newInspector)}
                     onDelete={(inspectorId) => handleDeleteInspector(row.id, inspectorId)}
                 />
@@ -173,21 +162,19 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         {
             id: 'Edit',
             label: 'Edit',
-            customRender: (_value: any, row: any) => (
+            customRender: (data: any, row: TableRowData): ReactNode => (
                 <EditableCell onEdit={() => onEditVenue(row)} />
-            ),
+            )
         },
         {
             id: 'delete',
             label: 'Delete',
-            customRender: (_: any, row: TableRowData) => (
+            customRender: (data: any, row: TableRowData): ReactNode => (
                 <DeleteCell onDelete={() => onDeleteVenue()} />
             )
         },
-
-
     ];
-    const dispatch = useAppDispatch();
+    
     return (
         <>
             {/* <CustomBreadcrumbs /> */}
@@ -195,7 +182,16 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button>
             </Box>
             <VenuesFilters dropdowns={dropdowns} />
-            <CustomTable data={data} headers={myHeaders} dispatch={dispatch} />
+            <Typography
+                variant='caption'
+                // aria-owns={open ? 'mouse-over-popover' : undefined}
+                aria-haspopup="true"
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
+            >
+                NOTES:
+            </Typography>
+            <CustomTable data={mockData} headers={myHeaders}   />
             <Modal
                 title={"Lookup"}
                 open={showInspector}
@@ -233,6 +229,31 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 fullWidth={true}
 
             />
+            <Popover
+                id="mouse-over-popover"
+                sx={{
+                    pointerEvents: 'none',
+
+                }}
+                open={openPopOver}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+
+                onClose={handlePopoverClose}
+                disableRestoreFocus
+
+            >
+                <Paper sx={{ maxWidth: 'small', padding: '16px' }}>
+                    <VenuesNotes />
+                </Paper>
+            </Popover>
 
         </>
 

@@ -1,5 +1,7 @@
 "use client"
-import CustomTable from '@/components/common/table/Table'
+
+
+import CustomTable from '@/components/common/table/Table';
 import { devicesHeader } from '@/utils/table-heders'
 import React from 'react'
 

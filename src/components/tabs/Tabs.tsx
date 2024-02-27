@@ -1,5 +1,5 @@
 "use client"
-import { useMediaQuery, Tabs, Tab, Box, AppBar, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { useMediaQuery, Tabs, Tab, Box, AppBar, Drawer, IconButton, List, ListItem, ListItemText, createTheme } from '@mui/material';
 
 import { usePathname } from 'next/navigation';
 
@@ -22,7 +22,7 @@ function a11yProps(index: number) {
 }
 
 export default function PciTabs() {
-  const theme = useTheme();
+  const theme = createTheme();
   const router = useRouter()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const path = usePathname();

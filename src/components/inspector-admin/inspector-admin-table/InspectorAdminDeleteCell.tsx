@@ -1,7 +1,7 @@
 import React from 'react'
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import { useAppDispatch } from '@/redux/hooks';
-import { setinspectorAdminDeleteModal } from '@/redux/features/inspectorAdminSlice';
+import { setinspectorAdminDeleteModal } from '@/redux/features/InspectorAdminSlice';
 
 const InspectorAdminDeleteCell = ({row}:any) => {
     const dispatch= useAppDispatch()

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import InspectorAdmin from "../../components/inspector-admin/InspectorAdmin"
-import Loading from '../Loading'
+import Loading from '../loading'
 
 const InspectorAdminPage = () => {
   return (

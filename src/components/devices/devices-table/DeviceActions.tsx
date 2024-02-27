@@ -3,7 +3,7 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from '@/redux/hooks';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
-import { setDeviceFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/devicesSlice';
+import { setDeviceFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice';
 
 const DeviceActions = ({ row }: any) => {
     const dispatch = useAppDispatch();

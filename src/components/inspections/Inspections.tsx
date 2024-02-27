@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import InspectionsFilters from './inspections-filters/InspectionsFilters'
 import InspectionsTable from './Inspections-table/InspectionsTable'
 import { fetchInspections } from '@/actions/api';
+import { format } from 'date-fns';
 
 
 interface FormData {
@@ -75,12 +76,14 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
         const obj = {
             FromDate: selectedDateRange[0],
             ToDate: selectedDateRange[1],
+            // FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
+            // ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
             InspectorNumber: formData.inspector.toString(),
             ReportStatus: formData.reportStatus,
             VenueId: formData.venue.toString(),
-            Is_it: "Yes",
+            Is_it: "1",
             EmployeeNumber: "789",
-            AdminLevel: "Admin"
+            AdminLevel: "1"
         }
 
         try {

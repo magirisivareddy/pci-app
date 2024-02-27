@@ -4,9 +4,9 @@ import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded
 
 import { Box, Grid, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import DevicesTable from '../../devices/devices-table/devices-table/DevicesTable'
+import DevicesTable from '../devices-table/DevicesTable'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setInitialValues, updateInspectorData } from '@/redux/features/inspectionsSlice';
+import { setInitialValues, updateInspectorData } from '@/redux/features/InspectionsSlice';
 import Modal from '@/components/common/modal/Modal';
 import WhatToInspectModal from '../what-to-inspect/WhatToInspectModal';
 import { fetchviewReport } from '@/actions/api';

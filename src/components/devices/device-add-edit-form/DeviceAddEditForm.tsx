@@ -1,8 +1,18 @@
+import React, { useState } from 'react';
 import TextInput from '@/components/common/input/Input';
-import SelectInput from '@/components/common/input/SelectInput'
+import SelectInput from '@/components/common/input/SelectInput';
 import { useAppSelector } from '@/redux/hooks';
-import { Box, Button, Checkbox, FormControlLabel, Grid, useMediaQuery, useTheme } from '@mui/material'
-import React, { useState } from 'react'
+import {
+    Alert,
+    Box,
+    Button,
+    Checkbox,
+    FormControlLabel,
+    Grid,
+    useMediaQuery,
+} from '@mui/material';
+import { Theme } from '@mui/material/styles';
+
 interface FormData {
     commonAssetName: string;
     associatedVenue: string;
@@ -14,30 +24,37 @@ interface FormData {
     location: string;
     terminalId: string;
     profileId: string;
-    ipAddress: string
-    assetStatus: boolean
+    ipAddress: string;
+    assetStatus: boolean;
+    [key: string]: string | boolean; // Index signature
 }
+
 const DeviceAddEditForm = () => {
-    const { devicesInfo, deviceFormData } = useAppSelector(state => state.devices)
-    const { deviceModalType } = devicesInfo
-    // const theme = useTheme();
-    const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-    console.log("deviceFormData",deviceFormData)
+    const { devicesInfo, deviceFormData } = useAppSelector(
+        (state) => state.devices
+    );
+    const { deviceModalType } = devicesInfo;
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
     const [formData, setFormData] = useState<FormData>({
-        commonAssetName: deviceFormData?.commonAssetName ?? "",
-        associatedVenue:deviceFormData?.associatedVenue ?? "",
-        asset: deviceFormData?.asset ??"",
-        manufacturer: deviceFormData?.manufacturer ??"",
-        vendor: deviceFormData?.vendor ??"",
-        model: deviceFormData?.model ??"",
-        serial: deviceFormData?.serial ??"",
-        location: deviceFormData?.location ??"",
-        terminalId: deviceFormData?.terminalId ??"",
-        profileId: deviceFormData?.profileId ??"",
-        ipAddress: deviceFormData?.ipAddress ??"",
-        assetStatus: false
+        commonAssetName: deviceFormData?.commonAssetName ?? '',
+        associatedVenue: deviceFormData?.associatedVenue ?? '',
+        asset: deviceFormData?.asset ?? '',
+        manufacturer: deviceFormData?.manufacturer ?? '',
+        vendor: deviceFormData?.vendor ?? '',
+        model: deviceFormData?.model ?? '',
+        serial: deviceFormData?.serial ?? '',
+        location: deviceFormData?.location ?? '',
+        terminalId: deviceFormData?.terminalId ?? '',
+        profileId: deviceFormData?.profileId ?? '',
+        ipAddress: deviceFormData?.ipAddress ?? '',
+        assetStatus: false,
     });
-    console.log("formData", formData)
+
+    const [validationErrors, setValidationErrors] = useState<Record<string, string>>(
+        {}
+    );
+
     const onChangeAsset = (e: any) => {
         const value = e.target.checked;
         const name = e.target.name;
@@ -45,22 +62,76 @@ const DeviceAddEditForm = () => {
             ...prevData,
             [name]: value,
         }));
+        // Clear validation error when the checkbox is checked
+        clearValidationError(name);
     };
-
-
+    console.log("validationErrors", validationErrors)
     const onChange = (value: any, name: any) => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
-    }
+        // Clear validation error when the field is changed
+        clearValidationError(name);
+
+    };
+
+    const clearValidationError = (name: string) => {
+        setValidationErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: '',
+        }));
+    };
+    const validationSchema: Record<string, { isRequired: boolean }> = {
+        commonAssetName: { isRequired: true },
+        associatedVenue: { isRequired: true },
+        asset: { isRequired: true },
+        model: { isRequired: true },
+
+    };
+    const addDevice = () => {
+        // Validate fields before proceeding
+        const errors: Record<string, string> = {};
+        Object.keys(formData).forEach((key) => {
+            // Check if the field is required and not filled in
+            if (key !== 'assetStatus' && formData[key] === '' && validationSchema[key]?.isRequired) {
+                errors[key] = 'This field is required';
+            }
+        });
+
+        // If there are validation errors, set them in state and return
+        if (Object.keys(errors).length > 0) {
+            setValidationErrors(errors);
+            return;
+        }
+
+        // Continue with your addDevice logic here
+        // ...
+
+        // Reset form data after successful submission (if needed)
+        setFormData({
+            commonAssetName: '',
+            associatedVenue: '',
+            asset: '',
+            manufacturer: '',
+            vendor: '',
+            model: '',
+            serial: '',
+            location: '',
+            terminalId: '',
+            profileId: '',
+            ipAddress: '',
+            assetStatus: false,
+        });
+    };
+
     return (
         <Grid container spacing={2} mb={2}>
             <Grid item xs={12} md={4}>
                 <SelectInput
                     selectedOption={formData.commonAssetName}
                     onChange={onChange}
-                    label={'Common Asset Name *'}
+                    label={'Common Asset Name'}
                     options={[
                         { label: "Inspected", value: "inspected" },
                         { label: "Missed Inspection", value: "missed_inspection" },
@@ -69,7 +140,17 @@ const DeviceAddEditForm = () => {
                     ]}
                     name={'commonAssetName'}
                     id={'commonAssetName'}
-                />
+                    size={'small'}
+                    isRequired={true} />
+                {validationErrors?.commonAssetName && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.commonAssetName}.</Alert>}
+
             </Grid>
             <Grid item xs={12} md={4}>
                 <SelectInput
@@ -83,7 +164,18 @@ const DeviceAddEditForm = () => {
                         { label: "To Be Inspected", value: "to_be_inspected" }
                     ]}
                     name={'associatedVenue'}
-                    id={'associatedVenue'} />
+                    id={'associatedVenue'}
+                    size={'small'}
+                    isRequired={true}
+                />
+                {validationErrors?.associatedVenue && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.associatedVenue}.</Alert>}
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
@@ -92,13 +184,25 @@ const DeviceAddEditForm = () => {
                     label={'Asset'}
                     name={'asset'}
                     id={'asset'}
+                    isRequired={true}
                 />
                 <FormControlLabel
+                    sx={{ fontSize: "10px", '& .MuiFormControlLabel-label':{
+                        fontSize:"10px"
+                    } }}
                     control={
                         <Checkbox checked={formData.assetStatus} onChange={onChangeAsset} name="assetStatus" />
                     }
                     label="Not an NQ asset tag not required"
                 />
+                {validationErrors?.asset && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.asset}.</Alert>}
             </Grid>
 
             <Grid item xs={12} md={4}>
@@ -108,6 +212,7 @@ const DeviceAddEditForm = () => {
                     label={'Manufacturer'}
                     name={'manufacturer'}
                     id={'manufacturer'}
+                    isRequired={true}
                 />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -117,6 +222,7 @@ const DeviceAddEditForm = () => {
                     label={'Vendor'}
                     name={'vendor'}
                     id={'vendor'}
+                    isRequired={true}
                 />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -126,7 +232,16 @@ const DeviceAddEditForm = () => {
                     label={'Model'}
                     name={'model'}
                     id={'model'}
+                    isRequired={true}
                 />
+                   {validationErrors?.model && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.model}.</Alert>}
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
@@ -135,6 +250,7 @@ const DeviceAddEditForm = () => {
                     label={'Serial'}
                     name={'serial'}
                     id={'serial'}
+                    isRequired={true}
                 />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -144,6 +260,7 @@ const DeviceAddEditForm = () => {
                     label={'Location'}
                     name={'location'}
                     id={'location'}
+                    isRequired={true}
                 />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -179,6 +296,7 @@ const DeviceAddEditForm = () => {
                     <Button
                         fullWidth={isMobile}
                         sx={{ marginTop: "22px" }}
+                        onClick={addDevice}
                         variant='contained'> {deviceModalType === "Add" ? "Add" : "Update"} </Button>
                 </Box>
             </Grid>

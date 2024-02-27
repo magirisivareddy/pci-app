@@ -6,7 +6,7 @@ import InspectorAdminLevelCell from './InspectorAdminLevelCell';
 import { Box, Button, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Modal from '@/components/common/modal/Modal';
-import { setinspectorAdminDeleteModal } from '@/redux/features/inspectorAdminSlice';
+import { setinspectorAdminDeleteModal } from '@/redux/features/InspectorAdminSlice';
 
 const headers = [
     { id: "name", label: "Name" },

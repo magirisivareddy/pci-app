@@ -75,9 +75,15 @@ const Modal: FC<ScrollDialogProps> = ({
           <DialogActions>
             {handleCancel && <Button variant='outlined' onClick={handleCancel}>Cancel</Button>}
             {handleSubscribe && (
-              <Button sx={{ marginRight: "20px" }} type={buttonType} onClick={handleSubscribe} variant="contained" color="primary">
-                {buttonText ?? "Save"}
-              </Button>
+              <Button
+              sx={{ marginRight: "20px" }}
+              type={buttonType === 'submit' ? 'submit' : 'button'}
+              onClick={handleSubscribe}
+              variant="contained"
+              color="primary"
+            >
+              {buttonText ?? "Save"}
+            </Button>
             )}
           </DialogActions>
         )}

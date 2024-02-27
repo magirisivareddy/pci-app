@@ -1,9 +1,8 @@
 
 import { fetchInspectors, fetchVenue } from "@/actions/api";
 import CustomBreadcrumbs from "@/components/common/breadcrumb/Breadcrumb";
-import InspectionsFilters from "@/components/inspections/inspections-filters/InspectionsFilters";
 import { Suspense } from "react";
-import Loading from "./Loading";
+import Loading from "./loading";
 import Inspections from "@/components/inspections/Inspections";
 export default async function Home() {
   const venues = await fetchVenue();

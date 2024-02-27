@@ -4,7 +4,7 @@ import { Box, IconButton, Tooltip } from '@mui/material'
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useAppDispatch } from '@/redux/hooks';
-import { setDeleteInspectorModal, setInspectorModal, setSelectedGroupInspectors } from '@/redux/features/groupInspectorsSlice';
+import { setDeleteInspectorModal, setInspectorModal, setSelectedGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
 
 
 

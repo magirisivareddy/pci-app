@@ -1,27 +1,23 @@
 "use client"
 import React, { useState } from 'react'
 import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import Alert, { AlertProps } from '@mui/material/Alert';
 
 // import { inspectionsTableHeaders } from '@/utils/table-heders';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Popover from '@mui/material/Popover';
 
-
-import { downloadExcel } from 'react-export-table-to-excel';
-
 import { Button, Tooltip, Typography } from '@mui/material';
-
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { format } from 'date-fns';
-import { setSelectedInspector } from '@/redux/features/inspectionsSlice';
+import { setSelectedInspector } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
-import CustomTable from '@/components/common/table/Table';
+
 import Modal from '@/components/common/modal/Modal';
 import Inspector from '../inspector/Inspector';
 import InspectionNotes from '../inspection-notes/InspectionNotes';
+import CustomTable from '@/components/common/table/Table';
 
 interface InspectionsTableProps {
   data: TableRowData[];
@@ -147,7 +143,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     { id: 'venue_name', label: 'Venue' },
     {
       id: 'inspectorEmployeenumber', label: 'Employee Number', customRender: (value: any, row: any): JSX.Element => (
-        row.inspectorEmployeeNumber ? <span>{row.inspectorEmployeeNumber}</span> : <span>No main inspector assigned</span>
+        row.inspectorEmployeeNumber ? <span>{row.inspectorEmployeeNumber}</span> : <span style={{ color: "#9c4040" }}>No main inspector assigned</span>
       )
     },
     { id: 'totalDevices', label: 'Total Devices' },
@@ -198,7 +194,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom' }} open={status.open} autoHideDuration={6000} onClose={handleCloseAlert}>
       <Alert
         onClose={handleCloseAlert}
-        severity={status.severity}
+        severity={status.severity as AlertProps['severity']}
         variant="filled"
         sx={{ width: '100%', alignItems: "center" }}
       >

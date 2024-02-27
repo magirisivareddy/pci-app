@@ -60,7 +60,7 @@ const AddGroupInspector = ({venues}:any) => {
                         label={'Add Venue'}
                         options={venues}
                         name={'addVenue'}
-                        id={'addVenue'} />
+                        id={'addVenue'} size={'small'} />
                 </Grid>
             </Grid>
             <Grid container mt={2}>

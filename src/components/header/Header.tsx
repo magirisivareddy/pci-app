@@ -38,7 +38,7 @@ const Header = ({ onMenuClick }: any) => {
           onClick={handleMenu}
           size='small'
         >
-          <Avatar sizes='small' /> {/* Assuming this is your user profile */}
+          <Avatar sizes='small' sx={{width:"35px",height:"35px"}} /> {/* Assuming this is your user profile */}
         </IconButton>
         <Menu
           id="menu-appbar"

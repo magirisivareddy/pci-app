@@ -72,7 +72,7 @@ const AddInspector = () => {
                             { label: "To Be Inspected", value: "to_be_inspected" }
                         ]}
                         name={'inspectorType'}
-                        id={'inspectorType'} />
+                        id={'inspectorType'} size={'small'} />
                 </Grid>
             </Grid>
             <Grid container mt={2}>

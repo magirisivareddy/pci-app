@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TableFooter, useTheme, CircularProgress, Box, Button, Skeleton } from '@mui/material';
 import { tokens } from '@/theme/theme';
 import { useAppDispatch } from '@/redux/hooks';
-import { setBodyData, setHeaderData } from '@/redux/features/exportSlice';
+import { setBodyData, setHeaderData } from '@/redux/features/ExportSlice';
 import TableRowsLoader from './TableRowsLoader';
 
 interface TableRowData {
@@ -58,7 +58,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
-                                <TableCell key={header.id} sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600" }} key={header.id}>
+                                <TableCell key={header.id} sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600" }} >
                                     {header.label}
                                 </TableCell>
                             ))}
@@ -84,7 +84,19 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                                     key={index}
                                 >
                                     {headers.map((header) => (
-                                        <TableCell key={header.id} sx={{ color: "" }}>
+                                        <TableCell key={header.id}
+                                            sx={{
+                                                // background: '#9ddbe0',
+                                                // color: 'rgba(0, 0, 0, 0.7)',
+                                                // fontWeight: "600",
+                                                // whiteSpace: 'nowrap',
+                                                // overflow: 'hidden',
+                                                // width:"200px",
+                                                // minWidth: '80px', 
+
+                                            }}
+
+                                        >
                                             {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
                                         </TableCell>
                                     ))}

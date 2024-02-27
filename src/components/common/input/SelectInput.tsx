@@ -14,10 +14,11 @@ interface SelectInputProps {
     options: Option[];
     size:"small"| "medium";
     onChange: (value: string, name: string) => void;
+    isRequired?: boolean;
 }
 
 
-const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selectedOption,size="small", onChange, id }) => {
+const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selectedOption,size="small", onChange, id,isRequired = false  }) => {
     const handleChange = (event: SelectChangeEvent<string>) => {
         if (onChange) {
             onChange(event.target.value, name);
@@ -27,15 +28,17 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selecte
     return (
         <div>
             <FormControl fullWidth>
-                <label style={{
-                    color: "rgba(0, 0, 0, 0.6)",
+            <label style={{
+                    color:"rgba(0, 0, 0, 0.6)",
                     fontWeight: "400",
                     fontSize: "0.6428571428571428rem",
                     lineHeight: "1.66",
                     textAlign: "left",
                     marginTop: "3px",
                     marginLeft: "13px"
-                }}>{label}</label>
+                }}>
+                      {label} {isRequired && <span style={{color:"#9c4040"}}>*</span>}
+                </label>
                 <Select
                     size={size}
                     name={name}

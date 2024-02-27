@@ -7,6 +7,8 @@ interface TextInputProps {
     defaultValue?: string;
     id: string;
     onChange?: (name: string, value: string) => void;
+    isRequired?: boolean;
+
 }
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
@@ -26,26 +28,25 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
         },
         '&:hover': {
             border: '1px solid #008c99',
-            borderColor: 'none', 
+            borderColor: 'none',
         },
     },
 }));
 
-const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange, id }) => {
+const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange, id, isRequired = false }) => {
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         const name = e.target.name
         if (onChange) {
-            onChange(value,name);
+            onChange(value, name);
         }
     };
 
     return (
         <FormControl fullWidth>
             <label style={{
-                color: "rgba(0, 0, 0, 0.6)",
-
+                color:"rgba(0, 0, 0, 0.6)",
                 fontWeight: "400",
                 fontSize: " 0.6428571428571428rem",
                 lineHeight: "1.66",
@@ -53,7 +54,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
                 marginTop: "3px",
                 marginLeft: "13px"
             }}>
-                {label}
+                {label} {isRequired && <span style={{color:"#9c4040"}}>*</span>}
             </label>
             <BootstrapInput
                 fullWidth

@@ -4,7 +4,7 @@ import DeviceFilter from './device-filter/DeviceFilter'
 import DevicesTable from './devices-table/DevicesTable'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import Modal from '../common/modal/Modal'
-import { setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/devicesSlice'
+import { setDeviceFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice'
 import DeviceAddEditForm from './device-add-edit-form/DeviceAddEditForm'
 import DeviceHistory from './device-history/DeviceHistory'
 
@@ -19,6 +19,7 @@ const Devices = () => {
       deviceModalType: ""
     }))
     dispatch(setDeviceHistoryInfo(false))
+    dispatch(setDeviceFormData(null))
   }
   return (
     <>

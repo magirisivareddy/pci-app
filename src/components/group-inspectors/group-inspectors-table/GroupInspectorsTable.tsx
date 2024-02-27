@@ -5,7 +5,7 @@ import { ReceiveNotices } from './ReceiveNotices';
 import ActionInspectors from './ActionInspectors';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Modal from '@/components/common/modal/Modal';
-import { setDeleteInspectorModal, setInspectorModal, setdeleteVenuModal } from '@/redux/features/groupInspectorsSlice';
+import { setDeleteInspectorModal, setInspectorModal, setdeleteVenuModal } from '@/redux/features/GroupInspectorsSlice';
 
 import { Box, Button, Grid, Typography } from '@mui/material';
 import TextInput from '@/components/common/input/Input';
@@ -90,7 +90,7 @@ export const GroupInspectorsTable = ({ venues }: any) => {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                 <Typography variant="body1">
-                    Are you sure tou want to delete this inspector?
+                    Are you sure you want to delete this inspector?
                 </Typography>
                 <Box display="flex" gap={2} mt={2} justifyContent="center">
                     <Button variant="outlined">Yes</Button>

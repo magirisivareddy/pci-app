@@ -4,12 +4,12 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import "./DeleteVenue.css"
-import { setInspectorModal, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/groupInspectorsSlice';
+import { setInspectorModal, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/GroupInspectorsSlice';
 import { useAppDispatch } from '@/redux/hooks';
 
 
 
-const DeleteVenue: React.FC = ({ row }: any) => {
+const DeleteVenue = ({ row }: any) => {
     const dispatch = useAppDispatch();
     const { venues } = row
     const addInspector = (event: any) => {

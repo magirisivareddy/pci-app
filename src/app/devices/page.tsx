@@ -1,7 +1,7 @@
 import CustomBreadcrumbs from '@/components/common/breadcrumb/Breadcrumb'
 import Devices from '@/components/devices/Devices'
 import React, { Suspense } from 'react'
-import Loading from '../Loading'
+import Loading from '../loading'
 
 const DevicesPage = () => {
   return (

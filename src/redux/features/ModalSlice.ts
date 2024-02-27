@@ -17,7 +17,7 @@ const initialState: CounterState = {
 }
 
 export const modalSlice = createSlice({
-  name: 'inspections',
+  name: 'modal',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {

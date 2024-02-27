@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { headerSlice } from "../redux/features/headerSlice"
-import {exportSlice} from "../redux/features/exportSlice"
-import {InspectionsSlice} from "./features/inspectionsSlice"
-import {devicesSlice} from "../redux/features/devicesSlice"
-import {groupInspectorsSlice} from "../redux/features/groupInspectorsSlice"
-import {inspectorAdminSlice} from "../redux/features/inspectorAdminSlice"
-import { modalSlice } from './features/modalSlice'
+import { headerSlice } from "./features/HeaderSlice"
+import {exportSlice} from "./features/ExportSlice"
+import {InspectionsSlice} from "./features/InspectionsSlice"
+import {devicesSlice} from "./features/DevicesSlice"
+import {groupInspectorsSlice} from "./features/GroupInspectorsSlice"
+import {inspectorAdminSlice} from "./features/InspectorAdminSlice"
+import { modalSlice } from './features/ModalSlice'
 
 
 export const makeStore = () => {
