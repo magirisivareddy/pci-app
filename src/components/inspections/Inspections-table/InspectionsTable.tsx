@@ -18,6 +18,7 @@ import Modal from '@/components/common/modal/Modal';
 import Inspector from '../inspector/Inspector';
 import InspectionNotes from '../inspection-notes/InspectionNotes';
 import CustomTable from '@/components/common/table/Table';
+import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
 
 interface InspectionsTableProps {
   data: TableRowData[];
@@ -43,7 +44,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
   const { devices } = useAppSelector(state => state.Inspections)
-
+  const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState({
     open: false,
@@ -52,7 +53,12 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
   })
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-
+  const handleModalClose = () => {
+    setHelpDeskModal(false)
+  }
+  const onHelpDeskModal = () => {
+    setHelpDeskModal(true)
+  }
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -187,10 +193,22 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           handleSubscribe={handleSave}
           buttonType="submit"
           buttonText="Submit"
+          footerLink="Report a Finding / Raise a ticket"
+          onFooterLink={onHelpDeskModal}
 
         />
       </form> : null}
+    <Modal
+      title={'Helpdesk Ticket'}
+      open={isHelpDeskModal}
+      scroll={'paper'}
+      handleClose={handleModalClose}
+      contentComponent={(props) => <HelpdeskTicketForm handleModalClose={handleModalClose} />}
+      fullWidth={true}
+    
 
+      maxWidth={"md"}
+    />
     <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom' }} open={status.open} autoHideDuration={6000} onClose={handleCloseAlert}>
       <Alert
         onClose={handleCloseAlert}

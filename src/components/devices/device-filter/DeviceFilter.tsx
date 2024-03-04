@@ -8,40 +8,20 @@ import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setDeviceInfo } from '@/redux/features/DevicesSlice';
 
-interface FormData {
-  commonAssetName: string;
-  assignedVenue: string;
-  asset: string;
-  serial: string;
-  terminalId: string;
-  profileId: string
-}
-const DeviceFilter = () => {
+
+const DeviceFilter = ({ venueDropdown, formData, onChange,handelSubmit }: any) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const { header, body } = useAppSelector(state => state.export.value)
-  const [formData, setFormData] = useState<FormData>({
-    commonAssetName: 'All',
-    assignedVenue: 'All',
-    asset: '',
-    serial: '',
-    terminalId: '',
-    profileId: ''
-  });
-  const onChange = (value: any, name: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  }
+
   const addDevice = () => {
     dispatch(setDeviceInfo({
       isDeviceModal: true,
       deviceModalType: "Add"
     }))
   }
-  const handelSubmit = (event: any) => { }
+
   const handleExport = () => {
     downloadExcel({
       fileName: "devices",
@@ -66,44 +46,45 @@ const DeviceFilter = () => {
             onChange={onChange}
             label={'Common Asset Name'}
             options={[
-              { label: "Inspected", value: "inspected" },
-              { label: "Missed Inspection", value: "missed_inspection" },
-              { label: "Inspected: Not Resolved", value: "inspected_not_resolved" },
-              { label: "To Be Inspected", value: "to_be_inspected" }
+              { label: "Apple Pay Change Point", value: "Apple Pay Change Point" },
+              { label: "ATM", value: "ATM" },
+              { label: "Credit card terminal", value: "Credit card terminal" },
+              { label: "Desktop, Laptop, Tablet", value: "Desktop, Laptop, Tablet" },
+              { label: "Fastbar CC Reader", value: "Fastbar CC Reader" },
+              { label: "Fastbar POS", value: "Fastbar POS" },
+              { label: "POS Card Reader", value: "POS Card Reader" },
+              { label: "POS System", value: "POS System" },
+              { label: "Receipt Printer", value: "Receipt Printer" },
+              { label: "USB credit card swiper", value: "USB credit card swiper" },
             ]}
             name={'commonAssetName'}
             id={'commonAssetName'} size={'small'} />
         </Grid>
         <Grid item xs={12} md={1.8}>
           <SelectInput
-            selectedOption={formData.assignedVenue}
+            selectedOption={formData.venueId}
             onChange={onChange}
             label={'Assigned Venue'}
-            options={[
-              { label: "Inspected", value: "inspected" },
-              { label: "Missed Inspection", value: "missed_inspection" },
-              { label: "Inspected: Not Resolved", value: "inspected_not_resolved" },
-              { label: "To Be Inspected", value: "to_be_inspected" }
-            ]}
-            name={'assignedVenue'}
-            id={'assignedVenue'} size={'small'} />
+            options={venueDropdown}
+            name={'venueId'}
+            id={'venueId'} size={'small'} />
         </Grid>
         <Grid item xs={12} md={1.8}>
           <TextInput
-            defaultValue={formData.asset ?? ""}
+            defaultValue={formData.assetNumber ?? ""}
             onChange={onChange}
             label={'Asset'}
-            name={'asset'}
-            id={'asset'}
+            name={'assetNumber'}
+            id={'assetNumber'}
           />
         </Grid>
         <Grid item xs={12} md={1.8}>
           <TextInput
-            defaultValue={formData.serial ?? ""}
+            defaultValue={formData.serialNumber ?? ""}
             onChange={onChange}
             label={'Serial'}
-            name={'serial'}
-            id={'serial'}
+            name={'serialNumber'}
+            id={'serialNumber'}
           />
         </Grid>
         <Grid item xs={12} md={1.8}>

@@ -10,6 +10,7 @@ import { setInitialValues, updateInspectorData } from '@/redux/features/Inspecti
 import Modal from '@/components/common/modal/Modal';
 import WhatToInspectModal from '../what-to-inspect/WhatToInspectModal';
 import { fetchviewReport } from '@/actions/api';
+import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
 interface Device {
     deviceId: string;
 
@@ -17,6 +18,7 @@ interface Device {
 const Inspector = () => {
     const dispatch = useAppDispatch();
     const [isModal, setModal] = useState(false)
+
     const { inspectorData, selectedInspector } = useAppSelector(state => state.Inspections)
     const [isLoading, setLoading] = useState(true)
     const [viewReport, setViewReport] = useState<Device[]>([]);
@@ -25,7 +27,9 @@ const Inspector = () => {
     }
     const handleModalClose = () => {
         setModal(false)
+
     }
+ 
     const handleModalOpen = () => {
         setModal(true)
     }
@@ -85,6 +89,8 @@ const Inspector = () => {
                 </Stack>
             </Box>
             <DevicesTable data={viewReport} isLoading={isLoading} />
+
+
             <Modal
                 title={'Instruction'}
                 open={isModal}

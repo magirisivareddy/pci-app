@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store'
+import { searchDevices } from '@/actions/api';
 
 
 // Define a type for the slice state
@@ -12,7 +12,10 @@ interface CounterState {
     deviceFormData: any,
     deviceHistory: {
         isDeviceHistoryModal: boolean
-    }
+    },
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    devicesData: any; // Change 'any' to the actual type of your data
+    error: string | null;
 }
 
 // Define the initial state using that type
@@ -24,9 +27,21 @@ const initialState: CounterState = {
     deviceHistory: {
         isDeviceHistoryModal: false,
     },
-    deviceFormData: null
+    deviceFormData: null,
+    status: 'idle',
+    devicesData: [],
+    error: null,
 }
 
+export const getDevices = createAsyncThunk('devices/getDevices', async (obj: any) => {
+    try {
+      const response = await searchDevices(obj);
+      return response;
+    } catch (error) {
+      console.error('Error in getDevices:', error);
+      throw error;
+    }
+  });
 export const devicesSlice = createSlice({
     name: 'devices',
     // `createSlice` will infer the state type from the `initialState` argument
@@ -41,6 +56,20 @@ export const devicesSlice = createSlice({
         setDeviceHistoryInfo: (state, actions) => {
             state.deviceHistory.isDeviceHistoryModal = actions.payload
         },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getDevices.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(getDevices.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.devicesData = action.payload;
+            })
+            .addCase(getDevices.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message || 'An error occurred';
+            });
     },
 })
 

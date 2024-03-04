@@ -1,10 +1,12 @@
+import { getDeviceHistory } from '@/actions/api';
 import CustomTable from '@/components/common/table/Table'
-import React from 'react'
+import { useAppSelector } from '@/redux/hooks';
+import React, { useEffect, useState } from 'react'
 const devicesHeader = [
-    { id: 'date', label: 'Date' },
-    { id: 'event', label: 'Event' },
-    { id: 'by_who', label: 'By Who' },
-    { id: 'changes', label: 'Changes' }
+    { id: 'historyDateTime', label: 'Date' },
+    { id: 'title', label: 'Event' },
+    { id: 'teamMember', label: 'By Who' },
+    { id: 'information', label: 'Changes' }
 ];
 const mockData = [
     {
@@ -27,8 +29,27 @@ const mockData = [
     }
 ];
 const DeviceHistory = () => {
+    const [deviceHistoryData, setDeviceHistory]=useState([])
+    const [isloading, setLoading]=useState(false)
+    const { deviceFormData } = useAppSelector(state => state.devices)
+    const fetchDataAndSetDate = async () => {
+    
+        try {
+          setLoading(true);
+          const deviceHistory = await getDeviceHistory(deviceFormData?.deviceId);
+         setDeviceHistory(deviceHistory)
+        console.log("deviceHistory",deviceHistory)
+        setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        fetchDataAndSetDate();
+      }, []);
     return (
-        <CustomTable data={mockData} headers={devicesHeader} isloading={false} isPagination={false} />
+        <CustomTable data={deviceHistoryData} headers={devicesHeader} isloading={isloading} isPagination={false} />
     )
 }
 

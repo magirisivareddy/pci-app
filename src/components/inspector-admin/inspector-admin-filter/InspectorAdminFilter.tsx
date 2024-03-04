@@ -1,39 +1,13 @@
 "use client"
 
 import TextInput from '@/components/common/input/Input';
-import SelectInput from '@/components/common/input/SelectInput'
+import React from 'react'
 import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
-import { downloadExcel } from 'react-export-table-to-excel';
-import React, { useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setDeviceInfo } from '@/redux/features/DevicesSlice';
 
-interface FormData {
-    lastName: string;
-    firstName: string;
-    employee: string;
-    badge: string;
-
-}
-const InspectorAdminFilter = () => {
+const InspectorAdminFilter = ({ onChange, handelSubmit, formData }: any) => {
     const theme = useTheme();
-    const dispatch = useAppDispatch();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
-    const [formData, setFormData] = useState<FormData>({
-        lastName: '',
-        firstName: '',
-        employee: '',
-        badge: ''
-    });
-    const onChange = (value: any, name: any) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    }
-
-    const handelSubmit = (event: any) => { }
 
     return (
         <>
@@ -41,7 +15,7 @@ const InspectorAdminFilter = () => {
             <Grid container spacing={2} mb={2}>
                 <Grid item xs={12} md={2.75}>
                     <TextInput
-                        defaultValue={""}
+                        defaultValue={formData.lastName}
                         onChange={onChange}
                         label={'Last Name'}
                         name={'lastName'}
@@ -50,7 +24,7 @@ const InspectorAdminFilter = () => {
                 </Grid>
                 <Grid item xs={12} md={2.75}>
                     <TextInput
-                        defaultValue={""}
+                        defaultValue={formData.firstName}
                         onChange={onChange}
                         label={'First Name'}
                         name={'firstName'}
@@ -59,20 +33,20 @@ const InspectorAdminFilter = () => {
                 </Grid>
                 <Grid item xs={12} md={2.74}>
                     <TextInput
-                        defaultValue={""}
+                        defaultValue={formData.employeeNumber}
                         onChange={onChange}
                         label={'Employee'}
-                        name={'employee'}
-                        id={'employee'}
+                        name={'employeeNumber'}
+                        id={'employeeNumber'}
                     />
                 </Grid>
                 <Grid item xs={12} md={2.75}>
                     <TextInput
-                        defaultValue={""}
+                        defaultValue={formData.badgeNumber}
                         onChange={onChange}
                         label={'Badge'}
-                        name={'badge'}
-                        id={'badge'}
+                        name={'badgeNumber'}
+                        id={'badgeNumber'}
                     />
                 </Grid>
                 <Grid item xs={12} md={1}>

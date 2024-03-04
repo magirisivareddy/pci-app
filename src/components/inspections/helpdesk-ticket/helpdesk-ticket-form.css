@@ -1,0 +1,27 @@
+.date-picker-container label {
+    color: rgba(0, 0, 0, 0.6);
+    font-family: Source Sans Pro, sans-serif;
+    font-weight: 400;
+    font-size: 0.6428571428571428rem;
+    line-height: 1.66;
+    text-align: left;
+    margin-top: 3px;
+    margin-right: 14px;
+    margin-bottom: 0;
+    margin-left: 14px;
+  }
+  
+  .custom-date-picker {
+    width: 100%;
+    min-width: 100px;
+    padding: 9px 10px;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 12px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 0.3s;
+    color: rgb(157, 148, 148);
+  }

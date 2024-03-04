@@ -4,38 +4,42 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import "./DeleteVenue.css"
-import { setInspectorModal, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/GroupInspectorsSlice';
+import { getGroupInspectors, setAddVenuToInspectorModal, setDeletedVenuId, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/GroupInspectorsSlice';
 import { useAppDispatch } from '@/redux/hooks';
+import { groupInspectorRemoveVenue } from '@/actions/api';
 
-
-
-const DeleteVenue = ({ row }: any) => {
+const AddAndDeleteVenue = ({ row }: any) => {
+    console.log("row", row)
+    const venues: any[] = row?.venueDetails ?? []
     const dispatch = useAppDispatch();
-    const { venues } = row
-    const addInspector = (event: any) => {
+
+    const addVenueToInspector = (event: any) => {
         dispatch(setSelectedGroupInspectors(row))
-        dispatch(setInspectorModal(true))
+        dispatch(setAddVenuToInspectorModal(true))
     }
-    const onDeleteVenue = (venue: any) => {
+    const onDeleteVenue = async(venue: any) => {
+        dispatch(setDeletedVenuId( venue.venueId))
         dispatch(setSelectedGroupInspectors(row))
         dispatch(setdeleteVenuModal(true))
+   
+     
     }
     return (
         <div className="venue-cell-container">
             <div className="scroll-container">
-                {venues.length === 0 ? (
+                {venues?.length === 0 ? (
                     <span>No Inspector</span>
                 ) : (
-                    venues.map((venue: any, index: any) => (
+                    venues?.map((venue: any, index: any) => (
                         <>
-                            <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} color='warning' onClick={() => onDeleteVenue(venue)} /> {venue.name}</>
+                            <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} color='warning' onClick={() => onDeleteVenue(venue)} /> {venue.venueName}</>
 
                     ))
                 )}
             </div>
 
             <Tooltip color='primary' title="Add Venue">
-                <IconButton onClick={addInspector} sx={{ padding: 0 }}>
+                <IconButton onClick={addVenueToInspector} sx={{ padding: 0 }}>
                     <AddCircleIcon color='primary' fontSize='medium' />
                 </IconButton>
             </Tooltip>
@@ -43,4 +47,4 @@ const DeleteVenue = ({ row }: any) => {
     );
 };
 
-export default DeleteVenue
+export default AddAndDeleteVenue

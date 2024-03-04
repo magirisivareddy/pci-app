@@ -8,28 +8,13 @@ import Modal from '@/components/common/modal/Modal';
 import AddGroupInspector from '../add-group-inspector/AddGroupInspector';
 
 
-interface FormData {
-    venue: string;
-    inspector: string;
-}
-const GroupInspectorsFilter = ({ dropdowns }: any) => {
+const GroupInspectorsFilter = ({ dropdowns,handelSubmit,onChange,formData }: any) => {
     const dispatch = useAppDispatch()
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const [formData, setFormData] = useState<FormData>({
-        venue: 'All',
-        inspector: 'All'
-    });
+  
     const { groupInspectorModal } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
-    const onChange = (value: any, name: any) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    }
-    const handelSubmit = (event: any) => {
-
-    }
+  
     const onAddGroupInspector = () => {
         dispatch(setGroupInspectorModal(true))
 

@@ -7,48 +7,32 @@ import SelectInput from '@/components/common/input/SelectInput';
 
 
 
-interface FormData {
-    venue: string;
-    inspector: string;
-}
-const VenuesFilters = ({ dropdowns }: any) => {
+
+const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const [formData, setFormData] = useState<FormData>({
-        venue: 'All',
-        inspector: 'All'
-    });
 
-    const onChange = (value: any, name: any) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    }
-    const handelSubmit = (event: any) => {
-
-    }
 
     return (<>
 
         <Grid container spacing={2} mb={2} pr={2}>
             <Grid item xs={12} md={5.5}>
                 <SelectInput
-                    selectedOption={formData.venue}
+                    selectedOption={formData.venueId}
                     onChange={onChange}
                     label={'Venue'}
                     options={dropdowns.venueDropdown}
-                    name={'venue'}
-                    id={'venue'} size={'small'}                />
+                    name={'venueId'}
+                    id={'venueId'} size={'small'} />
             </Grid>
             <Grid item xs={12} md={5.5}>
                 <SelectInput
-                    selectedOption={formData.inspector}
+                    selectedOption={formData.inspectorEmployeeNumber}
                     onChange={onChange}
                     label={'Inspector'}
                     options={dropdowns.inspectorsDropdown}
-                    name={'inspector'}
-                    id={'inspector'} size={'small'} />
+                    name={'inspectorEmployeeNumber'}
+                    id={'inspectorEmployeeNumber'} size={'small'} />
             </Grid>
             <Grid item xs={12} md={1}>
                 <Button onClick={handelSubmit} sx={{ marginTop: "22px", width: isDesktop ? "auto" : "100%" }} variant='contained'>Search</Button>

@@ -12,6 +12,7 @@ const DeviceActions = ({ row }: any) => {
             isDeviceModal: true,
             deviceModalType: "Edit"
         }))
+        console.log("row",row)
         dispatch(setDeviceFormData(row))
     }
     const onHistory=()=>{

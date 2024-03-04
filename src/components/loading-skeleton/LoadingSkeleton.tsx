@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 // Define useStyles
 const useStyles = makeStyles((theme) => ({
   backdrop: {
-    // zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
   container: {

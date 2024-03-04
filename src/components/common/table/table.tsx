@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { tokens } from '@/theme/theme';
 import { useAppDispatch } from '@/redux/hooks';
 import { setBodyData, setHeaderData } from '@/redux/features/ExportSlice';
-import TableRowsLoader from './TableRowsLoader';
+import {TableRowsLoader} from './TableRowsLoader';
 
 interface TableRowData {
     [key: string]: any;

@@ -6,6 +6,7 @@ import { updateRow } from "@/redux/features/InspectionsSlice";
 import DeviceActions from "@/components/devices/devices-table/DeviceActions";
 import StatusCell from "@/components/inspections/devices-table/StatusCell";
 import NotesCell from "@/components/inspections/devices-table/NotesCell";
+import ReasonsCell from "@/components/inspections/devices-table/ReasonsCell";
 
 
 
@@ -25,16 +26,20 @@ export const inspectionDeviceHeader: Header[] = [
     {
         id: 'notes', label: 'Notes', customRender: (value: any, row: any) => <NotesCell row={row}/>
     },
+    {
+        id: 'reason', label: 'Reason', customRender: (value: any, row: any) => <ReasonsCell row={row}/>
+    },
 ];
+
 
 export const devicesHeader: Header[] = [
     { id: 'commonAssetName', label: 'Common Asset Name', },
-    { id: 'model', label: 'Model' },
-    { id: 'assetSerial', label: 'Asset Serial' },
-    { id: 'terminalID', label: 'Terminal ID / Profile Id' },
-    { id: 'ipAddress', label: 'IP Address /Slot' },
+    { id: 'modelNumber', label: 'Model' },
+    { id: 'assetNumber', label: 'Asset Serial' },
+    { id: 'terminalId', label: 'Terminal ID / Profile Id' },
+    { id: 'slotNumber', label: 'IP Address /Slot' },
     { id: 'assignedVenue', label: 'Assigned Venue' },
-    { id: 'location', label: 'Location' },
+    { id: 'deviceLocation', label: 'Location' },
     {
         id: 'action', label: 'Action', customRender: (_: any, row: any) => (
             <DeviceActions row={row} />

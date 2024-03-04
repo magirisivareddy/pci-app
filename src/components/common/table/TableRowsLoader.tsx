@@ -1,6 +1,6 @@
-import { Skeleton, TableCell, TableRow } from "@mui/material";
+import { Skeleton, TableBody, TableCell, TableRow } from "@mui/material";
 
-const TableRowsLoader = ({ headers, rowsNum }: any) => {
+export const TableRowsLoader = ({ headers, rowsNum }: any) => {
     return [...Array(rowsNum)].map((row, index) => (
         <TableRow key={index}>
             {headers.map((header: { id: React.Key | null | undefined; }) => (
@@ -12,4 +12,17 @@ const TableRowsLoader = ({ headers, rowsNum }: any) => {
     ));
 };
 
-export default TableRowsLoader
+export const TableLoader = ({ rowsNum }: any) => {
+    return (
+      <TableBody>
+        {[...Array(rowsNum)].map((_, index) => (
+          <TableRow key={index}>
+            <TableCell component="th" scope="row">
+              <Skeleton animation="wave" variant="text" />
+            </TableCell>
+      
+          </TableRow>
+        ))}
+      </TableBody>
+    );
+  };

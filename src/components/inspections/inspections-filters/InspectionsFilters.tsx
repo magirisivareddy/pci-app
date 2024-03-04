@@ -3,32 +3,31 @@ import React from 'react'
 import RangeDatePicker from '@/components/common/datepicker/DatePicker';
 import { Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setInspectionFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
 
 interface InspectionsFiltersProps {
   venueDropdown: Array<{ label: string; value: string }>;
   handelSubmit: () => void;
   inspectorsDropdown: Array<{ label: string; value: string }>;
-  formData: {
-    venue: string;
-    inspector: string;
-    reportStatus: string;
-  };
-  handleDateRangeChange: (dateRange: [Date | null, Date | null]) => void;
-  onChange: (value: string, name: string) => void;
-  selectedDateRange: [Date | null, Date | null];
 }
 
 const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   venueDropdown,
   handelSubmit,
   inspectorsDropdown,
-  formData,
-  handleDateRangeChange,
-  onChange,
-  selectedDateRange,
 }) => {
+  const dispatch = useAppDispatch()
+  const { inspectionForm,selectedDateRange } = useAppSelector(state => state.Inspections.inspectionFilterData)
+  
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const onChange = (value: any, name: any) => {
+    dispatch(setInspectionFilterFormData({ name: name, value: value }))
+  }
+  const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
+    dispatch(setSelectedDateRange(dateRange))
+};
   return (<>
     <Grid container spacing={2} mb={2} pr={1}>
       <Grid item xs={12} md={4} >
@@ -39,7 +38,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
       </Grid>
       <Grid item xs={12} md={2.3}>
         <SelectInput
-          selectedOption={formData.venue}
+          selectedOption={inspectionForm.venue}
           onChange={onChange}
           label={'Venue'}
           options={venueDropdown}
@@ -50,7 +49,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
       </Grid>
       <Grid item xs={12} md={2.3}>
         <SelectInput
-          selectedOption={formData.inspector}
+          selectedOption={inspectionForm.inspector}
           onChange={onChange}
           label={'Inspector'}
           options={inspectorsDropdown}
@@ -60,7 +59,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
       </Grid>
       <Grid item xs={12} md={2.3}>
         <SelectInput
-          selectedOption={formData.reportStatus}
+          selectedOption={inspectionForm.reportStatus}
           onChange={onChange}
           label={'Report Status'}
           options={[

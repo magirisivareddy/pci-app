@@ -1,37 +1,71 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+import { searchAdmins } from '@/actions/api';
 
-import { RootState } from '../store'
-
-
-// Define a type for the slice state
 interface CounterState {
     inspectorAdminInfo: {
-        isinspectorAdminDeleteModal: boolean
-    },
+        isinspectorAdminDeleteModal: boolean;
+        selectedAdminRow: any;
+        adminLevelStatus:any
+    };
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    adminData: any; // Change 'any' to the actual type of your data
+    error: string | null;
 }
 
-// Define the initial state using that type
 const initialState: CounterState = {
     inspectorAdminInfo: {
         isinspectorAdminDeleteModal: false,
+        selectedAdminRow: null,
+        adminLevelStatus:null
     },
-}
+    status: 'idle',
+    adminData: [],
+    error: null,
+};
+
+export const getAdminList = createAsyncThunk('inspectorAdmin/getAdminList', async (obj: any) => {
+    try {
+      const response = await searchAdmins(obj);
+      return response;
+    } catch (error) {
+      console.error('Error in getAdminList:', error);
+      throw error;
+    }
+  });
 
 export const inspectorAdminSlice = createSlice({
     name: 'inspectorAdmin',
-    // `createSlice` will infer the state type from the `initialState` argument
     initialState,
     reducers: {
-        setinspectorAdminDeleteModal: (state, actions) => {
-            state.inspectorAdminInfo.isinspectorAdminDeleteModal = actions.payload
+        setinspectorAdminDeleteModal: (state, action: PayloadAction<boolean>) => {
+            state.inspectorAdminInfo.isinspectorAdminDeleteModal = action.payload;
         },
-    
+        setSelectedAdminrow: (state, action: PayloadAction<any>) => {
+            state.inspectorAdminInfo.selectedAdminRow = action.payload;
+        },
+        setAdminLevelStatus: (state, action: PayloadAction<any>) => {
+            state.inspectorAdminInfo.adminLevelStatus = action.payload;
+        },
     },
-})
+    extraReducers: (builder) => {
+        builder
+            .addCase(getAdminList.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(getAdminList.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.adminData = action.payload;
+            })
+            .addCase(getAdminList.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message || 'An error occurred';
+            });
+    },
+});
 
-export const { setinspectorAdminDeleteModal } = inspectorAdminSlice.actions
+export const { setinspectorAdminDeleteModal, setSelectedAdminrow, setAdminLevelStatus } = inspectorAdminSlice.actions;
 
-// Other code such as selectors can use the imported `RootState` type
-export const selectInspectorAdmin = (state: RootState) => state.inspectorAdmin
+export const selectInspectorAdmin = (state: RootState) => state.inspectorAdmin;
 
-export default inspectorAdminSlice.reducer
+export default inspectorAdminSlice.reducer;

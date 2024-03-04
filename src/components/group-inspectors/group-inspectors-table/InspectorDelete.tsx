@@ -8,7 +8,7 @@ import { setDeleteInspectorModal, setInspectorModal, setSelectedGroupInspectors 
 
 
 
-const ActionInspectors = ({ row }: any) => {
+const InspectorDelete = ({ row }: any) => {
     const dispatch = useAppDispatch();
   
     const onDelete = () => {
@@ -26,5 +26,6 @@ const ActionInspectors = ({ row }: any) => {
     )
 }
 
-export default ActionInspectors
+
+export default InspectorDelete
 

@@ -6,6 +6,7 @@ import {devicesSlice} from "./features/DevicesSlice"
 import {groupInspectorsSlice} from "./features/GroupInspectorsSlice"
 import {inspectorAdminSlice} from "./features/InspectorAdminSlice"
 import { modalSlice } from './features/ModalSlice'
+import { VenuesSlice } from './features/VenuesSlice'
 
 
 export const makeStore = () => {
@@ -17,7 +18,8 @@ export const makeStore = () => {
       Inspections:InspectionsSlice.reducer,
       devices:devicesSlice.reducer,
       groupInspector:groupInspectorsSlice.reducer,
-      inspectorAdmin:inspectorAdminSlice.reducer
+      inspectorAdmin:inspectorAdminSlice.reducer,
+      Venues:VenuesSlice.reducer
     },
   })
 }

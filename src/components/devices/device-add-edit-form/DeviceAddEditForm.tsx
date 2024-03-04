@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
     Alert,
     Box,
@@ -12,44 +12,56 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
+import { addUpdateDevice } from '@/actions/api';
+import { getDevices } from '@/redux/features/DevicesSlice';
 
 interface FormData {
     commonAssetName: string;
-    associatedVenue: string;
+    venueId: string;
     asset: string;
     manufacturer: string;
     vendor: string;
-    model: string;
-    serial: string;
-    location: string;
+    modelNumber: string;
+    serialNumber: string;
+    deviceLocation: string;
     terminalId: string;
     profileId: string;
     ipAddress: string;
-    assetStatus: boolean;
+    // assetStatus: boolean;
     [key: string]: string | boolean; // Index signature
 }
 
-const DeviceAddEditForm = () => {
+const DeviceAddEditForm = ({ venueDropdown }: any) => {
+    const dispatch = useAppDispatch()
     const { devicesInfo, deviceFormData } = useAppSelector(
         (state) => state.devices
     );
     const { deviceModalType } = devicesInfo;
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const [message, setMessage] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
+
 
     const [formData, setFormData] = useState<FormData>({
         commonAssetName: deviceFormData?.commonAssetName ?? '',
-        associatedVenue: deviceFormData?.associatedVenue ?? '',
+        venueId: deviceFormData?.venueId ?? '',
         asset: deviceFormData?.asset ?? '',
         manufacturer: deviceFormData?.manufacturer ?? '',
         vendor: deviceFormData?.vendor ?? '',
-        model: deviceFormData?.model ?? '',
-        serial: deviceFormData?.serial ?? '',
-        location: deviceFormData?.location ?? '',
+        modelNumber: deviceFormData?.modelNumber ?? '',
+        serialNumber: deviceFormData?.serialNumber ?? '',
+        deviceLocation: deviceFormData?.deviceLocation ?? '',
         terminalId: deviceFormData?.terminalId ?? '',
         profileId: deviceFormData?.profileId ?? '',
         ipAddress: deviceFormData?.ipAddress ?? '',
-        assetStatus: false,
+        // assetStatus: false,
     });
+    console.log("formData", formData)
+    // "deviceId": 0,
+    // "assetNumber": "string",
+    // "serialNumberNumber": "string",
+    // "slotNumber": "string",
+    // "employeeNumber": "string"
 
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>(
         {}
@@ -84,45 +96,60 @@ const DeviceAddEditForm = () => {
     };
     const validationSchema: Record<string, { isRequired: boolean }> = {
         commonAssetName: { isRequired: true },
-        associatedVenue: { isRequired: true },
+        venueId: { isRequired: true },
         asset: { isRequired: true },
-        model: { isRequired: true },
+        modelNumber: { isRequired: true },
 
     };
-    const addDevice = () => {
-        // Validate fields before proceeding
+    const addDevice = async () => {
         const errors: Record<string, string> = {};
         Object.keys(formData).forEach((key) => {
-            // Check if the field is required and not filled in
             if (key !== 'assetStatus' && formData[key] === '' && validationSchema[key]?.isRequired) {
                 errors[key] = 'This field is required';
             }
         });
-
         // If there are validation errors, set them in state and return
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
             return;
         }
 
-        // Continue with your addDevice logic here
-        // ...
+        try {
+            const res = await addUpdateDevice(formData)
+            setMessage(res.message)
+            setTimeout(() => {
+                setMessage("")
+                const obj = {
+                    "is_It": "1",
+                    "venueId": "All",
+                    "commonAssetName": "",
+                    "serialNumber": "",
+                    "assetNumber": "",
+                    "terminalId": "",
+                    "profileId": "",
+                    "employeeNumber": "789"
+                }
+                dispatch(getDevices(obj))
+            }, 3000)
+        } catch (error: any) {
+            setErrorMessage(error.message ?? "something went wrong ")
+        }
 
         // Reset form data after successful submission (if needed)
-        setFormData({
-            commonAssetName: '',
-            associatedVenue: '',
-            asset: '',
-            manufacturer: '',
-            vendor: '',
-            model: '',
-            serial: '',
-            location: '',
-            terminalId: '',
-            profileId: '',
-            ipAddress: '',
-            assetStatus: false,
-        });
+        // setFormData({
+        //     commonAssetName: '',
+        //     venueId: '',
+        //     asset: '',
+        //     manufacturer: '',
+        //     vendor: '',
+        //     modelNumber: '',
+        //     serialNumber: '',
+        //     deviceLocation: '',
+        //     terminalId: '',
+        //     profileId: '',
+        //     ipAddress: '',
+        //     assetStatus: false,
+        // });
     };
 
     return (
@@ -133,10 +160,16 @@ const DeviceAddEditForm = () => {
                     onChange={onChange}
                     label={'Common Asset Name'}
                     options={[
-                        { label: "Inspected", value: "inspected" },
-                        { label: "Missed Inspection", value: "missed_inspection" },
-                        { label: "Inspected: Not Resolved", value: "inspected_not_resolved" },
-                        { label: "To Be Inspected", value: "to_be_inspected" }
+                        { label: "Apple Pay Change Point", value: "Apple Pay Change Point" },
+                        { label: "ATM", value: "ATM" },
+                        { label: "Credit card terminal", value: "Credit card terminal" },
+                        { label: "Desktop, Laptop, Tablet", value: "Desktop, Laptop, Tablet" },
+                        { label: "Fastbar CC Reader", value: "Fastbar CC Reader" },
+                        { label: "Fastbar POS", value: "Fastbar POS" },
+                        { label: "POS Card Reader", value: "POS Card Reader" },
+                        { label: "POS System", value: "POS System" },
+                        { label: "Receipt Printer", value: "Receipt Printer" },
+                        { label: "USB credit card swiper", value: "USB credit card swiper" },
                     ]}
                     name={'commonAssetName'}
                     id={'commonAssetName'}
@@ -154,28 +187,23 @@ const DeviceAddEditForm = () => {
             </Grid>
             <Grid item xs={12} md={4}>
                 <SelectInput
-                    selectedOption={formData.associatedVenue}
+                    selectedOption={formData.venueId}
                     onChange={onChange}
                     label={'Associated Venue'}
-                    options={[
-                        { label: "Inspected", value: "inspected" },
-                        { label: "Missed Inspection", value: "missed_inspection" },
-                        { label: "Inspected: Not Resolved", value: "inspected_not_resolved" },
-                        { label: "To Be Inspected", value: "to_be_inspected" }
-                    ]}
-                    name={'associatedVenue'}
-                    id={'associatedVenue'}
+                    options={venueDropdown}
+                    name={'venueId'}
+                    id={'venueId'}
                     size={'small'}
                     isRequired={true}
                 />
-                {validationErrors?.associatedVenue && <Alert icon={false} sx={{
+                {validationErrors?.venueId && <Alert icon={false} sx={{
                     background: 'unset',
                     color: "#9c4040",
                     padding: "0 10px",
                     '& .mui-1pxa9xg-MuiAlert-message': {
                         padding: '4px 0',
                     },
-                }}  >{validationErrors?.associatedVenue}.</Alert>}
+                }}  >{validationErrors?.venueId}.</Alert>}
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
@@ -187,11 +215,13 @@ const DeviceAddEditForm = () => {
                     isRequired={true}
                 />
                 <FormControlLabel
-                    sx={{ fontSize: "10px", '& .MuiFormControlLabel-label':{
-                        fontSize:"10px"
-                    } }}
+                    sx={{
+                        fontSize: "10px", '& .MuiFormControlLabel-label': {
+                            fontSize: "10px"
+                        }
+                    }}
                     control={
-                        <Checkbox checked={formData.assetStatus} onChange={onChangeAsset} name="assetStatus" />
+                        <Checkbox checked={false} onChange={onChangeAsset} name="assetStatus" />
                     }
                     label="Not an NQ asset tag not required"
                 />
@@ -227,39 +257,39 @@ const DeviceAddEditForm = () => {
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
-                    defaultValue={formData.model ?? ""}
+                    defaultValue={formData.modelNumber ?? ""}
                     onChange={onChange}
                     label={'Model'}
-                    name={'model'}
-                    id={'model'}
+                    name={'modelNumber'}
+                    id={'modelNumber'}
                     isRequired={true}
                 />
-                   {validationErrors?.model && <Alert icon={false} sx={{
+                {validationErrors?.modelNumber && <Alert icon={false} sx={{
                     background: 'unset',
                     color: "#9c4040",
                     padding: "0 10px",
                     '& .mui-1pxa9xg-MuiAlert-message': {
                         padding: '4px 0',
                     },
-                }}  >{validationErrors?.model}.</Alert>}
+                }}  >{validationErrors?.modelNumber}.</Alert>}
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
-                    defaultValue={formData.serial ?? ""}
+                    defaultValue={formData.serialNumber ?? ""}
                     onChange={onChange}
                     label={'Serial'}
-                    name={'serial'}
-                    id={'serial'}
+                    name={'serialNumber'}
+                    id={'serialNumber'}
                     isRequired={true}
                 />
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
-                    defaultValue={formData.location ?? ""}
+                    defaultValue={formData.deviceLocation ?? ""}
                     onChange={onChange}
                     label={'Location'}
-                    name={'location'}
-                    id={'location'}
+                    name={'deviceLocation'}
+                    id={'deviceLocation'}
                     isRequired={true}
                 />
             </Grid>
@@ -299,6 +329,14 @@ const DeviceAddEditForm = () => {
                         onClick={addDevice}
                         variant='contained'> {deviceModalType === "Add" ? "Add" : "Update"} </Button>
                 </Box>
+                {message && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
+                    {message}
+                </Alert>}
+
+                {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+                    {errorMessage}
+                </Alert>}
+
             </Grid>
 
         </Grid>

@@ -1,9 +1,9 @@
 "use client"
-
-
+import { searchDevices } from '@/actions/api';
 import CustomTable from '@/components/common/table/Table';
+import { useAppSelector } from '@/redux/hooks';
 import { devicesHeader } from '@/utils/table-heders'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 interface FormData {
   commonAssetName: string;
@@ -19,30 +19,16 @@ interface FormData {
   ipAddress: string
   assetStatus: boolean
 }
-function generateMockData(numRecords: any) {
-  const mockData = [];
 
-  for (let i = 1; i <= numRecords; i++) {
-    const record = {
-      id: 'commonAssetName',
-      commonAssetName: `commonAssetName${i}`,
-      model: `Model${i % 3 + 1}`,
-      assetSerial: `SN00${i}`,
-      terminalID: `TID00${i}`,
-      ipAddress: `192.168.1.${i}`,
-      assignedVenue: `Venue${i % 3 + 1}`,
-      location: `Location${String.fromCharCode(65 + (i % 3))}`,
-    };
-    mockData.push(record);
-  }
-  return mockData;
-}
 
 const numberOfRecords = 30;
-const mockData = generateMockData(numberOfRecords);
+
 const DevicesTable = () => {
+  const { devicesData, status } = useAppSelector(state => state.devices)
+
+
   return (
-    <CustomTable data={mockData} headers={devicesHeader} isloading={false} isPagination={true} />
+    <CustomTable data={devicesData} headers={devicesHeader} isloading={status === "loading"} isPagination={true} />
   )
 }
 

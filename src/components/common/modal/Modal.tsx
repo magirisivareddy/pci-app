@@ -19,8 +19,10 @@ interface ScrollDialogProps {
   showCloseIcon?: boolean;
   fullWidth?: boolean;
   maxWidth?: false | Breakpoint | undefined;
-  buttonType?:  'button' | 'submit' | 'reset' |'Okay'
+  buttonType?: 'button' | 'submit' | 'reset' | 'Okay'
   buttonText?: string
+  footerLink?: string
+  onFooterLink?: any
 
 }
 
@@ -36,7 +38,9 @@ const Modal: FC<ScrollDialogProps> = ({
   maxWidth,
   showCloseIcon = true,
   buttonText,
-  buttonType ,
+  buttonType,
+  footerLink,
+  onFooterLink
 }: ScrollDialogProps): ReactElement => {
   const ContentComponent = contentComponent || (() => null);
 
@@ -67,23 +71,24 @@ const Modal: FC<ScrollDialogProps> = ({
             <CloseIcon />
           </IconButton>
         )}
-        <DialogTitle  color={"primary"} id="scroll-dialog-title"> <span><b>{title}</b></span></DialogTitle>
+        <DialogTitle color={"primary"} id="scroll-dialog-title"> <span><b>{title}</b></span></DialogTitle>
         <DialogContent dividers={true} sx={{ overflowX: 'hidden' }}>
           <ContentComponent />
         </DialogContent>
         {(handleCancel || handleSubscribe) && (
           <DialogActions>
+            {onFooterLink && footerLink && <Button onClick={onFooterLink}>{footerLink}</Button>}
             {handleCancel && <Button variant='outlined' onClick={handleCancel}>Cancel</Button>}
             {handleSubscribe && (
               <Button
-              sx={{ marginRight: "20px" }}
-              type={buttonType === 'submit' ? 'submit' : 'button'}
-              onClick={handleSubscribe}
-              variant="contained"
-              color="primary"
-            >
-              {buttonText ?? "Save"}
-            </Button>
+                sx={{ marginRight: "20px" }}
+                type={buttonType === 'submit' ? 'submit' : 'button'}
+                onClick={handleSubscribe}
+                variant="contained"
+                color="primary"
+              >
+                {buttonText ?? "Save"}
+              </Button>
             )}
           </DialogActions>
         )}
