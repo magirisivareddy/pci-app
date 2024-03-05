@@ -15,7 +15,7 @@ interface InspectionsProps {
 
 const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDropdown }) => {
     const dispatch = useAppDispatch()
-    const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections.inspectionFilterData)
+    const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections?.inspectionFilterData)
     const { inspectionsList, status } = useAppSelector(state => state.Inspections)
     useEffect(() => {
         const obj = {

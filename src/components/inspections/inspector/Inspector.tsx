@@ -11,15 +11,16 @@ import Modal from '@/components/common/modal/Modal';
 import WhatToInspectModal from '../what-to-inspect/WhatToInspectModal';
 import { fetchviewReport } from '@/actions/api';
 import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
+import Loading from '@/app/loading';
 interface Device {
     deviceId: string;
 
 }
-const Inspector = () => {
+const Inspector = ({loading}:any) => {
     const dispatch = useAppDispatch();
     const [isModal, setModal] = useState(false)
+    const { inspectorData, selectedInspector,saveReportStatus } = useAppSelector(state => state.Inspections)
 
-    const { inspectorData, selectedInspector } = useAppSelector(state => state.Inspections)
     const [isLoading, setLoading] = useState(true)
     const [viewReport, setViewReport] = useState<Device[]>([]);
     const inspectorHandlechange = (name: string, value: string) => {
@@ -65,6 +66,7 @@ const Inspector = () => {
 
     return (
         <>
+            {saveReportStatus && <Loading />}
             <Box sx={{ width: '100%' }}>
                 <Stack textAlign={"center"} mb={2} spacing={2}>
                     <Typography color={"primary"} variant='h5' sx={{ fontWeight: "600" }} component={"h3"} >Inspector</Typography>

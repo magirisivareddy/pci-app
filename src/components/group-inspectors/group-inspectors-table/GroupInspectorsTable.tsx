@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Modal from '@/components/common/modal/Modal';
 import { setDeleteInspectorModal, setAddVenuToInspectorModal, setdeleteVenuModal, getGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
 
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Alert, Box, Button, Grid, Typography } from '@mui/material';
 
 import SelectInput from '@/components/common/input/SelectInput';
 import AddAndDeleteVenue from './AddAndDeleteVenue';
@@ -15,6 +15,7 @@ import InspectorDelete from './InspectorDelete';
 import DeleteGroupInspector from '../delete-group-inspector/DeleteGroupInspector';
 import AddVenueToGroupInspector from '../add-venue-to-groupInspector/AddVenueToGroupInspector';
 import { groupInspectorRemoveVenue } from '@/actions/api';
+import Loading from '@/app/loading';
 
 
 
@@ -52,6 +53,9 @@ const myHeaders = [
 export const GroupInspectorsTable = ({ venues, isloading }: any) => {
     const dispatch = useAppDispatch();
     const { groupInspectorsData, status } = useAppSelector(state => state.groupInspector)
+    const [isLoading, setLoading] = useState(false)
+    const [message, setMessage] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
 
     const { isAddVenueToInspectorModal, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
     const handleClose = () => {
@@ -65,37 +69,52 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
 
     const VenueDeleteModal = () => {
         const onDelete = async () => {
+            setLoading(true)
             try {
                 const res = await groupInspectorRemoveVenue(selectedGroupInspector.employeeNumber, deletedVenuId)
-                // setMessage(res.message)
+                setMessage(res.message)
+                setLoading(false)
                 setTimeout(() => {
-                    // setMessage("")
+                  
+                    const obj: any = {
+                        venueId: 'All',
+                        inspectorEmployeeNumber: 'All',
+                        is_It: '1'
+                    }
+                    Object.keys(obj).forEach(key => {
+                        obj[key] = String(obj[key]);
+                    });
+                    setMessage("")
+                    dispatch(getGroupInspectors(obj))
                 }, 3000)
                 handleClose()
-                const obj: any = {
-                    venueId: 'All',
-                    inspectorEmployeeNumber: 'All',
-                    is_It: '1'
-                }
-                Object.keys(obj).forEach(key => {
-                    obj[key] = String(obj[key]);
-                });
-                dispatch(getGroupInspectors(obj))
+
             } catch (error: any) {
+                setLoading(false)
                 console.log("error", error)
-                // setErrorMessage(error.message ?? "something went wrong ")
+                setErrorMessage(error.message ?? "something went wrong ")
             }
         }
         return (
-            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-                <Typography variant="body1">
-                    Are you sure tou want to delete this Venue?
-                </Typography>
-                <Box display="flex" gap={2} mt={2} justifyContent="center">
-                    <Button variant="outlined" onClick={onDelete}>Yes</Button>
-                    <Button variant="outlined" onClick={handleClose}>No</Button>
+            <>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+                    <Typography variant="body1">
+                        Are you sure tou want to delete this Venue?
+                    </Typography>
+                    <Box display="flex" gap={2} mt={2} justifyContent="center">
+                        <Button variant="outlined" onClick={onDelete}>Yes</Button>
+                        <Button variant="outlined" onClick={handleClose}>No</Button>
+                    </Box>
                 </Box>
-            </Box>
+                {isLoading && <Loading />}
+                {message && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
+                    {message}
+                </Alert>}
+
+                {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+                    {errorMessage}
+                </Alert>}
+            </>
         )
     }
     return (

@@ -1,4 +1,5 @@
 import { deleteVenue, deleteVenueInspector } from '@/actions/api'
+import Loading from '@/app/loading'
 import { getVenues, setDeletInspectionModal } from '@/redux/features/VenuesSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Box, Button, Typography } from '@mui/material'
@@ -8,15 +9,17 @@ const InspectionDeleteModal = () => {
     const dispatch = useAppDispatch()
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [isloading, setLoading] = useState(false)
     const { selectedVenueInspector } = useAppSelector(state => state.Venues.venueInfo)
-    console.log("selectedVenueInspector", selectedVenueInspector)
+
     const onDeleteVenue = async () => {
         const inspectorId = selectedVenueInspector?.inspectorId.toString()
         try {
+            setLoading(true)
             const res = await deleteVenueInspector(inspectorId)
             setMessage(res.message)
+            setLoading(false)
             setTimeout(() => {
-                // dispatch(setDeletVenueModal(false))
                 setMessage("")
                 dispatch(setDeletInspectionModal(false))
                 const obj = {
@@ -32,7 +35,7 @@ const InspectionDeleteModal = () => {
             }, 3000)
 
         } catch (error: any) {
-
+            setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")
         }
     }
@@ -40,15 +43,17 @@ const InspectionDeleteModal = () => {
         dispatch(setDeletInspectionModal(false))
     }
     return (
-        <div>   <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <Typography variant="body1">
-                Are you sure you want to delete this inspector?
-            </Typography>
-            <Box display="flex" gap={2} mt={2} justifyContent="center">
-                <Button variant="outlined" onClick={onDeleteVenue}>Yes</Button>
-                <Button variant="outlined" onClick={onClose}>No</Button>
+        <div>
+              {isloading && <Loading/>}
+            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+                <Typography variant="body1">
+                    Are you sure you want to delete this inspector?
+                </Typography>
+                <Box display="flex" gap={2} mt={2} justifyContent="center">
+                    <Button variant="outlined" onClick={onDeleteVenue}>Yes</Button>
+                    <Button variant="outlined" onClick={onClose}>No</Button>
+                </Box>
             </Box>
-        </Box>
             {message && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
                 {message}
             </Alert>}

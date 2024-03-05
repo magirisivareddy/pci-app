@@ -1,4 +1,5 @@
 import { deleteGroupInspector } from '@/actions/api'
+import Loading from '@/app/loading'
 import { getGroupInspectors, setDeleteInspectorModal } from '@/redux/features/GroupInspectorsSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Box, Button, Typography } from '@mui/material'
@@ -8,10 +9,12 @@ const DeleteGroupInspector = () => {
     const dispatch = useAppDispatch()
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [isLoading, setLoading] = useState(false)
     const { selectedGroupInspector } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
     const onDelete = async () => {
         const inspectorId = selectedGroupInspector?.inspectorId.toString()
         try {
+            setLoading(true)
             const res = await deleteGroupInspector(inspectorId)
             setMessage(res.message)
             const payload = {
@@ -19,6 +22,7 @@ const DeleteGroupInspector = () => {
                 inspectorEmployeeNumber: 'All',
                 is_It: '1'
             }
+            setLoading(false)
             setTimeout(() => {
                 setMessage("")
                 dispatch(setDeleteInspectorModal(false))
@@ -26,6 +30,7 @@ const DeleteGroupInspector = () => {
             }, 3000)
         } catch (error: any) {
             console.log("error", error)
+            setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")
         }
     }
@@ -35,7 +40,9 @@ const DeleteGroupInspector = () => {
 
 
     return (
-        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+        <>
+           {isLoading && <Loading />}
+           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
             <Typography variant="body1">
                 Are you sure you want to delete this inspector?
             </Typography>
@@ -51,6 +58,8 @@ const DeleteGroupInspector = () => {
                 {errorMessage}
             </Alert>}
         </Box>
+           </>
+     
     )
 }
 

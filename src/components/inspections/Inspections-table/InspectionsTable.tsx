@@ -11,7 +11,7 @@ import { Button, Tooltip, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
-import { setInitialValues, setSelectedInspector } from '@/redux/features/InspectionsSlice';
+import { setInitialValues, setSaveReportStatus, setSelectedInspector } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 
 import Modal from '@/components/common/modal/Modal';
@@ -20,6 +20,7 @@ import InspectionNotes from '../inspection-notes/InspectionNotes';
 import CustomTable from '@/components/common/table/Table';
 import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
 import { insertOrUpdateReport } from '@/actions/api';
+import Loading from '@/app/loading';
 
 interface InspectionsTableProps {
   data: TableRowData[];
@@ -44,7 +45,8 @@ interface TableRowData {
 const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
-  const { devices, selectedInspector } = useAppSelector(state => state.Inspections)
+  const { devices, selectedInspector,saveReportStatus } = useAppSelector(state => state.Inspections)
+
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState({
@@ -95,8 +97,6 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
   };
 
   const handleSave = async () => {
-
-
     const obj = {
       inspectorENumber: selectedInspector?.inspectorEmployeenumber,
       reportId: selectedInspector.reportId,
@@ -120,6 +120,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       return
     }
     try {
+      dispatch(setSaveReportStatus(true))
       const res = await insertOrUpdateReport(payload)
       setStatus({
         ...status,
@@ -127,6 +128,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         message: `${res.message}!`,
         severity: "success"
       });
+      dispatch(setSaveReportStatus(false))
       setTimeout(() => {
         dispatch(setModalInspectOpen(false));
         setStatus({
@@ -136,6 +138,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         })
       }, 3000)
     } catch (error: any) {
+      dispatch(setSaveReportStatus(false))
       setStatus({
         ...status,
         open: true,
@@ -215,7 +218,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     >
       Inspections status notes
     </Typography>
-
+ 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />
     {isInspect ?
       <form >
@@ -228,6 +231,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           showCloseIcon={true}
           handleClose={handleClose}
           contentComponent={Inspector}
+          
           handleCancel={handleClose}
           handleSubscribe={handleSave}
           buttonType="submit"

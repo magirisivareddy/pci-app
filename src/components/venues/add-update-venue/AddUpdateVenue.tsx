@@ -1,4 +1,5 @@
 import { addUpdateVenue } from '@/actions/api'
+import Loading from '@/app/loading'
 import TextInput from '@/components/common/input/Input'
 import { getVenues, setAddOrEditVenueModal } from '@/redux/features/VenuesSlice'
 import { useAppDispatch } from '@/redux/hooks'
@@ -9,6 +10,7 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
     const dispatch = useAppDispatch()
     const [venue_name, setVenueName] = useState(selectedRow?.venue_name ?? "")
     const [message, setMessage] = useState("")
+    const [isloading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const onChange = (value: any) => {
         setVenueName(value)
@@ -20,8 +22,10 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
             employeeNumber: "789"
         }
         try {
+            setLoading(true)
             const res = await addUpdateVenue(obj)
             setMessage(res.message)
+            setLoading(false)
             setTimeout(() => {
                 setMessage("")
                 dispatch(setAddOrEditVenueModal(false))
@@ -37,12 +41,14 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
                 dispatch(getVenues(obj))
             }, 3000)
         } catch (error: any) {
+            setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")
         }
-     
+
     }
     return (
         <Grid container spacing={2} mb={2} pr={2}>
+            {isloading && <Loading/>}
             <Grid item xs={12} md={9}>
                 <TextInput label={"Venue Name"} onChange={onChange} defaultValue={venue_name} name={"venue_name"} id={"venue_name"} />
             </Grid>

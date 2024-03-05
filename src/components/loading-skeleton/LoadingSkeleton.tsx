@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
   },
   container: {
-    width: '100%',
-    height: '100vh',
+    // width: '100%',
+    // height: '100vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

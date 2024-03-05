@@ -3,21 +3,26 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Alert, Box, Button, Typography } from '@mui/material';
 import { deleteVenue } from '@/actions/api';
 import { getVenues, setDeletVenueModal } from '@/redux/features/VenuesSlice';
+import Loading from '@/app/loading';
 
 const VenuesDeleteModal = () => {
     const dispatch =useAppDispatch()
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [isloading, setLoading] = useState(false)
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
-    const isDevices = selectedVenueRow.totalDevices === 0;
-    console.log("selectedVenueRow", selectedVenueRow.venue_id)
+    const isDevices = selectedVenueRow.totalDevices !== 0;
+    console.log("selectedVenueRow", selectedVenueRow)
     const employeeNumber = "0004236";
     const venue_id =selectedVenueRow.venue_id.toString()
+
     const onDeleteVenue = async () => {
 
         try {
+            setLoading(true)
             const res = await deleteVenue(employeeNumber, venue_id)
             setMessage(res.message)
+            setLoading(false)
             setTimeout(() => {
                 dispatch(setDeletVenueModal(false))
                 setMessage("")
@@ -34,9 +39,12 @@ const VenuesDeleteModal = () => {
             }, 3000)
 
         } catch (error: any) {
-
+            setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")
         }
+    }
+    const onClose=()=>{
+        dispatch(setDeletVenueModal(false)) 
     }
     const renderContent = () => {
         if (isDevices) {
@@ -48,12 +56,12 @@ const VenuesDeleteModal = () => {
 
     const renderButtons = () => {
         if (isDevices) {
-            return <Button variant="outlined">Okay</Button>;
+            return <Button variant="outlined" onClick={onClose}>Okay</Button>;
         } else {
             return (
                 <>
                     <Button variant="outlined" onClick={onDeleteVenue}>Yes</Button>
-                    <Button variant="outlined">No</Button>
+                    <Button variant="outlined" onClick={onClose}>No</Button>
                 </>
             );
         }
@@ -61,6 +69,7 @@ const VenuesDeleteModal = () => {
 
     return (
         <div>
+            {isloading && <Loading/>}
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                 {renderContent()}
 

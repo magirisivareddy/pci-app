@@ -18,7 +18,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   inspectorsDropdown,
 }) => {
   const dispatch = useAppDispatch()
-  const { inspectionForm,selectedDateRange } = useAppSelector(state => state.Inspections.inspectionFilterData)
+  const { inspectionForm,selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));

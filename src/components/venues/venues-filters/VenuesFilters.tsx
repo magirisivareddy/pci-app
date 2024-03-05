@@ -11,7 +11,8 @@ import SelectInput from '@/components/common/input/SelectInput';
 const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-
+    const updatedVenueDropdown = [...dropdowns.venueDropdown, { label: "All", value: "All" }];
+    const updatedInspectorsDropdown = [...dropdowns.inspectorsDropdown, { label: "All", value: "All" }];
 
     return (<>
 
@@ -21,7 +22,7 @@ const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => 
                     selectedOption={formData.venueId}
                     onChange={onChange}
                     label={'Venue'}
-                    options={dropdowns.venueDropdown}
+                    options={updatedVenueDropdown}
                     name={'venueId'}
                     id={'venueId'} size={'small'} />
             </Grid>
@@ -30,7 +31,7 @@ const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => 
                     selectedOption={formData.inspectorEmployeeNumber}
                     onChange={onChange}
                     label={'Inspector'}
-                    options={dropdowns.inspectorsDropdown}
+                    options={updatedInspectorsDropdown}
                     name={'inspectorEmployeeNumber'}
                     id={'inspectorEmployeeNumber'} size={'small'} />
             </Grid>

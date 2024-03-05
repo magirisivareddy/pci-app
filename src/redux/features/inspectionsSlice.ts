@@ -19,6 +19,7 @@ interface InspectorFormState {
     selectedDateRange: any
   }
   devices: Row[];
+  saveReportStatus: boolean
   selectedInspector: any;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   inspectionsList: any; // Change 'any' to the actual type of your data
@@ -40,6 +41,7 @@ const initialState: InspectorFormState = {
     selectedDateRange: getDefaultWeekRange()
   },
   devices: [],
+  saveReportStatus: false,
   selectedInspector: {},
   status: 'idle',
   inspectionsList: [], // Change 'any' to the actual type of your data
@@ -64,6 +66,9 @@ export const InspectionsSlice = createSlice({
     },
     setSelectedDateRange: (state, action) => {
       state.inspectionFilterData.selectedDateRange = action.payload;
+    },
+    setSaveReportStatus: (state, action) => {
+      state.saveReportStatus = action.payload;
     },
     updateInspectorData: (state, action: PayloadAction<{ name: string; value: string | null }>) => {
       state.inspectorData[action.payload.name] = action.payload.value;
@@ -104,21 +109,21 @@ export const InspectionsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-        .addCase(getInspections.pending, (state) => {
-            state.status = 'loading';
-        })
-        .addCase(getInspections.fulfilled, (state, action) => {
-            state.status = 'succeeded';
-            state.inspectionsList = action.payload;
-        })
-        .addCase(getInspections.rejected, (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message || 'An error occurred';
-        });
-},
+      .addCase(getInspections.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getInspections.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.inspectionsList = action.payload;
+      })
+      .addCase(getInspections.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'An error occurred';
+      });
+  },
 });
 
-export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange } = InspectionsSlice.actions;
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus } = InspectionsSlice.actions;
 
 export const selectInspections = (state: RootState) => state.Inspections;
 
