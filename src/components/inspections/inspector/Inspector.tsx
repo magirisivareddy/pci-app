@@ -27,9 +27,10 @@ const Inspector = () => {
     }
     const handleModalClose = () => {
         setModal(false)
+        dispatch(setInitialValues([]));
 
     }
- 
+
     const handleModalOpen = () => {
         setModal(true)
     }
@@ -37,11 +38,19 @@ const Inspector = () => {
         try {
             setLoading(true);
             dispatch(setInitialValues([]));
-            const viewReport = await fetchviewReport(selectedInspector);
-            const initialFormData = viewReport.map((report: { deviceId: string; }) => ({
-                id: report.deviceId,
+            const payload ={
+                reportId: selectedInspector.reportId.toString(),
+                venueId: selectedInspector.venue_id
+          
+              }
+            const viewReport = await fetchviewReport(payload);
+            const initialFormData = viewReport.map((report: {
+                inspectedId: any; deviceId: string;
+            }) => ({
+                deviceId: report.deviceId,
                 status: null,
-                notes: null
+                notes: null,
+                inspectedId: report.inspectedId,
             }));
             dispatch(setInitialValues(initialFormData));
             setViewReport(viewReport);

@@ -26,8 +26,16 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
     dispatch(setInspectionFilterFormData({ name: name, value: value }))
   }
   const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
-    dispatch(setSelectedDateRange(dateRange))
-};
+    const serializedDateRange = dateRange.map(date => (date ? date.toISOString() : null));
+  
+    // Check if the date range has changed before updating the state
+    if (JSON.stringify(serializedDateRange) !== JSON.stringify(dateRange)) {
+      dispatch(setSelectedDateRange(serializedDateRange));
+
+    }
+  };
+  const updatedVenueDropdown = [...venueDropdown, { label: "All", value: "All" }];
+  const updatedInspectorsDropdown = [...inspectorsDropdown, { label: "All", value: "All" }];
   return (<>
     <Grid container spacing={2} mb={2} pr={1}>
       <Grid item xs={12} md={4} >
@@ -41,7 +49,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           selectedOption={inspectionForm.venue}
           onChange={onChange}
           label={'Venue'}
-          options={venueDropdown}
+          options={updatedVenueDropdown}
           name={'venue'}
           id={'venue'}
           size={'small'}
@@ -52,7 +60,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           selectedOption={inspectionForm.inspector}
           onChange={onChange}
           label={'Inspector'}
-          options={inspectorsDropdown}
+          options={updatedInspectorsDropdown}
           name={'inspector'}
           id={'inspector'}
           size={'small'} />

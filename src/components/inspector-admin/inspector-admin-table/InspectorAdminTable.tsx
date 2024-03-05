@@ -42,7 +42,7 @@ const InspectorAdminTable = () => {
         <>
             <CustomTable data={adminData} headers={headers} isloading={status==="loading"} />
             <Modal
-                title={`Delete Admiin`}
+                title={`Delete Admin`}
                 open={isinspectorAdminDeleteModal}
                 scroll={"body"}
                 handleClose={handleClose}

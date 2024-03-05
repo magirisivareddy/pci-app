@@ -11,7 +11,7 @@ import { Button, Tooltip, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
-import { setSelectedInspector } from '@/redux/features/InspectionsSlice';
+import { setInitialValues, setSelectedInspector } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 
 import Modal from '@/components/common/modal/Modal';
@@ -19,6 +19,7 @@ import Inspector from '../inspector/Inspector';
 import InspectionNotes from '../inspection-notes/InspectionNotes';
 import CustomTable from '@/components/common/table/Table';
 import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
+import { insertOrUpdateReport } from '@/actions/api';
 
 interface InspectionsTableProps {
   data: TableRowData[];
@@ -43,7 +44,7 @@ interface TableRowData {
 const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
-  const { devices } = useAppSelector(state => state.Inspections)
+  const { devices, selectedInspector } = useAppSelector(state => state.Inspections)
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState({
@@ -81,6 +82,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
   };
   const handleClose = () => {
     dispatch(setModalInspectOpen(false));
+    dispatch(setInitialValues([]));
     setStatus({
       open: false,
       message: "",
@@ -88,16 +90,25 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     })
   };
   const handleInspectClick = (row: any) => {
-    dispatch(setSelectedInspector({
-      reportId: row.reportId.toString(),
-      venueId: row.venue_id
-
-    }))
+    dispatch(setSelectedInspector(row))
     dispatch(setModalInspectOpen(true));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+
+
+    const obj = {
+      inspectorENumber: selectedInspector?.inspectorEmployeenumber,
+      reportId: selectedInspector.reportId,
+      venueId: selectedInspector.venue_id,
+      venueName: selectedInspector.venue_name,
+    }
+    const payload = {
+      ...obj, devices
+    }
+
     const deviceWithEmptyStatusOrNotes = devices.find(device => !device.status || !device.notes);
+
     if (deviceWithEmptyStatusOrNotes) {
       setOpen(true)
       setStatus({
@@ -108,12 +119,31 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       });
       return
     }
-    setStatus({
-      ...status,
-      open: true,
-      message: "Data submitted successfully!",
-      severity: "success"
-    });
+    try {
+      const res = await insertOrUpdateReport(payload)
+      setStatus({
+        ...status,
+        open: true,
+        message: `${res.message}!`,
+        severity: "success"
+      });
+      setTimeout(() => {
+        dispatch(setModalInspectOpen(false));
+        setStatus({
+          open: false,
+          message: "",
+          severity: ''
+        })
+      }, 3000)
+    } catch (error: any) {
+      setStatus({
+        ...status,
+        open: true,
+        message: `${error.message}!`,
+        severity: "error"
+      });
+    }
+
 
   }
 
@@ -148,9 +178,18 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     },
     { id: 'venue_name', label: 'Venue' },
     {
-      id: 'inspectorEmployeenumber', label: 'Employee Number', customRender: (value: any, row: any): JSX.Element => (
-        row.inspectorEmployeeNumber ? <span>{row.inspectorEmployeeNumber}</span> : <span style={{ color: "#9c4040" }}>No main inspector assigned</span>
-      )
+      id: 'inspector Employee',
+      label: 'Inspector Employee',
+      customRender: (value: any, row: any): JSX.Element => {
+        const name = `${row.inpsectorLastName} ${row.inpsectorFirstName}`;
+        return (
+          name.trim() !== '' ? (
+            <span>{name} {row.inspectorEmployeenumber}</span>
+          ) : (
+            <span style={{ color: "#9c4040" }}>No main inspector assigned</span>
+          )
+        );
+      }
     },
     { id: 'totalDevices', label: 'Total Devices' },
     { id: 'questionable', label: 'Total Questionable Devices' },
@@ -205,7 +244,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       handleClose={handleModalClose}
       contentComponent={(props) => <HelpdeskTicketForm handleModalClose={handleModalClose} />}
       fullWidth={true}
-    
+
 
       maxWidth={"md"}
     />

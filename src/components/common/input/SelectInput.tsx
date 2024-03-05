@@ -68,7 +68,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selecte
                         },
                     }}
                 >
-                    <MenuItem value="All">All</MenuItem>
+               
                     {options.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                             {option.label}

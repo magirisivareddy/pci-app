@@ -4,6 +4,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 
 import "./InspectorCell.css"
+import { useAppDispatch } from '@/redux/hooks';
+import { setDeletInspectionModal, setSelectedVenueInspector } from '@/redux/features/VenuesSlice';
 
 interface Inspector {
     inspectorId?: number;
@@ -13,13 +15,19 @@ interface Inspector {
 interface InspectorCellProps {
     inspectorDetails: any;
     onAdd: () => void;
-    onDelete: (inspectorId: any) => void;
+    // onDelete: (inspector: any) => void;
 }
 
-const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd, onDelete }) => {
-console.log("inspectorDetails",inspectorDetails)
+const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }) => {
+    const dispatch= useAppDispatch()
     const hasMainInspector = inspectorDetails.some((inspector: any) => inspector.inspector !== "");
+    const onDelete = (inspector: any) => {
+        dispatch(setDeletInspectionModal(true))
+        dispatch(setSelectedVenueInspector(inspector))
 
+
+        console.log("inspector",inspector)
+    }
     return (
         <div className="inspector-cell-container">
             <div className="scroll-container">
@@ -28,7 +36,7 @@ console.log("inspectorDetails",inspectorDetails)
                         <Box key={inspector.inspectorId} sx={{ display: "flex", gap: "5px", textWrap: "nowrap" }}>
                             {inspector.inspector ? (
                                 <Box sx={{ display: "flex", gap: "5px" }}>
-                                    <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() => inspector.id ? onDelete(inspector.id) : undefined} color='warning' />
+                                    <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() =>  onDelete(inspector)} color='warning' />
                                     <Avatar
                                         sx={{
                                             width: 20,

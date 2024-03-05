@@ -6,7 +6,7 @@ import React from 'react'
 const StatusCell = ({ row }: any) => {
     const dispatch = useAppDispatch(); // Use the useAppDispatch hook here
     const handleStatusChange = (event: any) => {
-        dispatch(updateRow({ id: row.deviceId, status: event.target.value }));
+        dispatch(updateRow({ deviceId: row.deviceId, status: event.target.value }));
     }
     return (
         <FormControl>

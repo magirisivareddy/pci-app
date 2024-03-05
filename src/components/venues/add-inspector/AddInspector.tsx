@@ -32,7 +32,6 @@ const AddInspector = ({ selectedRow }: any) => {
 
     const handleTableRowClick = async (row: any) => {
         console.log("row", row)
-
         const payload = {
             employeeNumber: row.employeeNumber.toString(),
             venueId: selectedVenueRow.venue_id.toString(),
@@ -48,7 +47,7 @@ const AddInspector = ({ selectedRow }: any) => {
             setTimeout(() => {
                 setSuccessMessage("")
                 const obj = {
-                    "employeeNumber": "789",
+                    "employeeNumber": "0004236",
                     "is_it": "1",
                     "adminLevel": "1",
                     "inspectorType": "1",
@@ -160,14 +159,14 @@ const AddInspector = ({ selectedRow }: any) => {
                         ))}
                     </TableBody>
                 </Table>
-                {successMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
+            </Grid>
+            {successMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
                     {successMessage}
                 </Alert>}
 
                 {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
                     {errorMessage}
                 </Alert>}
-            </Grid>
         </div>
     )
 }

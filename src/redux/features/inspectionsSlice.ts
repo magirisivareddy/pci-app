@@ -1,9 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { getDefaultWeekRange } from '@/utils/helpers';
+import { fetchInspections } from '@/actions/api';
 
 interface Row {
-  id: string;
+  deviceId: string;
   status?: string;
   notes?: string;
   reason?: string
@@ -18,7 +19,10 @@ interface InspectorFormState {
     selectedDateRange: any
   }
   devices: Row[];
-  selectedInspector: any
+  selectedInspector: any;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  inspectionsList: any; // Change 'any' to the actual type of your data
+  error: string | null;
 }
 
 const initialState: InspectorFormState = {
@@ -36,9 +40,20 @@ const initialState: InspectorFormState = {
     selectedDateRange: getDefaultWeekRange()
   },
   devices: [],
-  selectedInspector: {}
+  selectedInspector: {},
+  status: 'idle',
+  inspectionsList: [], // Change 'any' to the actual type of your data
+  error: null
 };
-
+export const getInspections = createAsyncThunk('inspections/getInspections', async (obj: any) => {
+  try {
+    const response = await fetchInspections(obj);
+    return response;
+  } catch (error) {
+    console.error('Error in getInspections:', error);
+    throw error;
+  }
+});
 export const InspectionsSlice = createSlice({
   name: 'Inspections',
   initialState,
@@ -54,8 +69,8 @@ export const InspectionsSlice = createSlice({
       state.inspectorData[action.payload.name] = action.payload.value;
     },
     updateRow: (state, action: PayloadAction<Partial<Row>>) => {
-      const { id, status, notes, reason } = action.payload;
-      const deviceIndex = state.devices.findIndex(device => device.id === id);
+      const { deviceId, status, notes, reason } = action.payload;
+      const deviceIndex = state.devices.findIndex(device => device.deviceId === deviceId);
       if (deviceIndex !== -1) {
         if (status !== undefined) {
           state.devices[deviceIndex].status = status;
@@ -83,11 +98,24 @@ export const InspectionsSlice = createSlice({
         });
       }
     },
-
     setSelectedInspector: (state, action: PayloadAction<{ reportId: string; venueId: string | null }>) => {
       state.selectedInspector = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder
+        .addCase(getInspections.pending, (state) => {
+            state.status = 'loading';
+        })
+        .addCase(getInspections.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.inspectionsList = action.payload;
+        })
+        .addCase(getInspections.rejected, (state, action) => {
+            state.status = 'failed';
+            state.error = action.error.message || 'An error occurred';
+        });
+},
 });
 
 export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange } = InspectionsSlice.actions;

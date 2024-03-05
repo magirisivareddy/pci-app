@@ -7,13 +7,14 @@ import VenuesFilters from "./venues-filters/VenuesFilters";
 import Modal from "../common/modal/Modal";
 import AddInspector from "./add-inspector/AddInspector";
 import { Box, Button, Grid, Paper, Popover, Typography } from "@mui/material";
-import TextInput from "../common/input/Input";
 import VenuesNotes from "./notes/VenuesNotes";
 import CustomTable from "../common/table/Table";
 import { searchVenues } from "@/actions/api";
 import AddUpdateVenue from "./add-update-venue/AddUpdateVenue";
-import { getVenues, selectedVenueRow } from "@/redux/features/VenuesSlice";
+import { getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspectionModal, setDeletVenueModal, setShowInspector } from "@/redux/features/VenuesSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import InspectionDeleteModal from "./inspection-delete-modal/InspectionDeleteModal";
+import VenuesDeleteModal from "./venues-delete-modal/VenuesDeleteModal";
 
 type Dropdowns = {
     venueDropdown: any; // replace with the actual type
@@ -34,28 +35,12 @@ interface FormData {
     venueId: string;
     inspectorEmployeeNumber: string;
 }
-const mockData = [
-    { id: 1, venue: 'Venue A', inspector: [{ id: 1, name: "Inspector 1", type: "MI" }, { id: 2, name: "Inspector 2", type: "BI" }, { id: 3, name: "Inspector 3" }, { id: 4, name: "Inspector 4" }, { id: 5, name: "Inspector 5" }], totalDevices: 10 },
-    { id: 2, venue: 'Venue B', inspector: [{ id: 1, name: "Inspector 3", type: "GI" }], totalDevices: 5 },
-    { id: 3, venue: 'Venue C', inspector: [{ id: 1, name: "Inspector 4", type: "BI" }, { id: 2, name: "Inspector 5" },], totalDevices: 8 },
-    { id: 4, venue: 'Venue D', inspector: [{ id: 1, name: "Inspector 6", type: "MI" }, { id: 2, name: "Inspector 7" },], totalDevices: 12 },
-    { id: 5, venue: 'Venue E', inspector: [], totalDevices: 15 },
-];
-
 const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const dispatch = useAppDispatch()
-
-    const { venuesData, status } = useAppSelector(state => state.Venues)
-    const [showInspector, setShowInspector] = useState(false)
-    const [isAddOrEditVenueModal, setAddOrEditVenueModal] = useState(false)
-    const [isDeletVenueModal, setDeletVenueModal] = useState(false)
-    const [isDeletInspectionModal, setDeletInspectionModal] = useState(false)
+    const { venuesData, status, venueInfo } = useAppSelector(state => state.Venues)
+    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal } = venueInfo
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState<any>(null)
-
-    const [isLoading, setLoading] = useState(false)
-
-
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -74,7 +59,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     }
     const handelSubmit = () => {
         const obj: any = {
-            ...formData, employeeNumber: "789", is_it: "1", adminLevel: "1", inspectorType: "1"
+            ...formData, employeeNumber: "0004236", is_it: "1", adminLevel: "1", inspectorType: "1"
         }
         Object.keys(obj).forEach(key => {
             obj[key] = String(obj[key]);
@@ -83,7 +68,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     }
     useEffect(() => {
         const obj = {
-            "employeeNumber": "789",
+            "employeeNumber": "0004236",
             "is_it": "1",
             "adminLevel": "1",
             "inspectorType": "1",
@@ -100,58 +85,44 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const onEditVenue = (row: any) => {
         setSelectedRow(row)
         setModalTyep("Edit")
-        setAddOrEditVenueModal(true)
+        dispatch(setAddOrEditVenueModal(true))
     }
     const onAddVenue = () => {
         setSelectedRow(null)
         setModalTyep("Add")
-        setAddOrEditVenueModal(true)
+        dispatch(setAddOrEditVenueModal(true))
     }
-    const onDeleteVenue = () => {
-        setDeletVenueModal(true)
+    const onDeleteVenue = (row: any) => {
+        dispatch(selectedVenueRow(row))
+        dispatch(setDeletVenueModal(true))
     }
     const handleCloseAddorEdit = () => {
         setModalTyep("")
-        setAddOrEditVenueModal(false)
+        dispatch(setAddOrEditVenueModal(false))
     }
     const handleCloseDelete = () => {
-        setDeletVenueModal(false)
+        dispatch(setDeletVenueModal(false))
     }
     const handleCloseDeleteInspection = () => {
-        setDeletInspectionModal(false)
+        dispatch(setDeletInspectionModal(false))
     }
     const handleAddInspector = (row: any) => {
         dispatch(selectedVenueRow(row))
-        setShowInspector(true)
+        dispatch(setShowInspector(true))
     };
     const handleCloseInspector = () => {
-        setShowInspector(false)
+        dispatch(setShowInspector(false))
 
     };
-    const VenuesDeleteModal = () => {
-        return (
-            <Typography variant="body1">A venue can not be deleted until you have removed/transferred all its associated devices from it.</Typography>
-        )
-    }
-
-    const InspectionDeleteModal = () => {
-        return (
-            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-                <Typography variant="body1">
-                    Are you sure you want to delete this inspector?
-                </Typography>
-                <Box display="flex" gap={2} mt={2} justifyContent="center">
-                    <Button variant="outlined">Yes</Button>
-                    <Button variant="outlined">No</Button>
-                </Box>
-            </Box>
-        )
-    }
-
-    const handleDeleteInspector = (row: any) => {
+    const handleDeleteInspector = (row: any,inspector:any) => {
         console.log("row", row)
-        setDeletInspectionModal(true)
+        console.log("inspector",inspector)
+        dispatch(setDeletInspectionModal(true))
     };
+
+
+
+ 
     const myHeaders: any = [
         { id: 'venue_name', label: 'Venue' },
         {
@@ -161,7 +132,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 <InspectorCell
                     inspectorDetails={row.inspectorDetails}
                     onAdd={() => handleAddInspector(row)}
-                    onDelete={(inspectorId) => handleDeleteInspector(row)}
+                 
                 />
             )
         },
@@ -177,11 +148,11 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
             id: 'delete',
             label: 'Delete',
             customRender: (data: any, row: TableRowData): ReactNode => (
-                <DeleteCell onDelete={() => onDeleteVenue()} />
+                <DeleteCell onDelete={() => onDeleteVenue(row)} />
             )
         },
     ];
-
+    console.log("isDeletInspectionModal", isDeletInspectionModal)
     return (
         <>
             {/* <CustomBreadcrumbs /> */}
@@ -224,8 +195,8 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 contentComponent={VenuesDeleteModal}
                 maxWidth='sm'
                 fullWidth={true}
-                buttonText="Okay"
-                handleSubscribe={() => { console.log("cal") }}
+            // buttonText="Okay"
+            // handleSubscribe={() => { console.log("cal") }}
             />
             <Modal
                 title={`Delete Inspection`}

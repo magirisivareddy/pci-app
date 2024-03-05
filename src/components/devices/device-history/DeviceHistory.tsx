@@ -38,7 +38,6 @@ const DeviceHistory = () => {
           setLoading(true);
           const deviceHistory = await getDeviceHistory(deviceFormData?.deviceId);
          setDeviceHistory(deviceHistory)
-        console.log("deviceHistory",deviceHistory)
         setLoading(false);
         } finally {
           setLoading(false);

@@ -18,8 +18,9 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
     console.log("venueId", venueId)
 
     const addVenue = async () => {
+        console.log("selectedGroupInspector",selectedGroupInspector.employeeNumber)
         const obj = {
-            employeeNumber: "789",
+            employeeNumber: selectedGroupInspector.employeeNumber.toString(),
             venueId: venueId.toString(),
             inspectorType: "1"
         }

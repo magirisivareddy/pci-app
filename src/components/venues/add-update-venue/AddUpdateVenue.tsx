@@ -1,6 +1,6 @@
 import { addUpdateVenue } from '@/actions/api'
 import TextInput from '@/components/common/input/Input'
-import { getVenues } from '@/redux/features/VenuesSlice'
+import { getVenues, setAddOrEditVenueModal } from '@/redux/features/VenuesSlice'
 import { useAppDispatch } from '@/redux/hooks'
 import { Alert, Button, Grid } from '@mui/material'
 import React, { useState } from 'react'
@@ -24,8 +24,9 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
             setMessage(res.message)
             setTimeout(() => {
                 setMessage("")
+                dispatch(setAddOrEditVenueModal(false))
                 const obj = {
-                    "employeeNumber": "789",
+                    "employeeNumber": "0004236",
                     "is_it": "1",
                     "adminLevel": "1",
                     "inspectorType": "1",

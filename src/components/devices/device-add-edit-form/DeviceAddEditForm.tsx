@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { addUpdateDevice } from '@/actions/api';
-import { getDevices } from '@/redux/features/DevicesSlice';
+import { getDevices, setDeviceInfo } from '@/redux/features/DevicesSlice';
 
 interface FormData {
     commonAssetName: string;
@@ -119,6 +119,10 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
             setMessage(res.message)
             setTimeout(() => {
                 setMessage("")
+                dispatch(setDeviceInfo({
+                    isDeviceModal: false,
+                    deviceModalType: ""
+                  }))
                 const obj = {
                     "is_It": "1",
                     "venueId": "All",

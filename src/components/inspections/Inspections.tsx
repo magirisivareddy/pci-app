@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import InspectionsFilters from './inspections-filters/InspectionsFilters'
 import InspectionsTable from './Inspections-table/InspectionsTable'
 import { fetchInspections } from '@/actions/api';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { getInspections } from '@/redux/features/InspectionsSlice';
 
 
 
@@ -13,11 +14,10 @@ interface InspectionsProps {
 }
 
 const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDropdown }) => {
+    const dispatch = useAppDispatch()
     const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections.inspectionFilterData)
-    const [isLoading, setLoading] = useState(true)
-    const [inspections, setInspectionsData] = useState([])
-    const fetchDataAndSetDate = async () => {
-
+    const { inspectionsList, status } = useAppSelector(state => state.Inspections)
+    useEffect(() => {
         const obj = {
             //  FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
             //  ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
@@ -27,20 +27,11 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
             ReportStatus: inspectionForm.reportStatus,
             VenueId: inspectionForm.venue,
             Is_it: "1",
-            EmployeeNumber: "789",
+            EmployeeNumber: "0004236",
             AdminLevel: "1"
         }
-        try {
-            setLoading(true);
-            const inspections = await fetchInspections(obj);
-            setInspectionsData(inspections);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchDataAndSetDate();
+        dispatch(getInspections(obj))
+     
     }, []);
 
 
@@ -55,19 +46,11 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
             ReportStatus: inspectionForm.reportStatus,
             VenueId: inspectionForm.venue.toString(),
             Is_it: "1",
-            EmployeeNumber: "789",
+            EmployeeNumber: "0004236",
             AdminLevel: "1"
         }
-
-        try {
-            setLoading(true);
-            const inspections = await fetchInspections(obj);
-            setInspectionsData(inspections);
-        } catch (error) {
-            setLoading(false);
-        } finally {
-            setLoading(false);
-        }
+        dispatch(getInspections(obj))
+      
 
     }
     return (
@@ -77,7 +60,7 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
                 inspectorsDropdown={inspectorsDropdown}
                 handelSubmit={handelSubmit}
             />
-            <InspectionsTable data={inspections} isLoading={isLoading} />
+            <InspectionsTable data={inspectionsList} isLoading={status === "loading"} />
         </>
     )
 }

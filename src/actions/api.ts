@@ -62,24 +62,14 @@ async function fetchData(apiEndpoint: string, method = 'GET', payload = null) {
 
 
 
-//Inspections page apis
-export async function fetchInspections(payload: any) {
-    return fetchData('inspections', 'POST', payload);
-}
-export async function fetchviewReport(payload: any) {
-    // payload={
-    //     "reportId": "0",
-    //     "venueId": "74"
-    //   }
-    return fetchData('viewReport', 'POST', payload);
-}
+
 
 
 
 export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE", payload: any) => {
     const url = `${process.env.PCI_API_URL}${endpoint}`
     const options = {
-        method,  
+        method,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -88,7 +78,7 @@ export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "PO
 
     try {
         const res = await fetch(url, options);
-        
+
         if (!res.ok) {
             throw new Error(`Error fetching data from ${endpoint}`);
         }
@@ -102,6 +92,16 @@ export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "PO
 }
 
 
+//Inspections page apis
+export async function fetchInspections(payload: any) {
+    return fetchData('inspections', 'POST', payload);
+}
+export async function fetchviewReport(payload: any) {
+    return fetchData('viewReport', 'POST', payload);
+}
+export async function insertOrUpdateReport(payload: any) {
+    return fetchData('InsertOrUpdateReport', 'POST', payload);
+}
 
 
 
@@ -155,12 +155,21 @@ export async function deleteGroupInspector(inspectorId: any) {
 export async function deleteAdmin(adminId: any) {
     return fetchQueryparamsData(`Admin/DeleteAdmin?adminId=${adminId}`, "DELETE", null);
 }
-export async function doLookup(firstName: any,lastName:any) {
+export async function doLookup(firstName: any, lastName: any) {
     return fetchQueryparamsData(`Common/DoLookup?firstName=${firstName}&lastName=${lastName}`, "GET", null);
 }
-export async function groupInspectorRemoveVenue(employeeNumber: any,venueId:any) {
+export async function groupInspectorRemoveVenue(employeeNumber: any, venueId: any) {
     return fetchQueryparamsData(`Inspector/GroupInspectorRemoveVenue?employeeNumber=${employeeNumber}&venueId=${venueId}`, "DELETE", null);
 }
+export async function deleteVenue(employeeNumber: any, venueId: any) {
+    return fetchQueryparamsData(`venue/DeleteVenue?venueId=${venueId}&employeeNumber=${employeeNumber}`, "DELETE", null);
+}
+export async function deleteVenueInspector(inspectorId: any) {
+    return fetchQueryparamsData(`Inspector/DeleteVenueInspector?inspectorId=${inspectorId}`, "DELETE", null);
+}
+
+
+
 
 
 
@@ -183,9 +192,7 @@ export async function receiveNoticesGroupInspector(payload: any) {
     return fetchData('Common/ReceiveNoticesGroupInspector', 'POST', payload);
 }
 
-export async function insertOrUpdateReport(payload: any) {
-    return fetchData('Common/InsertOrUpdateReport', 'POST', payload);
-}
+
 
 
 
@@ -221,17 +228,12 @@ export async function getVenueInspectors(venueId: any, employeeNumber: any) {
 export async function deleteDevice(firstName: any, lastName: any) {
     return fetchData(`Device/DeleteDevice?firstName=${firstName}&lastName=${lastName}`, 'DELETE');
 }
-export async function deleteVenueInspector(inspectorId: any) {
-    return fetchData(`Device/DeleteVenueInspector?inspectorId=${inspectorId}`, 'DELETE');
-}
+
 
 
 // export async function deleteGroupInspector(inspectorId: any) {
 //     return fetchData(`Device/DeleteGroupInspector?inspectorId=${inspectorId}`, 'DELETE');
 // }
-export async function deleteVenue(venueId: any, employeeNumber: any) {
-    return fetchData(`Device/DeleteVenue?venueId=${venueId}&employeeNumber=${employeeNumber}`, 'DELETE');
-}
 
 
 

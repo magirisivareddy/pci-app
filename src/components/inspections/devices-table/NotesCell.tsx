@@ -10,9 +10,9 @@ const NotesCell = ({ row }: any) => {
     const theme = createTheme(); // Use createTheme to get access to breakpoints
     const xs = theme.breakpoints.down('xs');
     const { devices } = useAppSelector(state => state.Inspections)
-    const device = devices.find(device => device.id === row.deviceId);
+    const device = devices.find(device => device.deviceId === row.deviceId);
     const handleNotesChange = (event: any) => {
-        dispatch(updateRow({ id: row.deviceId, notes: event.target.value }));
+        dispatch(updateRow({ deviceId: row.deviceId, notes: event.target.value }));
     }
 
     return (

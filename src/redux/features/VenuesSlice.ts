@@ -7,6 +7,11 @@ import { searchDevices, searchVenues } from '@/actions/api';
 interface CounterState {
     venueInfo: {
         selectedVenueRow: any
+        isAddOrEditVenueModal:boolean
+        isDeletVenueModal:boolean
+        showInspector:boolean
+        isDeletInspectionModal:boolean
+        selectedVenueInspector:any
     },
 
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -17,7 +22,12 @@ interface CounterState {
 // Define the initial state using that type
 const initialState: CounterState = {
     venueInfo: {
-        selectedVenueRow: null
+        selectedVenueRow: null,
+        isAddOrEditVenueModal:false,
+        isDeletVenueModal:false,
+        showInspector:false,
+        isDeletInspectionModal:false,
+        selectedVenueInspector:null
     },
     status: 'idle',
     venuesData: [],
@@ -40,6 +50,21 @@ export const VenuesSlice = createSlice({
         selectedVenueRow: (state, action: PayloadAction<boolean>) => {
             state.venueInfo.selectedVenueRow = action.payload;
         },
+        setAddOrEditVenueModal: (state, action: PayloadAction<boolean>) => {
+            state.venueInfo.isAddOrEditVenueModal = action.payload;
+        },
+        setDeletVenueModal: (state, action: PayloadAction<boolean>) => {
+            state.venueInfo.isDeletVenueModal = action.payload;
+        },
+        setShowInspector: (state, action: PayloadAction<boolean>) => {
+            state.venueInfo.showInspector = action.payload;
+        },
+        setDeletInspectionModal: (state, action: PayloadAction<boolean>) => {
+            state.venueInfo.isDeletInspectionModal = action.payload;
+        },
+        setSelectedVenueInspector: (state, action: PayloadAction<boolean>) => {
+            state.venueInfo.selectedVenueInspector = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -57,7 +82,7 @@ export const VenuesSlice = createSlice({
     },
 })
 
-export const {selectedVenueRow } = VenuesSlice.actions
+export const {selectedVenueRow, setAddOrEditVenueModal,setDeletVenueModal,setShowInspector,setDeletInspectionModal,setSelectedVenueInspector } = VenuesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectVenues = (state: RootState) => state.Venues

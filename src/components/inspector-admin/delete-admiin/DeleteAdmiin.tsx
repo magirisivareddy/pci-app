@@ -14,6 +14,7 @@ export const DeleteAdmiin = () => {
             const res = await deleteAdmin(selectedAdminRow?.adminId)
             setMessage(res.message)
             setTimeout(() => {
+                dispatch(setinspectorAdminDeleteModal(false))
                 setMessage("")
             }, 3000)
             const obj =
@@ -26,7 +27,7 @@ export const DeleteAdmiin = () => {
             }
             dispatch(getAdminList(obj))
         } catch (error: any) {
-            console.log("error", error)
+     
             setErrorMessage(error.message ?? "something went wrong ")
         }
     }

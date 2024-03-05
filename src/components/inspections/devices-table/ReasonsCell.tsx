@@ -12,15 +12,15 @@ const ReasonsCell = ({ row }: any) => {
     const { devices } = useAppSelector(state => state.Inspections)
     const theme = createTheme(); // Use createTheme to get access to breakpoints
     const xs = theme.breakpoints.down('xs');
-    const device = devices.find(device => device.id === row.deviceId);
+    const device = devices.find(device => device.deviceId === row.deviceId);
     const handleChange = (event: any) => {
-        dispatch(updateRow({ id: row.deviceId, reason: event.target.value }));
+        dispatch(updateRow({ deviceId: row.deviceId, reason: event.target.value }));
     }
     useEffect(() => {
         if (device?.status === "pass") {
-            dispatch(updateRow({ id: row.deviceId, reason: "" }));
+            dispatch(updateRow({ deviceId: row.deviceId, reason: "" }));
         }else {
-            dispatch(updateRow({ id: row.deviceId, reason: "Not Applicable" }));
+            dispatch(updateRow({ deviceId: row.deviceId, reason: "Not Applicable" }));
         }
     }, [device])
 

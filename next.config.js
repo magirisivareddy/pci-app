@@ -73,6 +73,10 @@ const nextConfig = {
         source: "/api/AddVenueInspector",
         destination: `${process.env.NEXT_PUBLIC_PCI_API_URL}Inspector/AddVenueInspector`,
       },
+      {
+        source: "/api/InsertOrUpdateReport",
+        destination: `${process.env.NEXT_PUBLIC_PCI_API_URL}report/InsertOrUpdateReport`,
+      },
      
       
 
