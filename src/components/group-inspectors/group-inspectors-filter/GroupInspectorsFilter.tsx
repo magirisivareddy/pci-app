@@ -8,13 +8,13 @@ import Modal from '@/components/common/modal/Modal';
 import AddGroupInspector from '../add-group-inspector/AddGroupInspector';
 
 
-const GroupInspectorsFilter = ({ dropdowns,handelSubmit,onChange,formData }: any) => {
+const GroupInspectorsFilter = ({ dropdowns, handelSubmit, onChange, formData }: any) => {
     const dispatch = useAppDispatch()
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-  
+
     const { groupInspectorModal } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
-  
+
     const onAddGroupInspector = () => {
         dispatch(setGroupInspectorModal(true))
 
@@ -26,6 +26,8 @@ const GroupInspectorsFilter = ({ dropdowns,handelSubmit,onChange,formData }: any
         // Use the data as needed within the AddGroupInspector component
         return <AddGroupInspector venues={dropdowns.venueDropdown} />;
     };
+    const updatedVenueDropdown = [...dropdowns.venueDropdown, { label: "All", value: "All" }];
+    const updatedInspectorsDropdown = [...dropdowns.inspectorsDropdown, { label: "All", value: "All" }];
     return (<>
         <Box display="flex" justifyContent="flex-end" pr={2}>
             <Button onClick={onAddGroupInspector} size="small" variant="outlined">Add Group Inspector</Button>
@@ -36,16 +38,16 @@ const GroupInspectorsFilter = ({ dropdowns,handelSubmit,onChange,formData }: any
                     selectedOption={formData.venue}
                     onChange={onChange}
                     label={'Venue'}
-                    options={dropdowns.venueDropdown}
+                    options={updatedVenueDropdown}
                     name={'venue'}
-                    id={'venue'} size={'small'}                />
+                    id={'venue'} size={'small'} />
             </Grid>
             <Grid item xs={12} md={5.5}>
                 <SelectInput
                     selectedOption={formData.inspector}
                     onChange={onChange}
                     label={'Inspector'}
-                    options={dropdowns.inspectorsDropdown}
+                    options={updatedInspectorsDropdown}
                     name={'inspector'}
                     id={'inspector'} size={'small'} />
             </Grid>

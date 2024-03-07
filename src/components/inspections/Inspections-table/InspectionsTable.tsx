@@ -45,7 +45,7 @@ interface TableRowData {
 const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
-  const { devices, selectedInspector,saveReportStatus } = useAppSelector(state => state.Inspections)
+  const { devices, selectedInspector, saveReportStatus } = useAppSelector(state => state.Inspections)
 
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
@@ -218,7 +218,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     >
       Inspections status notes
     </Typography>
- 
+
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />
     {isInspect ?
       <form >
@@ -231,7 +231,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           showCloseIcon={true}
           handleClose={handleClose}
           contentComponent={Inspector}
-          
+
           handleCancel={handleClose}
           handleSubscribe={handleSave}
           buttonType="submit"

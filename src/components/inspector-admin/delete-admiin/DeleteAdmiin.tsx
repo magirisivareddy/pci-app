@@ -1,4 +1,5 @@
 import { deleteAdmin } from '@/actions/api'
+import Loading from '@/app/loading'
 import { getAdminList, setinspectorAdminDeleteModal } from '@/redux/features/InspectorAdminSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Box, Button, Typography } from '@mui/material'
@@ -8,11 +9,14 @@ export const DeleteAdmiin = () => {
     const dispatch = useAppDispatch()
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [isloading, setLoading]=useState(false)
     const { selectedAdminRow } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
     const onDelete = async () => {
         try {
+            setLoading(true)
             const res = await deleteAdmin(selectedAdminRow?.adminId)
             setMessage(res.message)
+            setLoading(false)
             setTimeout(() => {
                 dispatch(setinspectorAdminDeleteModal(false))
                 setMessage("")
@@ -27,7 +31,7 @@ export const DeleteAdmiin = () => {
             }
             dispatch(getAdminList(obj))
         } catch (error: any) {
-     
+            setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")
         }
     }
@@ -36,6 +40,7 @@ export const DeleteAdmiin = () => {
     }
     return (
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+            {isloading&& <Loading/>}
             <Typography variant="body1">
                 Are you sure tou want to delete this Venue?
             </Typography>

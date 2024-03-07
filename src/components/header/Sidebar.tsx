@@ -23,6 +23,7 @@ import Diversity1OutlinedIcon from '@mui/icons-material/Diversity1Outlined';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import DeviceHubOutlinedIcon from '@mui/icons-material/DeviceHubOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import MailIcon from '@mui/icons-material/Mail';
 import StarBorder from '@mui/icons-material/StarBorder';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -97,6 +98,16 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors' },
         { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information' },
         { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin' },
+        {
+            text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+                { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report' },
+                { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary' },
+                { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report' },
+                { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel' },
+                { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report' },
+                // { text: 'Device Log Report', icon: <StarBorder />, path: '/report/device-log-report' }
+            ]
+        },
         // {
         //     text: 'Admins',
         //     icon: <PersonAddAltOutlinedIcon />,

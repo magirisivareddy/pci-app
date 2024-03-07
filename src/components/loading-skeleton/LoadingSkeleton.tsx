@@ -6,7 +6,7 @@ import { Backdrop } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // Define useStyles
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme:any) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',

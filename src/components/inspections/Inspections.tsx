@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import InspectionsFilters from './inspections-filters/InspectionsFilters'
 import InspectionsTable from './Inspections-table/InspectionsTable'
-import { fetchInspections } from '@/actions/api';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getInspections } from '@/redux/features/InspectionsSlice';
 
@@ -17,21 +16,20 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
     const dispatch = useAppDispatch()
     const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections?.inspectionFilterData)
     const { inspectionsList, status } = useAppSelector(state => state.Inspections)
+    const initialPayload = {
+        //  FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
+        //  ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
+        FromDate: selectedDateRange[0],
+        ToDate: selectedDateRange[1],
+        InspectorNumber: inspectionForm.inspector,
+        ReportStatus: inspectionForm.reportStatus,
+        VenueId: inspectionForm.venue,
+        Is_it: "1",
+        EmployeeNumber: "0004236",
+        AdminLevel: "1"
+    }
     useEffect(() => {
-        const obj = {
-            //  FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
-            //  ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
-            FromDate: selectedDateRange[0],
-            ToDate: selectedDateRange[1],
-            InspectorNumber: inspectionForm.inspector,
-            ReportStatus: inspectionForm.reportStatus,
-            VenueId: inspectionForm.venue,
-            Is_it: "1",
-            EmployeeNumber: "0004236",
-            AdminLevel: "1"
-        }
-        dispatch(getInspections(obj))
-     
+        dispatch(getInspections(initialPayload))
     }, []);
 
 
@@ -50,7 +48,7 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
             AdminLevel: "1"
         }
         dispatch(getInspections(obj))
-      
+
 
     }
     return (

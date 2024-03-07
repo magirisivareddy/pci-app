@@ -1,8 +1,10 @@
+import React from 'react';
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import StoreProvider from "@/StoreProvider";
 import Layout from "@/components/header/Layout";
+import MsalRootProvider from '@/msalProvider';
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,15 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
+      <MsalRootProvider>
       <ThemeRegistry>
         <StoreProvider>
-          <body >
-            <Layout>
-              {children}
-            </Layout>
-          </body>
+            <body>
+              <Layout>{children}</Layout>
+            </body>
         </StoreProvider>
       </ThemeRegistry>
+      </MsalRootProvider>
     </html>
   );
 }

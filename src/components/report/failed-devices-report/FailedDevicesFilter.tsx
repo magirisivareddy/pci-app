@@ -8,7 +8,7 @@ import SelectInput from '@/components/common/input/SelectInput';
 
 
 
-const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => {
+const FailedDevicesFilter = ({ dropdowns, handelSubmit, formData, onChange }: any) => {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const updatedVenueDropdown = [...dropdowns.venueDropdown, { label: "All", value: "All" }];
@@ -44,4 +44,5 @@ const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => 
     )
 }
 
-export default VenuesFilters
+
+export default FailedDevicesFilter

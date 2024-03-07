@@ -1,6 +1,7 @@
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  distDir: 'build',
   reactStrictMode: false,
   swcMinify: true,
   env: {
@@ -77,8 +78,12 @@ const nextConfig = {
         source: "/api/InsertOrUpdateReport",
         destination: `${process.env.NEXT_PUBLIC_PCI_API_URL}report/InsertOrUpdateReport`,
       },
-     
-      
+      {
+        source: "/api/HelpDeskTicket",
+        destination: `${process.env.NEXT_PUBLIC_PCI_API_URL}Common/HelpDeskTicket`,
+      },
+
+
 
 
     ];

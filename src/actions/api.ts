@@ -139,6 +139,11 @@ export async function addGroupInspector(payload: any) {
 export async function addVenueInspector(payload: any) {
     return fetchData('AddVenueInspector', 'POST', payload);
 }
+export async function helpDeskTicket(payload: any) {
+    return fetchData('HelpDeskTicket', 'POST', payload);
+}
+
+
 // Admin/ChangeAdminLevel
 
 
@@ -167,85 +172,20 @@ export async function deleteVenue(employeeNumber: any, venueId: any) {
 export async function deleteVenueInspector(inspectorId: any) {
     return fetchQueryparamsData(`Inspector/DeleteVenueInspector?inspectorId=${inspectorId}`, "DELETE", null);
 }
-
-
-
-
-
-
-
-
-//above one done
-
-
-export async function recordHistory(payload: any) {
-    return fetchData('Common/RecordHistory', 'POST', payload);
+export async function getVenueInspectorReport(employeeNumber: any) {
+    return fetchQueryparamsData(`Report/GetVenueInspectorReport?employeeNumber=${employeeNumber}`, "GET", null);
 }
-export async function generateMenuAccess(payload: any) {
-    return fetchData('Common/GenerateMenuAccess', 'POST', payload);
-}
-// export async function addUpdateDevice(payload: any) {
-//     return fetchData('Common/AddUpdateDevice', 'POST', payload);
-// }
+export async function getVenueSummaryReport(employeeNumber: string, venueId?: string, deviceLocation?: string, inspectorId?: string) {
+    let url = `Report/GetVenueSummaryReport?employeeNumber=${employeeNumber}`;
 
-export async function receiveNoticesGroupInspector(payload: any) {
-    return fetchData('Common/ReceiveNoticesGroupInspector', 'POST', payload);
+    if (venueId || deviceLocation) {
+        url += `&venueId=${venueId || ''}&deviceLocation=${deviceLocation || ''}&inspectorId=${inspectorId || ''}`;
+    }
+
+    return fetchQueryparamsData(url, "GET", null);
 }
 
 
-
-
-
-
-
-//Devices Api
-
-//Get APIS
-export async function updatePciLabeled(employeeNumber: any, deviceId: any) {
-    return fetchData(`Device/UpdatePciLabeled?deviceId=${deviceId}&employeeNumber=${employeeNumber}`, 'GET');
-}
-export async function loadVenueDevices(venueId: any) {
-    return fetchData(`Common/LoadVenueDevices?venueId=${venueId}`, 'GET');
-}
-// export async function getDeviceHistory(deviceId: any) {
-//     return fetchData(`Common/GetDeviceHistory?deviceId=${deviceId}`, 'GET');
-// }
-export async function loadSlotNumbers(deviceId: any) {
-    return fetchData(`Common/LoadSlotNumbers?deviceId=${deviceId}`, 'GET');
-}
-
-export async function getVenueInfo(employeeNumber: any) {
-    return fetchData(`Common/GetVenueInfo?employeeNumber=${employeeNumber}`, 'GET');
-}
-export async function loadGroupVenues(employeeNumber: any) {
-    return fetchData(`Common/LoadGroupVenues?inspectorId=${employeeNumber}`, 'GET');
-}
-export async function getVenueInspectors(venueId: any, employeeNumber: any) {
-    return fetchData(`Common/GetVenueInspectors?venueId=${venueId}$employeeNumber=${employeeNumber}`, 'GET');
-}
-
-//DELETE APIS
-export async function deleteDevice(firstName: any, lastName: any) {
-    return fetchData(`Device/DeleteDevice?firstName=${firstName}&lastName=${lastName}`, 'DELETE');
-}
-
-
-
-// export async function deleteGroupInspector(inspectorId: any) {
-//     return fetchData(`Device/DeleteGroupInspector?inspectorId=${inspectorId}`, 'DELETE');
-// }
-
-
-
-
-
-
-// Admin API
-
-export async function addAdmin(queryParams: any) {
-    return fetchData('Admin/AddAdmin?employeeNumber=', 'POST');
-}
-//api/Admin/ChangeAdminLevel
 
 
 //Common apis

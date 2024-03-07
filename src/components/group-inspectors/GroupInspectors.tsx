@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { GroupInspectorsTable } from './group-inspectors-table/GroupInspectorsTable'
 import GroupInspectorsFilter from './group-inspectors-filter/GroupInspectorsFilter'
-import { searchGroupInspectors } from '@/actions/api';
 import { useAppDispatch } from '@/redux/hooks';
 import { getGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
 type Dropdowns = {
@@ -19,8 +18,6 @@ interface FormData {
 }
 const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
   const dispatch = useAppDispatch()
-  const [groupInspectorsData, setGroupInspectorsData] = useState([])
-  const [isloading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     venue: 'All',
     inspector: 'All'
@@ -36,9 +33,8 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
       venueId: 'All',
       inspectorEmployeeNumber: 'All',
       is_It: '1'
-    }
-    dispatch(getGroupInspectors(obj))
-
+    };
+    dispatch(getGroupInspectors(obj));
   }, []);
   const handelSubmit = (event: any) => {
     const obj: any = {
@@ -62,8 +58,6 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
       />
       <GroupInspectorsTable
         venues={dropdowns.venueDropdown}
-        // isloading={isloading}
-        // groupInspectorsData={groupInspectorsData}
       />
     </div>
   )

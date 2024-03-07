@@ -14,6 +14,7 @@ import {
 import { Theme } from '@mui/material/styles';
 import { addUpdateDevice } from '@/actions/api';
 import { getDevices, setDeviceInfo } from '@/redux/features/DevicesSlice';
+import Loading from '@/app/loading';
 
 interface FormData {
     commonAssetName: string;
@@ -40,6 +41,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [isloading, setLoading]=useState(false)
 
 
     const [formData, setFormData] = useState<FormData>({
@@ -56,13 +58,6 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         ipAddress: deviceFormData?.ipAddress ?? '',
         // assetStatus: false,
     });
-    console.log("formData", formData)
-    // "deviceId": 0,
-    // "assetNumber": "string",
-    // "serialNumberNumber": "string",
-    // "slotNumber": "string",
-    // "employeeNumber": "string"
-
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>(
         {}
     );
@@ -77,7 +72,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         // Clear validation error when the checkbox is checked
         clearValidationError(name);
     };
-    console.log("validationErrors", validationErrors)
+
     const onChange = (value: any, name: any) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -115,8 +110,10 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         }
 
         try {
+            setLoading(true)
             const res = await addUpdateDevice(formData)
             setMessage(res.message)
+            setLoading(false)
             setTimeout(() => {
                 setMessage("")
                 dispatch(setDeviceInfo({
@@ -136,6 +133,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
                 dispatch(getDevices(obj))
             }, 3000)
         } catch (error: any) {
+            setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")
         }
 
@@ -158,6 +156,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
 
     return (
         <Grid container spacing={2} mb={2}>
+            {isloading&& <Loading/>}
             <Grid item xs={12} md={4}>
                 <SelectInput
                     selectedOption={formData.commonAssetName}

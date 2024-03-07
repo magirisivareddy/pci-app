@@ -25,30 +25,43 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
   const handleSelect = (dates: DateRange, event: React.SyntheticEvent<any> | undefined) => {
     setDateRange(dates);
   };
-
   const handlePreviousWeek = () => {
     const newEndDate = new Date(startDate || new Date());
     const newStartDate = new Date(newEndDate);
-    
-    const daysToMonday = (newStartDate.getDay() + 6) % 7; // Calculate days from current day to Monday
+  
+    // Calculate the days to Monday and Sunday
+    const daysToMonday = (newStartDate.getDay() - 1 + 7) % 7; // Calculate days from current day to Monday
     const daysToSunday = (newEndDate.getDay() + 7) % 7; // Calculate days from current day to Sunday
-    
-    newStartDate.setDate(newStartDate.getDate() - daysToMonday - 7); // Set to Monday of the previous week
-    newEndDate.setDate(newEndDate.getDate() - daysToSunday - 7); // Set to Sunday of the previous week
-    
+  
+    // Calculate the start and end dates for the previous week
+    newStartDate.setDate(newStartDate.getDate() - daysToMonday - 6); // Set to Monday of the previous week
+    newEndDate.setDate(newEndDate.getDate() - daysToSunday); // Set to Sunday of the previous week
+  
     setDateRange([newStartDate, newEndDate]);
   };
+  
+  
+  
+  
   
 
   const handleNextWeek = () => {
     const newStartDate = new Date(endDate || new Date());
     const newEndDate = new Date(newStartDate);
   
-    newStartDate.setDate(newStartDate.getDate() + (8 - newStartDate.getDay()) % 7); // Set to Monday of the next week
+    const daysToAdd = (8 - newStartDate.getDay()) % 7; // Calculate days to the next Monday
+    newStartDate.setDate(newStartDate.getDate() + daysToAdd); // Set to Monday of the next week
+  
+    // Check if the end date needs to be in the next month
+    if (newStartDate.getMonth() !== newEndDate.getMonth()) {
+      newEndDate.setMonth(newStartDate.getMonth());
+    }
+  
     newEndDate.setDate(newStartDate.getDate() + 5); // Set to Saturday of the next week
   
     setDateRange([newStartDate, newEndDate]);
   };
+  
 
 
   return (
