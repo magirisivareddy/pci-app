@@ -108,23 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                 // { text: 'Device Log Report', icon: <StarBorder />, path: '/report/device-log-report' }
             ]
         },
-        // {
-        //     text: 'Admins',
-        //     icon: <PersonAddAltOutlinedIcon />,
-        //     path: '/admins',
-        //     children: [
-        //         {
-        //             text: 'Submenu 1',
-        //             icon: <StarBorder />,
-        //             path: '/admins/submenu1',
-        //             children: [
-        //                 { text: 'Sub-child 1', icon: <StarBorder />, path: '/admins/submenu1/subchild1' },
-        //                 { text: 'Sub-child 2', icon: <StarBorder />, path: '/admins/submenu1/subchild2' },
-        //             ],
-        //         },
-        //         { text: 'Submenu 2', icon: <StarBorder />, path: '/admins/submenu2' },
-        //     ],
-        // },
+     
 
 
     ];

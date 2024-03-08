@@ -71,6 +71,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
     const employeeNumber = "5860"
     getVenueInspectorList(employeeNumber, formData.venueId, formData.inspectorEmployeeNumber)
   }
+  console.log("isLoading", isLoading)
   return (
     <>
       <VenuesFilters dropdowns={dropdowns} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />

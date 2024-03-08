@@ -32,7 +32,7 @@ const DeviceLogReport = () => {
 
     return (
         <div>
-            <CustomTable data={mockData} headers={headers} />
+            <CustomTable data={mockData} headers={headers}  />
 
         </div>
     )

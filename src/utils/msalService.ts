@@ -19,5 +19,5 @@ msalInstance.addEventCallback((event) => {
 
 // Type guard function to check if the object is an AccountInfo
 function isAccountInfo(obj: any): obj is { account: AccountInfo } {
-  return obj && typeof obj.account !== 'undefined';
+  return obj !== null && obj !== undefined && typeof obj.account !== 'undefined';
 }

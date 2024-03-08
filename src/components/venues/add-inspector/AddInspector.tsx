@@ -11,11 +11,19 @@ import EmailIcon from '@mui/icons-material/Email';
 import { addGroupInspector, addVenueInspector, doLookup } from '@/actions/api';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getVenues } from '@/redux/features/VenuesSlice';
+import Loading from '@/app/loading';
 
 interface FormData {
     inspectorType: string;
 }
 
+const debounce = (func: Function, delay: number) => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    return (...args: any) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func(...args), delay);
+    };
+};
 const AddInspector = ({ selectedRow }: any) => {
     const dispatch = useAppDispatch()
     const [formData, setFormData] = useState<FormData>({
@@ -83,20 +91,22 @@ const AddInspector = ({ selectedRow }: any) => {
             [name]: value,
         }));
     }
+    const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 1000);
     const onChangeLastName = (value: any) => {
         setLastName(value);
-        fetchDataAndSetDate(firstName, value);  // Use current state values
+        debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
     }
 
     const onChangeFirstName = (value: any) => {
         setFirstName(value);
-        fetchDataAndSetDate(value, lastName);  // Use current state values
+        debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
     }
 
 
     return (
         <div>
             <Grid container spacing={2} mb={2}>
+                {isloading && <Loading/>}
                 <Grid item xs={12} md={4}>
                     <TextInput
                         defaultValue={lastName ?? ""}

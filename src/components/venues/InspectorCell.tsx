@@ -42,10 +42,10 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                                             width: 20,
                                             height: 20,
                                             fontSize: "12px",
-                                            backgroundColor: inspector.inspectorType === "MI" ? "green" : (inspector.type === "GI" ? "#bc48bc" : "#4c74b5"),
+                                            backgroundColor: inspector.inspectorType === 1 ? "green" : (inspector.type === 2 ? "#bc48bc" : "#4c74b5"),
                                         }}
                                     >
-                                        {inspector.inspectorType === "MI" ? "MI" : (inspector.type === "GI" ? "GI" : "BI")}
+                                        {inspector.inspectorType === 1 ? "MI" : (inspector.type === 2 ? "GI" : "BI")}
                                     </Avatar>
                                     <span>{inspector.inspector}</span>
                                 </Box>

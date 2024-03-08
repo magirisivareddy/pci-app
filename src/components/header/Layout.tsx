@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, CssBaseline, Toolbar, useMediaQuery, useTheme } from '@mui/material';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import MsalRootProvider from '@/msalProvider';
 
 export default function Layout({ children }: any) {
     const theme = useTheme();
@@ -17,6 +18,7 @@ export default function Layout({ children }: any) {
     };
 
     return (
+        // <MsalRootProvider>
         <Box sx={{ display: isDesktop ? 'flex' : 'block' }}>
             <CssBaseline />
             <Header onMenuClick={handleDrawerToggle} open={open} />
@@ -33,5 +35,6 @@ export default function Layout({ children }: any) {
                 {children}
             </Box>
         </Box>
+        // </MsalRootProvider>
     );
 }

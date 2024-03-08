@@ -185,27 +185,52 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       label: 'Inspector Employee',
       customRender: (value: any, row: any): JSX.Element => {
         const name = `${row.inpsectorLastName} ${row.inpsectorFirstName}`;
+
         return (
           name.trim() !== '' ? (
             <span>{name} {row.inspectorEmployeenumber}</span>
           ) : (
-            <span style={{ color: "#9c4040" }}>No main inspector assigned</span>
+            <span style={{ color: "#F00" }}>
+              {row.venue_name !== "SPARE DEVICES" &&
+                row.venue_name !== "ARCHIVED DEVICES" &&
+                row.venue_name !== "IT STORAGE" &&
+                (row.inspectorEmployeenumber === 0)
+                ? "No Main Inspector assigned"
+                : ""}
+            </span>
           )
         );
       }
+
     },
     { id: 'totalDevices', label: 'Total Devices' },
     { id: 'questionable', label: 'Total Questionable Devices' },
     { id: 'failed', label: 'Total Failed Devices' },
     {
-      id: 'inspect', label: 'Inspect', customRender: (value: any, row: any): JSX.Element => {
+      id: 'inspect',
+      label: 'Inspect',
+      customRender: (value: any, row: any): JSX.Element => {
+        console.log("row", row);
+        let title = "";
+
+        if (row.reportId === 0) {
+          title = "Inspect";
+        } else if (row.questionable !== 0 || row.failed !== 0) {
+          title = "Edit";
+
+          if (row.dateDifference && row.dateDifference <= 0) {
+            title = "View";
+          }
+        }
+
         return (
           <Button size="small" variant="outlined" onClick={() => handleInspectClick(row)}>
-            Inspect
+            {title}
           </Button>
         );
       }
-    },
+    }
+
   ];
   return (<>
 
