@@ -10,6 +10,8 @@ import {
 } from "@azure/msal-react";
 import { msalInstance } from "./utils/msalService";
 import { InteractionType } from "@azure/msal-browser";
+import Loading from "./app/loading";
+import { Box, Typography } from "@mui/material";
 
 interface IRequest {
   scopes: [string];
@@ -19,19 +21,46 @@ const request: IRequest = {
 };
 
 const Auth = (props: any) => {
-  const { login, result, error } = useMsalAuthentication(
+  const { result } = useMsalAuthentication(
     InteractionType.Redirect,
     request
   );
-  const { accounts  } =useMsal()
-  console.log("result", result);
-  console.log("error", error);
   return (
     <>
+
       <UnauthenticatedTemplate>
-        <h5 className="text-center">Please sign-In.</h5>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+          <Typography variant="h5">
+            Please sign-In.
+            <Loading />
+          </Typography>
+        </Box>
       </UnauthenticatedTemplate>
-      <AuthenticatedTemplate>{props.children}</AuthenticatedTemplate>
+
+      {
+        result === null ? 
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+        <Typography variant="h5">
+          Loading...
+          <Loading />
+        </Typography> 
+          </Box>:
+          <AuthenticatedTemplate>
+            {props.children}</AuthenticatedTemplate>
+      }
+
     </>
   );
 };

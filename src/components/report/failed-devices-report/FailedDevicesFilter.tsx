@@ -24,16 +24,18 @@ const FailedDevicesFilter = ({ dropdowns, handelSubmit, formData, onChange }: an
                     label={'Venue'}
                     options={updatedVenueDropdown}
                     name={'venueId'}
-                    id={'venueId'} size={'small'} />
+                    id={'venueId'}
+                    size={'small'} />
             </Grid>
             <Grid item xs={12} md={5.5}>
                 <SelectInput
-                    selectedOption={formData.inspectorEmployeeNumber}
+                    selectedOption={formData.inspectorId}
                     onChange={onChange}
                     label={'Inspector'}
                     options={updatedInspectorsDropdown}
-                    name={'inspectorEmployeeNumber'}
-                    id={'inspectorEmployeeNumber'} size={'small'} />
+                    name={'inspectorId'}
+                    id={'inspectorId'}
+                    size={'small'} />
             </Grid>
             <Grid item xs={12} md={1}>
                 <Button onClick={handelSubmit} sx={{ marginTop: "22px", width: isDesktop ? "auto" : "100%" }} variant='contained'>Search</Button>

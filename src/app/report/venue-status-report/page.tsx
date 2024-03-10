@@ -5,7 +5,7 @@ import React from 'react'
 const VenueStatusReportPage =async() => {
   const venues = await fetchVenue()
   return (
-    <VenueStatusReport VenueDropdown={venues} />
+    <VenueStatusReport venueDropdown={venues} />
   )
 }
 

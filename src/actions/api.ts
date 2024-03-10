@@ -185,7 +185,15 @@ export async function getVenueSummaryReport(employeeNumber: string, venueId?: st
     return fetchQueryparamsData(url, "GET", null);
 }
 
+export async function getVenuePassFailSummaryReport(employeeNumber: string, venueName?: string, inspector?: string) {
+    let url = `Report/GetVenuePassFailSummaryReport?employeeNumber=${employeeNumber}`;
 
+    if (venueName || inspector) {
+        url += `&venueName=${venueName || ''}&inspector=${inspector || ''}`;
+    }
+
+    return fetchQueryparamsData(url, "GET", null);
+}
 
 
 //Common apis

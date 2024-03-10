@@ -18,7 +18,7 @@ export default function Layout({ children }: any) {
     };
 
     return (
-        // <MsalRootProvider>
+        //<MsalRootProvider>
         <Box sx={{ display: isDesktop ? 'flex' : 'block' }}>
             <CssBaseline />
             <Header onMenuClick={handleDrawerToggle} open={open} />
@@ -35,6 +35,6 @@ export default function Layout({ children }: any) {
                 {children}
             </Box>
         </Box>
-        // </MsalRootProvider>
+        //  </MsalRootProvider>
     );
 }

@@ -1,8 +1,9 @@
 "use client"
 import CustomTable from '@/components/common/table/Table';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FailedDevicesFilter from './FailedDevicesFilter';
 import { format } from 'date-fns';
+import { getVenuePassFailSummaryReport } from '@/actions/api';
 
 type Dropdowns = {
   venueDropdown: any; // replace with the actual type
@@ -21,32 +22,10 @@ interface TableRowData {
 
 interface FormData {
   venueId: string;
-  inspectorEmployeeNumber: string;
+  inspectorId: string;
 }
 const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
-  const mockData = [
-    {
-      venueName: 'Venue G',
-      deviceName: 'Device 7',
-      deviceStatus: 'Active',
-      reason: 'Routine maintenance',
-      notes: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      inspectionType: 'Routine',
-      inspector: 'Eva Williams',
-      inspectionActualDate: '2024-03-12T14:00:00',
-    },
-    {
-      venueName: 'Venue H',
-      deviceName: 'Device 8',
-      deviceStatus: 'Inactive',
-      reason: 'Technical issue',
-      notes: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      inspectionType: 'Emergency',
-      inspector: 'Frank Johnson',
-      inspectionActualDate: '2024-03-13T15:30:00',
-    },
-    // Add more mock data as needed
-  ];
+
 
   const headers = [
     { id: 'venueName', label: 'Venue Name' },
@@ -56,27 +35,53 @@ const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
     { id: 'notes', label: 'Notes' },
     { id: 'inspectionType', label: 'Inspection Type' },
     { id: 'inspector', label: 'Inspector' },
-    { id: 'inspectionActualDate', label: 'Inspection Actual Date',customRender: (value: any, row: any): JSX.Element => (
-      <span>
-        {format(row.inspectionActualDate, 'dd/MM/yyyy hh:mm a')}
-      </span>
-    ) },
+    {
+      id: 'inspectionActualDate', label: 'Inspection Actual Date', customRender: (value: any, row: any): JSX.Element => (
+        <span>
+          {format(row.inspectionActualDate, 'dd/MM/yyyy hh:mm a')}
+        </span>
+      )
+    },
   ];
   const [formData, setFormData] = useState<FormData>({
     venueId: 'All',
-    inspectorEmployeeNumber: 'All'
-});
+    inspectorId: 'All'
+  });
 
-const onChange = (value: any, name: any) => {
+  const [data, setData] = useState([])
+  const [isLoading, setLoading] = useState(false)
+  const employeeNumber = "5860"
+  const getVenueInspectorList = async (
+    employeeNumber: string,
+    venueId?: string,
+    inspectorId?: string
+  ) => {
+    try {
+      setLoading(true)
+      const res = await getVenuePassFailSummaryReport(employeeNumber, venueId, inspectorId)
+      setData(res)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getVenueInspectorList(employeeNumber)
+  }, [])
+
+  const onChange = (value: any, name: any) => {
     setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
+      ...prevData,
+      [name]: value,
     }));
-}
-const handelSubmit = () => {}
+  }
+  const handelSubmit = () => {
+    getVenueInspectorList(formData.venueId, formData.inspectorId);
+  };
   return (<>
     <FailedDevicesFilter dropdowns={dropdowns} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
-    <CustomTable data={mockData} headers={headers} />
+    <CustomTable data={data} headers={headers} isloading={isLoading} />
   </>
 
   )

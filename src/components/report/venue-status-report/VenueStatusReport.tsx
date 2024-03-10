@@ -12,7 +12,7 @@ interface FormData {
 }
 
 // Define the VenueStatusReport functional component
-const VenueStatusReport: React.FC = ({VenueDropdown}:any) => {
+const VenueStatusReport = ({ venueDropdown }: any) => {
     // Define the headers for the table
     const headers = [
         { id: 'venueName', label: 'Venue Name' },
@@ -88,7 +88,7 @@ const VenueStatusReport: React.FC = ({VenueDropdown}:any) => {
     // Render the VenueStatusReport component
     return (
         <div>
-            <VenueStatusFilter venueDropdown={VenueDropdown} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+            <VenueStatusFilter venueDropdown={venueDropdown} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
             <CustomTable data={data} headers={headers} isloading={isLoading} />
         </div>
     );
