@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
     Collapse,
@@ -18,13 +18,11 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import PinDropOutlinedIcon from '@mui/icons-material/PinDropOutlined';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Diversity1OutlinedIcon from '@mui/icons-material/Diversity1Outlined';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import DeviceHubOutlinedIcon from '@mui/icons-material/DeviceHubOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
-import MailIcon from '@mui/icons-material/Mail';
 import StarBorder from '@mui/icons-material/StarBorder';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -51,6 +49,19 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
     const iconColor = "#008c99";
     const hoverBackgroundColor = "#f1fafb";
     const activeBackgroundColor = "#9ddbe0";
+    useEffect(() => {
+        // Retrieve the openSubMenus state from local storage on component mount.
+        const storedOpenSubMenus = localStorage.getItem('openSubMenus');
+
+        if (storedOpenSubMenus) {
+            setOpenSubMenus(JSON.parse(storedOpenSubMenus));
+        }
+    }, []);
+
+    useEffect(() => {
+        // Save the openSubMenus state to local storage whenever it changes.
+        localStorage.setItem('openSubMenus', JSON.stringify(openSubMenus));
+    }, [openSubMenus]);
     const handleSubMenuClick = (index: string, item: MenuItem) => {
         // Copy the current state to a new object to modify.
         const newOpenSubMenusState = { ...openSubMenus };

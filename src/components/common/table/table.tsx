@@ -54,7 +54,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
     }, []);
     return (
         <>
-          <TableContainer component={Paper} sx={{ maxHeight:"60vh",overflow: 'auto', width: "100%" }}>
+          <TableContainer component={Paper} sx={{ maxHeight:"65vh",overflow: 'auto', width: "100%", position:"relative"}}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
@@ -86,17 +86,6 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                                     >
                                         {headers.map((header) => (
                                             <TableCell key={header.id}
-                                                sx={{
-                                                    // background: '#9ddbe0',
-                                                    // color: 'rgba(0, 0, 0, 0.7)',
-                                                    // fontWeight: "600",
-                                                    // whiteSpace: 'nowrap',
-                                                    // overflow: 'hidden',
-                                                    // width:"200px",
-                                                    // minWidth: '80px', 
-
-                                                }}
-
                                             >
                                                 {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
                                             </TableCell>
@@ -106,7 +95,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                             )}
                         </TableBody>
                         {isPagination && (
-                            <TableFooter sx={{ background: '#9ddbe0' }}>
+                             <TableFooter sx={{ background: '#9ddbe0',position:"sticky",  bottom: 0, zIndex: 100, width: '100%' }}>
                                 <TableRow>
                                     <TablePagination
                                         rowsPerPageOptions={[15, 30, 60, 120, { value: -1, label: 'All' }]}

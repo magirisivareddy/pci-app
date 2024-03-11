@@ -210,7 +210,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       id: 'inspect',
       label: 'Inspect',
       customRender: (value: any, row: any): JSX.Element => {
-        console.log("row", row);
+        // console.log("row", row);
         let title = "";
 
         if (row.reportId === 0) {

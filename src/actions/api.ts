@@ -1,9 +1,13 @@
 async function fetchData(apiEndpoint: string, method = 'GET', payload = null) {
+    console.log("process.env.NEXT_PUBLIC_API_SECRET_KEY", process.env.NEXT_PUBLIC_API_SECRET_KEY)
     try {
         const options = {
             method,
             headers: {
                 'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Cache-Control': 'no-cache',
+                'Ocp-Apim-Subscription-Key': `${process.env.NEXT_PUBLIC_API_SECRET_KEY}`
             },
             body: payload ? JSON.stringify(payload) : undefined,
         };
@@ -72,6 +76,9 @@ export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "PO
         method,
         headers: {
             'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+            'Ocp-Apim-Subscription-Key': `${process.env.NEXT_PUBLIC_API_SECRET_KEY}`,
         },
         body: payload ? JSON.stringify(payload) : undefined,
     };
@@ -93,58 +100,80 @@ export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "PO
 
 
 //Inspections page apis
-export async function fetchInspections(payload: any) {
-    return fetchData('inspections', 'POST', payload);
-}
-export async function fetchviewReport(payload: any) {
-    return fetchData('viewReport', 'POST', payload);
-}
-export async function insertOrUpdateReport(payload: any) {
-    return fetchData('InsertOrUpdateReport', 'POST', payload);
-}
+// export async function fetchInspections(payload: any) {
+//     return fetchData('inspections', 'POST', payload);
+// }
 
 
 
 //Post Api
 
-export async function searchDevices(payload: any) {    // api integration done need payload
-    return fetchData('SearchDevices', 'POST', payload);
-}
 
-export async function searchAdmins(payload: any) {    // api integration done need payload
-    return fetchData('searchAdmins', 'POST', payload);
-}
-export async function searchGroupInspectors(payload: any) {  // api integration done need payload
-    return fetchData('searchGroupInspectors', 'POST', payload);
-}
-export async function searchVenues(payload: any) {  // api integration done need payload
-    return fetchData('SearchVenues', 'POST', payload);
-}
-export async function addUpdateDevice(payload: any) {  // api integration done need payload
-    return fetchData('AddUpdateDevice', 'POST', payload);
-}
-
-export async function addUpdateVenue(payload: any) {
-    return fetchData('AddUpdateVenue', 'POST', payload);
-}
-export async function addVenueToGroupInspector(payload: any) {
-    return fetchData('AddVenueToGroupInspector', 'POST', payload);
-}
-export async function changeAdminLevel(payload: any) {
-    return fetchData('ChangeAdminLevel', 'POST', payload);
-}
-export async function addGroupInspector(payload: any) {
-    return fetchData('AddGroupInspector', 'POST', payload);
-}
-export async function addVenueInspector(payload: any) {
-    return fetchData('AddVenueInspector', 'POST', payload);
-}
-export async function helpDeskTicket(payload: any) {
-    return fetchData('HelpDeskTicket', 'POST', payload);
-}
 
 
 // Admin/ChangeAdminLevel
+
+
+
+export async function fetchInspections(payload: any) {
+    return fetchQueryparamsData('Search/SearchInspections', 'POST', payload);
+}
+
+export async function fetchviewReport(payload: any) {
+    // return fetchData('viewReport', 'POST', payload);
+    return fetchQueryparamsData('Report/ViewReport', 'POST', payload);
+}
+export async function insertOrUpdateReport(payload: any) {
+    // return fetchData('InsertOrUpdateReport', 'POST', payload);
+    return fetchQueryparamsData('report/InsertOrUpdateReport', 'POST', payload);
+}
+
+export async function searchDevices(payload: any) {    
+    // return fetchData('SearchDevices', 'POST', payload);
+    return fetchQueryparamsData('search/SearchDevices', 'POST', payload);
+}
+
+export async function searchAdmins(payload: any) {    // api integration done need payload
+    // return fetchData('searchAdmins', 'POST', payload);
+    return fetchQueryparamsData('search/SearchAdmins', 'POST', payload);
+}
+export async function searchGroupInspectors(payload: any) {  // api integration done need payload
+    // return fetchData('searchGroupInspectors', 'POST', payload);
+    return fetchQueryparamsData('search/SearchGroupInspectors', 'POST', payload);
+}
+export async function searchVenues(payload: any) {  // api integration done need payload
+    // return fetchData('SearchVenues', 'POST', payload);
+    return fetchQueryparamsData('search/SearchVenues', 'POST', payload);
+}
+export async function addUpdateDevice(payload: any) {  // api integration done need payload
+    // return fetchData('AddUpdateDevice', 'POST', payload);
+    return fetchQueryparamsData('device/AddUpdateDevice', 'POST', payload);
+}
+
+export async function addUpdateVenue(payload: any) {
+    // return fetchData('AddUpdateVenue', 'POST', payload);
+    return fetchQueryparamsData('venue/AddUpdateVenue', 'POST', payload);
+}
+export async function addVenueToGroupInspector(payload: any) {
+    // return fetchData('AddVenueToGroupInspector', 'POST', payload);
+    return fetchQueryparamsData('Inspector/AddVenueToGroupInspector', 'POST', payload);
+}
+export async function changeAdminLevel(payload: any) {
+    // return fetchData('Admin/ChangeAdminLevel', 'POST', payload);
+    return fetchQueryparamsData('Admin/ChangeAdminLevel', 'POST', payload);
+}
+export async function addGroupInspector(payload: any) {
+    // return fetchData('Inspector/AddGroupInspector', 'POST', payload);
+    return fetchQueryparamsData('Inspector/AddGroupInspector', 'POST', payload);
+}
+export async function addVenueInspector(payload: any) {
+    return fetchQueryparamsData('Inspector/AddVenueInspector', 'POST', payload);
+}
+export async function helpDeskTicket(payload: any) {
+    return fetchQueryparamsData('Common/HelpDeskTicket', 'POST', payload);
+}
+
+
 
 
 
@@ -198,7 +227,16 @@ export async function getVenuePassFailSummaryReport(employeeNumber: string, venu
 
 //Common apis
 export const fetchVenue = async () => {
-    const res = await fetch(`${process.env.PCI_API_URL}/common/GetVenues`, { method: 'GET' });
+    const res = await fetch(`${process.env.PCI_API_URL}common/GetVenues`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+            'Ocp-Apim-Subscription-Key': `${process.env.NEXT_PUBLIC_API_SECRET_KEY}`
+        },
+    });
+
     if (res.ok) {
         const venues = await res.json();  // Wait for the JSON data to be resolved
         const data = venues.map((venue: { venueId: any; venueName: any; }) => {
@@ -213,8 +251,16 @@ export const fetchVenue = async () => {
 
     return [];
 }
+
 export const fetchInspectors = async () => {
-    const res = await fetch(`${process.env.PCI_API_URL}/common/GetInspectors`, { method: 'GET' });
+    const res = await fetch(`${process.env.PCI_API_URL}common/GetInspectors`, {
+        method: 'GET', headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+            'Ocp-Apim-Subscription-Key': `${process.env.NEXT_PUBLIC_API_SECRET_KEY}`
+        },
+    });
     if (res.ok) {
         const inspectors = await res.json();  // Wait for the JSON data to be resolved
         const data = inspectors.map((inspector: { inspectorId: any; inspectorName: any; }) => {

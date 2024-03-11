@@ -4,7 +4,7 @@ const Information = () => {
   return (
     <div className="info">
       <section>
-        <strong>Inspections</strong> - Every Sunday to Saturday, Weekly PCI inspections of devices are conducted by those
+        <b>Inspections</b> - Every Sunday to Saturday, Weekly PCI inspections of devices are conducted by those
         assigned as inspectors, usually a manager of the specific venue. These are submitted through a
         paperless report in SharePoint via a link that only the inspectors have access to.
       </section>
