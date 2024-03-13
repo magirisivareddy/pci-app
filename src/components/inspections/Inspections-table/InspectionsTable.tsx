@@ -11,7 +11,7 @@ import { Button, Tooltip, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
-import { setInitialValues, setSaveReportStatus, setSelectedInspector } from '@/redux/features/InspectionsSlice';
+import { setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 
 import Modal from '@/components/common/modal/Modal';
@@ -45,16 +45,11 @@ interface TableRowData {
 const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
-  const { devices, selectedInspector, saveReportStatus } = useAppSelector(state => state.Inspections)
+  const { devices, selectedInspector, saveReportStatus, deviceStatus } = useAppSelector(state => state.Inspections)
 
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState({
-    open: false,
-    message: "",
-    severity: ''
 
-  })
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const handleModalClose = () => {
     setHelpDeskModal(false)
@@ -75,80 +70,104 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     if (reason === 'clickaway') {
       return;
     }
-    setStatus({
+    dispatch(setDeviceStatus({
       open: false,
       message: "",
       severity: ''
-    })
+    }))
+
     setOpen(false);
   };
   const handleClose = () => {
     dispatch(setModalInspectOpen(false));
     dispatch(setInitialValues([]));
-    setStatus({
+
+    dispatch(setDeviceStatus({
       open: false,
       message: "",
       severity: ''
-    })
+    }))
   };
   const handleInspectClick = (row: any) => {
     dispatch(setSelectedInspector(row))
     dispatch(setModalInspectOpen(true));
   };
-
   const handleSave = async () => {
     const obj = {
       inspectorENumber: selectedInspector?.inspectorEmployeenumber,
       reportId: selectedInspector.reportId,
       venueId: selectedInspector.venue_id,
       venueName: selectedInspector.venue_name,
-    }
+    };
     const payload = {
-      ...obj, devices
-    }
-
-    const deviceWithEmptyStatusOrNotes = devices.find(device => !device.status || !device.notes);
-
-    if (deviceWithEmptyStatusOrNotes) {
-      setOpen(true)
-      setStatus({
-        ...status,
+      ...obj,
+      devices,
+    };
+  
+    // Check status field validation
+    const invalidStatusDevice = devices.find(device => {
+      if (!device.status) return true; // Check if status is undefined or null
+      return !["fail", "Questionable", "pass"].includes(device.status.toLowerCase());
+    });
+  
+    if (invalidStatusDevice) {
+      setOpen(true);
+      dispatch(setDeviceStatus({
         open: true,
-        message: " Status and Notes cannot be empty for all devices!",
-        severity: "error"
-      });
-      return
+        message: "Invalid status value found!",
+        severity: "error",
+      }))
+      return;
     }
+  
+    // Check notes field validation based on status
+    const deviceWithEmptyNotes = devices.find(device => (
+      (device.status === "fail" || device.status === "Questionable") && !device.notes
+    ));
+  
+    if (deviceWithEmptyNotes) {
+      setOpen(true);
+  
+      dispatch(setDeviceStatus({
+        open: true,
+        message: "Notes cannot be empty for devices with 'Failed' or 'Questionable' status!",
+        severity: "error",
+      }))
+      return;
+    }
+  
     try {
-      dispatch(setSaveReportStatus(true))
-      const res = await insertOrUpdateReport(payload)
-      setStatus({
-        ...status,
+      dispatch(setSaveReportStatus(true));
+      const res = await insertOrUpdateReport(payload);
+      dispatch(setDeviceStatus({
         open: true,
         message: `${res.message}!`,
-        severity: "success"
-      });
-      dispatch(setSaveReportStatus(false))
+        severity: "success",
+      }))
+  
+      dispatch(setSaveReportStatus(false));
       setTimeout(() => {
         dispatch(setModalInspectOpen(false));
-        setStatus({
+        dispatch(setDeviceStatus({
           open: false,
           message: "",
-          severity: ''
-        })
-      }, 3000)
+          severity: "",
+        }))
+  
+      }, 3000);
     } catch (error: any) {
-      dispatch(setSaveReportStatus(false))
-      setStatus({
-        ...status,
+      dispatch(setSaveReportStatus(false));
+      dispatch(setDeviceStatus({
         open: true,
         message: `${error.message}!`,
-        severity: "error"
-      });
+        severity: "error",
+      }))
+  
     }
+  };
+  
 
 
-  }
 
   const inspectionsTableHeaders: Header[] = [
     {
@@ -257,10 +276,12 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           handleClose={handleClose}
           contentComponent={Inspector}
 
+
           handleCancel={handleClose}
           handleSubscribe={handleSave}
           buttonType="submit"
           buttonText="Submit"
+          isDisabled={selectedInspector.totalDevices === 0}
           footerLink="Report a Finding / Raise a ticket"
           onFooterLink={onHelpDeskModal}
 
@@ -277,15 +298,16 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
       maxWidth={"md"}
     />
-    <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom' }} open={status.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+    <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom', }} sx={{ width: "80%", bottom: "20px" }} open={deviceStatus.open} autoHideDuration={6000} onClose={handleCloseAlert}>
       <Alert
         onClose={handleCloseAlert}
-        severity={status.severity as AlertProps['severity']}
+        severity={deviceStatus.severity as AlertProps['severity']}
         variant="filled"
         sx={{ width: '100%', alignItems: "center" }}
       >
-        {status.message}
+        {deviceStatus.message}
       </Alert>
+
     </Snackbar>
     <Popover
       id="mouse-over-popover"

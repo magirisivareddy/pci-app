@@ -68,6 +68,7 @@ export const devicesSlice = createSlice({
             })
             .addCase(getDevices.rejected, (state, action) => {
                 state.status = 'failed';
+                state.devicesData = [];
                 state.error = action.error.message || 'An error occurred';
             });
     },

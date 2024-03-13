@@ -152,7 +152,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
             )
         },
     ];
-    console.log("isDeletInspectionModal", isDeletInspectionModal)
+    console.log("venuesData", venuesData)
     return (
         <>
             {/* <CustomBreadcrumbs /> */}

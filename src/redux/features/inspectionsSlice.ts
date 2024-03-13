@@ -24,6 +24,7 @@ interface InspectorFormState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   inspectionsList: any; // Change 'any' to the actual type of your data
   error: string | null;
+  deviceStatus:any
 }
 
 const initialState: InspectorFormState = {
@@ -45,7 +46,13 @@ const initialState: InspectorFormState = {
   selectedInspector: {},
   status: 'idle',
   inspectionsList: [], // Change 'any' to the actual type of your data
-  error: null
+  error: null,
+  deviceStatus:{
+    open: false,
+    message: "",
+    severity: ''
+
+  }
 };
 export const getInspections = createAsyncThunk('inspections/getInspections', async (obj: any) => {
   try {
@@ -106,6 +113,9 @@ export const InspectionsSlice = createSlice({
     setSelectedInspector: (state, action: PayloadAction<{ reportId: string; venueId: string | null }>) => {
       state.selectedInspector = action.payload;
     },
+    setDeviceStatus: (state, action: PayloadAction<any>) => {
+      state.deviceStatus = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -118,12 +128,13 @@ export const InspectionsSlice = createSlice({
       })
       .addCase(getInspections.rejected, (state, action) => {
         state.status = 'failed';
+        state.inspectionsList = [];
         state.error = action.error.message || 'An error occurred';
       });
   },
 });
 
-export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus } = InspectionsSlice.actions;
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus,setDeviceStatus } = InspectionsSlice.actions;
 
 export const selectInspections = (state: RootState) => state.Inspections;
 

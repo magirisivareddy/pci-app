@@ -86,6 +86,7 @@ export const groupInspectorsSlice = createSlice({
             })
             .addCase(getGroupInspectors.rejected, (state, action) => {
                 state.status = 'failed';
+                state.groupInspectorsData = [];
                 state.error = action.error.message || 'An error occurred';
             });
     },

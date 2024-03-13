@@ -59,6 +59,7 @@ export const inspectorAdminSlice = createSlice({
             })
             .addCase(getAdminList.rejected, (state, action) => {
                 state.status = 'failed';
+                state.adminData = [];
                 state.error = action.error.message || 'An error occurred';
             });
     },

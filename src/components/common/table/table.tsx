@@ -36,7 +36,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-    const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const paginatedData = rowsPerPage === -1 ? data : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     const header = headers.map(header => header.label);
     const body = data.map(row => {
         return headers.map(header => {
@@ -54,64 +54,64 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
     }, []);
     return (
         <>
-          <TableContainer component={Paper} sx={{ maxHeight:"65vh",overflow: 'auto', width: "100%", position:"relative"}}>
-                    <Table stickyHeader>
-                        <TableHead>
+            <TableContainer component={Paper} sx={{ maxHeight: "65vh", overflow: 'auto', width: "100%", position: "relative" }}>
+                <Table stickyHeader>
+                    <TableHead>
+                        <TableRow>
+                            {headers.map((header) => (
+                                <TableCell key={header.id} sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600", position: 'sticky', top: 0, zIndex: 100 }}>
+                                    {header.label}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {isloading ? (
+                            <TableRowsLoader headers={headers} rowsNum={10} />
+                        ) : paginatedData.length === 0 ? (
                             <TableRow>
-                                {headers.map((header) => (
-                                    <TableCell key={header.id} sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600", position: 'sticky', top: 0, zIndex: 100 }}>
-                                        {header.label}
-                                    </TableCell>
-                                ))}
+                                <TableCell colSpan={headers.length} align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
+                                    No data available!
+                                </TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {isloading ? (
-                                <TableRowsLoader headers={headers} rowsNum={10} />
-                            ) : paginatedData.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={headers.length} align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
-                                        No data available!
-                                    </TableCell>
+                        ) : (
+                            paginatedData.map((row, index) => (
+                                <TableRow
+                                    sx={{
+                                        '&:hover': {
+                                            backgroundColor: colors.primary.light,
+                                        },
+                                    }}
+                                    key={index}
+                                >
+                                    {headers.map((header) => (
+                                        <TableCell key={header.id}
+                                        >
+                                            {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
-                            ) : (
-                                paginatedData.map((row, index) => (
-                                    <TableRow
-                                        sx={{
-                                            '&:hover': {
-                                                backgroundColor: colors.primary.light,
-                                            },
-                                        }}
-                                        key={index}
-                                    >
-                                        {headers.map((header) => (
-                                            <TableCell key={header.id}
-                                            >
-                                                {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                        {isPagination && (
-                             <TableFooter sx={{ background: '#9ddbe0',position:"sticky",  bottom: 0, zIndex: 100, width: '100%' }}>
-                                <TableRow>
-                                    <TablePagination
-                                        rowsPerPageOptions={[15, 30, 60, 120, { value: -1, label: 'All' }]}
-                                        count={data.length}
-                                        page={page}
-                                        onPageChange={handleChangePage}
-                                        rowsPerPage={rowsPerPage}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
-                                        color='rgba(0, 0, 0, 0.7)'
-                                    />
-                                </TableRow>
-                            </TableFooter>
+                            ))
                         )}
-                    </Table>
-         
-       
+                    </TableBody>
+                    {isPagination && (
+                        <TableFooter sx={{ background: '#9ddbe0', position: "sticky", bottom: 0, zIndex: 100, width: '100%' }}>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[15, 30, 60, 120, { value: -1, label: 'All' }]}
+                                    count={data.length}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    rowsPerPage={rowsPerPage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    color='rgba(0, 0, 0, 0.7)'
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    )}
+                </Table>
+
+
             </TableContainer>
 
         </>

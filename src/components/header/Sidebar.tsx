@@ -104,18 +104,18 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
 
     const menuItems: MenuItem[] = [
         { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
-        { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues' },
-        { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices' },
-        { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors' },
-        { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information' },
-        { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin' },
+        { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+        { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+        { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
+        { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+        { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin/' },
         {
             text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
-                { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report' },
-                { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary' },
-                { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report' },
-                { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel' },
-                { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report' },
+                { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+                { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+                { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+                { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+                { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report/' },
                 // { text: 'Device Log Report', icon: <StarBorder />, path: '/report/device-log-report' }
             ]
         },
@@ -142,6 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                             },
                             backgroundColor: path === item.path ? activeBackgroundColor : "inherit",
                             color: path === item.path ? "#fff" : "inherit"
+                            
                         }}
                     >
                         <ListItemIcon sx={{ color: iconColor, paddingLeft: !open ? "5px" : "16px", }}>

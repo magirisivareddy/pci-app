@@ -2,9 +2,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  //  output: 'standalone', 
+    // output: 'standalone', 
   reactStrictMode: false,
   swcMinify: true,
+  trailingSlash:true,
   env: {
     PCI_API_URL: 'https://esc-api.ktea.com/pci/dev/api/',
   },

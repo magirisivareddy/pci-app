@@ -16,7 +16,7 @@ interface Device {
     deviceId: string;
 
 }
-const Inspector = ({loading}:any) => {
+const Inspector = () => {
     const dispatch = useAppDispatch();
     const [isModal, setModal] = useState(false)
     const { inspectorData, selectedInspector,saveReportStatus } = useAppSelector(state => state.Inspections)
@@ -100,8 +100,6 @@ const Inspector = ({loading}:any) => {
                 </Stack>
             </Box>
             <DevicesTable data={viewReport} isLoading={isLoading} />
-
-
             <Modal
                 title={'Instruction'}
                 open={isModal}

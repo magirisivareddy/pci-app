@@ -77,6 +77,7 @@ export const VenuesSlice = createSlice({
             })
             .addCase(getVenues.rejected, (state, action) => {
                 state.status = 'failed';
+                state.venuesData = [];
                 state.error = action.error.message || 'An error occurred';
             });
     },

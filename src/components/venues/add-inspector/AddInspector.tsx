@@ -101,8 +101,6 @@ const AddInspector = ({ selectedRow }: any) => {
         setFirstName(value);
         debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
     }
-
-
     return (
         <div>
             <Grid container spacing={2} mb={2}>
@@ -129,12 +127,12 @@ const AddInspector = ({ selectedRow }: any) => {
                     <SelectInput
                         selectedOption={formData.inspectorType}
                         onChange={onChange}
-                        label={'inspectorType'}
+                        label={'Inspector Type'}
                         options={[
                             { label: "Backup Inspector", value: "Backup Inspector" },
-                            { label: "Missed Inspection", value: "missed_inspection" },
-                            { label: "Inspected: Not Resolved", value: "inspected_not_resolved" },
-                            { label: "To Be Inspected", value: "to_be_inspected" }
+                            { label: "Group Inspector", value: "Group Inspector" },
+                            { label: "Main Inspector", value: "Main Inspector" },
+                        
                         ]}
                         name={'inspectorType'}
                         id={'inspectorType'} size={'small'} />

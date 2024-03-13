@@ -13,16 +13,11 @@ const ReasonsCell = ({ row }: any) => {
     const theme = createTheme(); // Use createTheme to get access to breakpoints
     const xs = theme.breakpoints.down('xs');
     const device = devices.find(device => device.deviceId === row.deviceId);
+  
     const handleChange = (event: any) => {
         dispatch(updateRow({ deviceId: row.deviceId, reason: event.target.value }));
     }
-    useEffect(() => {
-        if (device?.status === "pass") {
-            dispatch(updateRow({ deviceId: row.deviceId, reason: "" }));
-        }else {
-            dispatch(updateRow({ deviceId: row.deviceId, reason: "Not Applicable" }));
-        }
-    }, [device])
+ 
 
     return (
         <FormControl sx={{

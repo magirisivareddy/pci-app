@@ -23,6 +23,7 @@ interface ScrollDialogProps {
   buttonText?: string
   footerLink?: string
   onFooterLink?: any
+  isDisabled?: boolean
 
 }
 
@@ -40,7 +41,8 @@ const Modal: FC<ScrollDialogProps> = ({
   buttonText,
   buttonType,
   footerLink,
-  onFooterLink
+  onFooterLink,
+  isDisabled = false
 }: ScrollDialogProps): ReactElement => {
   const ContentComponent = contentComponent || (() => null);
 
@@ -86,6 +88,7 @@ const Modal: FC<ScrollDialogProps> = ({
                 onClick={handleSubscribe}
                 variant="contained"
                 color="primary"
+                disabled={isDisabled}
               >
                 {buttonText ?? "Save"}
               </Button>

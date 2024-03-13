@@ -7,6 +7,7 @@ import { Alert, Button, Grid } from '@mui/material'
 import React, { useState } from 'react'
 
 const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
+    console.log("selectedRow",selectedRow)
     const dispatch = useAppDispatch()
     const [venue_name, setVenueName] = useState(selectedRow?.venue_name ?? "")
     const [message, setMessage] = useState("")
