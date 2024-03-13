@@ -47,6 +47,7 @@ const HelpdeskTicketForm: React.FC<{ handleModalClose: () => void }> = ({ handle
         handleModalClose();
     };
     const onChange = (value: string, name: string) => {
+        setErrorMessage("")
         setHelpDeskForm(prevhelpDeskForm => ({
             ...prevhelpDeskForm,
             [name]: value,

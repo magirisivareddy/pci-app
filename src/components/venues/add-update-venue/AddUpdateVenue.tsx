@@ -7,7 +7,6 @@ import { Alert, Button, Grid } from '@mui/material'
 import React, { useState } from 'react'
 
 const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
-    console.log("selectedRow",selectedRow)
     const dispatch = useAppDispatch()
     const [venue_name, setVenueName] = useState(selectedRow?.venue_name ?? "")
     const [message, setMessage] = useState("")
@@ -16,37 +15,43 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
     const onChange = (value: any) => {
         setVenueName(value)
     }
+  
     const onAddUpdateVenue = async () => {
+        if (!venue_name.trim()) {
+            setErrorMessage("Venue name cannot be empty");
+            return;
+        }
+    
         const obj = {
             venueId: (selectedRow?.venue_id ?? 0).toString(),
             venueName: venue_name,
             employeeNumber: "789"
-        }
+        };
         try {
-            setLoading(true)
-            const res = await addUpdateVenue(obj)
-            setMessage(res.message)
-            setLoading(false)
+            setLoading(true);
+            const res = await addUpdateVenue(obj);
+            setMessage(res.message);
+            setLoading(false);
             setTimeout(() => {
-                setMessage("")
-                dispatch(setAddOrEditVenueModal(false))
+                setMessage("");
+                dispatch(setAddOrEditVenueModal(false));
                 const obj = {
-                    "employeeNumber": "0004236",
-                    "is_it": "1",
-                    "adminLevel": "1",
-                    "inspectorType": "1",
-                    "venueId": "All",
-                    "inspectorEmployeeNumber": "All"
-                }
-
-                dispatch(getVenues(obj))
-            }, 3000)
-        } catch (error: any) {
-            setLoading(false)
-            setErrorMessage(error.message ?? "something went wrong ")
+                    employeeNumber: "0004236",
+                    is_it: "1",
+                    adminLevel: "1",
+                    inspectorType: "1",
+                    venueId: "All",
+                    inspectorEmployeeNumber: "All"
+                };
+    
+                dispatch(getVenues(obj));
+            }, 3000);
+        } catch (error:any) {
+            setLoading(false);
+            setErrorMessage(error.message ?? "Something went wrong");
         }
-
-    }
+    };
+    
     return (
         <Grid container spacing={2} mb={2} pr={2}>
             {isloading && <Loading/>}

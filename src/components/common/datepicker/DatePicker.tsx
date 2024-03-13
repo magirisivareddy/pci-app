@@ -5,6 +5,7 @@ import "./customDatePicker.css";
 import { IconButton, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { getDefaultWeekRange } from '@/utils/helpers';
 
 type DateRange = [Date | null, Date | null];
 
@@ -16,7 +17,6 @@ interface RangeDatePickerProps {
 const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onDateRangeChange }) => {
   const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange || getDefaultWeekRange());
   const [startDate, endDate] = dateRange;
-
   useEffect(() => {
     // Call the callback when dateRange changes
     onDateRangeChange(dateRange);
@@ -103,13 +103,4 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
 export default RangeDatePicker;
 
 // Function to get the default date range for the current week
-function getDefaultWeekRange(): DateRange {
-  const currentDate = new Date();
-  const startOfWeek = new Date(currentDate);
-  startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Set to Monday of the current week
 
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6); // Set to Saturday of the current week
-
-  return [startOfWeek, endOfWeek];
-}

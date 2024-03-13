@@ -26,13 +26,13 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
     dispatch(setInspectionFilterFormData({ name: name, value: value }))
   }
   const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
-    const serializedDateRange = dateRange.map(date => (date ? date.toISOString() : null));
-  
-    // Check if the date range has changed before updating the state
-    if (JSON.stringify(serializedDateRange) !== JSON.stringify(dateRange)) {
-      dispatch(setSelectedDateRange(serializedDateRange));
+    dispatch(setSelectedDateRange(dateRange));
+    // const serializedDateRange = dateRange.map(date => (date ? date.toISOString() : null));
+    // if (JSON.stringify(serializedDateRange) !== JSON.stringify(dateRange)) {
+    //   console.log("dateRange",dateRange)
+    //   dispatch(setSelectedDateRange(serializedDateRange));
 
-    }
+    // }
   };
   const updatedVenueDropdown = [...venueDropdown, { label: "All", value: "All" }];
   const updatedInspectorsDropdown = [...inspectorsDropdown, { label: "All", value: "All" }];

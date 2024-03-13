@@ -3,18 +3,25 @@ import SelectInput from '@/components/common/input/SelectInput';
 import { Alert, Grid } from '@mui/material';
 import React, { useState } from 'react'
 import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import EmailIcon from '@mui/icons-material/Email';
 import { addGroupInspector, doLookup } from '@/actions/api';
+import Loading from '@/app/loading';
 
 interface FormData {
     venue: any;
 }
+const debounce = (func: Function, delay: number) => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    return (...args: any) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func(...args), delay);
+    };
+};
 const AddGroupInspector = ({ venues }: any) => {
     const [formData, setFormData] = useState<FormData>({
-        venue: 101
+        venue: "All"
     });
     const [lastName, setLastName] = useState("")
     const [firstName, setFirstName] = useState("")
@@ -22,8 +29,6 @@ const AddGroupInspector = ({ venues }: any) => {
     const [isloading, setLoading] = useState(false)
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-
-    const [selectedTableRow, setSelectedTableRow] = useState(null)
     const handleTableRowClick = async (row: any) => {
         console.log("row", row)
         setSelectedTableRow(row);
@@ -66,19 +71,22 @@ const AddGroupInspector = ({ venues }: any) => {
             [name]: value,
         }));
     }
+
+    const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 3000);
     const onChangeLastName = (value: any) => {
         setLastName(value);
-        fetchDataAndSetDate(firstName, value);  // Use current state values
+        debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
     }
 
     const onChangeFirstName = (value: any) => {
         setFirstName(value);
-        fetchDataAndSetDate(value, lastName);  // Use current state values
+        debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
     }
-
+    const updatedVenueDropdown = [...venues, { label: "All", value: "All" }];
     return (
         <div>
             <Grid container spacing={2} mb={2}>
+            {isloading && <Loading/>}
                 <Grid item xs={12} md={4}>
                     <TextInput
                         defaultValue={lastName ?? ""}
@@ -102,7 +110,7 @@ const AddGroupInspector = ({ venues }: any) => {
                         selectedOption={formData.venue}
                         onChange={onChange}
                         label={'Add Venue'}
-                        options={venues}
+                        options={updatedVenueDropdown}
                         name={'addVenue'}
                         id={'addVenue'} size={'small'} />
                 </Grid>

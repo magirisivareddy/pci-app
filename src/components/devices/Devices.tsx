@@ -20,7 +20,7 @@ interface FormData {
 const Devices = ({ venueDropdown }: any) => {
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<FormData>({
-    commonAssetName: 'All',
+    commonAssetName: '',
     venueId: 'All',
     assetNumber: '',
     serialNumber: '',

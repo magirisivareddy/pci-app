@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TableFooter, useTheme, CircularProgress, Box, Button, Skeleton } from '@mui/material';
 import { tokens } from '@/theme/theme';
 import { useAppDispatch } from '@/redux/hooks';
-import { setBodyData, setHeaderData } from '@/redux/features/ExportSlice';
 import { TableRowsLoader } from './TableRowsLoader';
 import "./table.css"
 
@@ -37,21 +36,6 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
         setPage(0);
     };
     const paginatedData = rowsPerPage === -1 ? data : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-    const header = headers.map(header => header.label);
-    const body = data.map(row => {
-        return headers.map(header => {
-            return header.customRender ? header.customRender(row[header.id], row) : row[header.id];
-        });
-    });
-
-    useEffect(() => {
-        const bodyData = body.map(row => row.map(cell => {
-            // Extract relevant information from React elements if necessary
-            return typeof cell === 'object' && cell !== null && 'props' in cell ? cell.props.children : cell;
-        }));
-        dispatch(setBodyData(bodyData));
-        dispatch(setHeaderData(header));
-    }, []);
     return (
         <>
             <TableContainer component={Paper} sx={{ maxHeight: "65vh", overflow: 'auto', width: "100%", position: "relative" }}>

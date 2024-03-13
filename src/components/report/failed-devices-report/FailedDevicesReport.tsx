@@ -80,7 +80,7 @@ const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
     getVenueInspectorList(formData.venueId, formData.inspectorId);
   };
   return (<>
-    <FailedDevicesFilter dropdowns={dropdowns} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+    <FailedDevicesFilter dropdowns={dropdowns} failedDevicesData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
     <CustomTable data={data} headers={headers} isloading={isLoading} />
   </>
 

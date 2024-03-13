@@ -152,7 +152,6 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
             )
         },
     ];
-    console.log("venuesData", venuesData)
     return (
         <>
             {/* <CustomBreadcrumbs /> */}
@@ -166,6 +165,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 aria-haspopup="true"
                 onMouseEnter={handlePopoverOpen}
                 onMouseLeave={handlePopoverClose}
+                sx={{marginLeft:"2px"}}
             >
                 NOTES:
             </Typography>

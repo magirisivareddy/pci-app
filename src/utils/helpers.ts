@@ -9,3 +9,4 @@ export function getDefaultWeekRange(): DateRange {
     endOfWeek.setDate(startOfWeek.getDate() + 5); // Set to Saturday of the current week
     return [startOfWeek, endOfWeek];
 }
+

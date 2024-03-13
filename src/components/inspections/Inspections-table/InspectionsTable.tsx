@@ -259,8 +259,9 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       aria-haspopup="true"
       onMouseEnter={handlePopoverOpen}
       onMouseLeave={handlePopoverClose}
+      sx={{marginLeft:"2px"}}
     >
-      Inspections status notes
+      NOTES:
     </Typography>
 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />

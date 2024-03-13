@@ -38,8 +38,8 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
   }, []);
   const handelSubmit = (event: any) => {
     const obj: any = {
-      venueId: 'All',
-      inspectorEmployeeNumber: 'All',
+      venueId: formData.venue,
+      inspectorEmployeeNumber: formData.inspector,
       is_It: '1'
     }
     Object.keys(obj).forEach(key => {

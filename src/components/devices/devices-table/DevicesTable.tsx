@@ -26,7 +26,6 @@ const numberOfRecords = 30;
 const DevicesTable = () => {
   const { devicesData, status } = useAppSelector(state => state.devices)
 
-
   return (
     <CustomTable data={devicesData} headers={devicesHeader} isloading={status === "loading"} isPagination={true} />
   )

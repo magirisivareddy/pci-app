@@ -25,7 +25,15 @@ const DeviceFilter: React.FC<DeviceFilterProps> = ({ venueDropdown, formData, on
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const is_it = "1"
   const { devicesData } = useAppSelector(state => state.devices);
+  let updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
+  const assignedVenue = [
+    { label: "ARCHIVED DEVICES", value: "-1" }, { label: "IT STORAGE", value: '-2' }, { label: "RMA DEVICES", value: "0" }
+  ]
+  if (is_it == "1") {
+    updatedVenueDropdown = [...updatedVenueDropdown, ...assignedVenue,]
+  }
 
   const addDevice = () => {
     dispatch(
@@ -135,7 +143,7 @@ const DeviceFilter: React.FC<DeviceFilterProps> = ({ venueDropdown, formData, on
             selectedOption={formData.venueId}
             onChange={onChange}
             label={'Assigned Venue'}
-            options={venueDropdown}
+            options={updatedVenueDropdown}
             name={'venueId'}
             id={'venueId'}
             size={'small'}

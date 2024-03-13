@@ -91,7 +91,7 @@ const AddInspector = ({ selectedRow }: any) => {
             [name]: value,
         }));
     }
-    const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 1000);
+    const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 3000);
     const onChangeLastName = (value: any) => {
         setLastName(value);
         debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
