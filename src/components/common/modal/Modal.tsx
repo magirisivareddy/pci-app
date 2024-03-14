@@ -68,7 +68,7 @@ const Modal: FC<ScrollDialogProps> = ({
             color="inherit"
             onClick={handleClose}
             aria-label="close"
-            sx={{ position: 'absolute', top: 8, right: 8 }}
+            sx={{ position: 'absolute', top: 8, right: 20 }}
           >
             <CloseIcon />
           </IconButton>

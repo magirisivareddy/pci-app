@@ -14,9 +14,9 @@
 }
 
 .date-picker-container label {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.8);
   font-family: Source Sans Pro, sans-serif;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 0.6428571428571428rem;
   line-height: 1.66;
   text-align: left;

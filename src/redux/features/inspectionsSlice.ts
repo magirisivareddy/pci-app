@@ -5,7 +5,7 @@ import { fetchInspections } from '@/actions/api';
 
 interface Row {
   deviceId: string;
-  status?: string;
+  status?: any;
   notes?: string;
   reason?: string
 }

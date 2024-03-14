@@ -92,6 +92,11 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     dispatch(setSelectedInspector(row))
     dispatch(setModalInspectOpen(true));
   };
+  const isValidStatus = (status: any) => {
+    const validStatuses = [0, -1, 1];
+    return validStatuses.includes(status);
+  };
+  
   const handleSave = async () => {
     const obj = {
       inspectorENumber: selectedInspector?.inspectorEmployeenumber,
@@ -99,16 +104,14 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       venueId: selectedInspector.venue_id,
       venueName: selectedInspector.venue_name,
     };
+  
     const payload = {
       ...obj,
       devices,
     };
   
     // Check status field validation
-    const invalidStatusDevice = devices.find(device => {
-      if (!device.status) return true; // Check if status is undefined or null
-      return !["fail", "Questionable", "pass"].includes(device.status.toLowerCase());
-    });
+    const invalidStatusDevice = devices.find(device => !isValidStatus(device.status));
   
     if (invalidStatusDevice) {
       setOpen(true);
@@ -116,23 +119,20 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         open: true,
         message: "Invalid status value found!",
         severity: "error",
-      }))
+      }));
       return;
     }
   
     // Check notes field validation based on status
-    const deviceWithEmptyNotes = devices.find(device => (
-      (device.status === "fail" || device.status === "Questionable") && !device.notes
-    ));
+    const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 0) && !device.notes);
   
     if (deviceWithEmptyNotes) {
       setOpen(true);
-  
       dispatch(setDeviceStatus({
         open: true,
         message: "Notes cannot be empty for devices with 'Failed' or 'Questionable' status!",
         severity: "error",
-      }))
+      }));
       return;
     }
   
@@ -143,8 +143,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         open: true,
         message: `${res.message}!`,
         severity: "success",
-      }))
-  
+      }));
       dispatch(setSaveReportStatus(false));
       setTimeout(() => {
         dispatch(setModalInspectOpen(false));
@@ -152,8 +151,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           open: false,
           message: "",
           severity: "",
-        }))
-  
+        }));
       }, 3000);
     } catch (error: any) {
       dispatch(setSaveReportStatus(false));
@@ -161,8 +159,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         open: true,
         message: `${error.message}!`,
         severity: "error",
-      }))
-  
+      }));
     }
   };
   
@@ -259,7 +256,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       aria-haspopup="true"
       onMouseEnter={handlePopoverOpen}
       onMouseLeave={handlePopoverClose}
-      sx={{marginLeft:"2px"}}
+      sx={{ marginLeft: "2px" }}
     >
       NOTES:
     </Typography>

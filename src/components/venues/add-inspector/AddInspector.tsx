@@ -1,8 +1,7 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
-import { Alert, Grid } from '@mui/material';
-import React, { useState } from 'react'
-
+import { Alert, Grid, TableContainer } from '@mui/material';
+import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
@@ -24,36 +23,35 @@ const debounce = (func: Function, delay: number) => {
         timeoutId = setTimeout(() => func(...args), delay);
     };
 };
+
 const AddInspector = ({ selectedRow }: any) => {
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<FormData>({
         inspectorType: "Backup Inspector"
     });
-    const [lastName, setLastName] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lookupData, setLookup] = useState([])
-    const [isloading, setLoading] = useState(false)
-    const [successMessage, setSuccessMessage] = useState("")
-    const [errorMessage, setErrorMessage] = useState("")
-    const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo)
-
+    const [lastName, setLastName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lookupData, setLookup] = useState([]);
+    const [isLoading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
 
     const handleTableRowClick = async (row: any) => {
-        console.log("row", row)
+        console.log("row", row);
         const payload = {
             employeeNumber: row.employeeNumber.toString(),
             venueId: selectedVenueRow.venue_id.toString(),
             inspectorType: formData.inspectorType.toString()
-        }
+        };
 
         try {
             setLoading(true);
-            const data = await addVenueInspector(payload)
-
-            setSuccessMessage(data.message)
+            const data = await addVenueInspector(payload);
+            setSuccessMessage(data.message);
             setLoading(false);
             setTimeout(() => {
-                setSuccessMessage("")
+                setSuccessMessage("");
                 const obj = {
                     "employeeNumber": "0004236",
                     "is_it": "1",
@@ -61,25 +59,25 @@ const AddInspector = ({ selectedRow }: any) => {
                     "inspectorType": "1",
                     "venueId": "All",
                     "inspectorEmployeeNumber": "All"
-                }
+                };
 
-                dispatch(getVenues(obj))
-            }, 3000)
+                dispatch(getVenues(obj));
+            }, 3000);
         } catch (e: any) {
-            setErrorMessage(e.message)
+            setErrorMessage(e.message);
             setTimeout(() => {
-                setErrorMessage("")
-            }, 3000)
+                setErrorMessage("");
+            }, 3000);
         } finally {
             setLoading(false);
         }
-    }
+    };
+
     const fetchDataAndSetDate = async (firstname: any, lastname: any) => {
         try {
             setLoading(true);
             const data = await doLookup(firstname, lastname);
-            setLookup(data)
-            setLoading(false);
+            setLookup(data);
         } finally {
             setLoading(false);
         }
@@ -90,21 +88,24 @@ const AddInspector = ({ selectedRow }: any) => {
             ...prevData,
             [name]: value,
         }));
-    }
+    };
+
     const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 3000);
+
     const onChangeLastName = (value: any) => {
         setLastName(value);
         debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
-    }
+    };
 
     const onChangeFirstName = (value: any) => {
         setFirstName(value);
         debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
-    }
+    };
+
     return (
         <div>
             <Grid container spacing={2} mb={2}>
-                {isloading && <Loading/>}
+                {isLoading && <Loading/>}
                 <Grid item xs={12} md={4}>
                     <TextInput
                         defaultValue={lastName ?? ""}
@@ -137,46 +138,44 @@ const AddInspector = ({ selectedRow }: any) => {
                         name={'inspectorType'}
                         id={'inspectorType'} size={'small'} />
                 </Grid>
-
             </Grid>
             <Grid container mt={2}>
-                <Table sx={{ border: 'none' }}>
-                    <TableBody>
-
-                        {lookupData?.length === 0 ? (
-                            <TableRow>
-                                <TableCell align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
-                                    No data available!
-                                </TableCell>
-                            </TableRow>
-                        ) : lookupData?.map((row: any, index) => (
-                            <TableRow key={index} sx={{
-                                '&:nth-of-type(odd)': { backgroundColor: '#f2f2f2' },
-
-                            }} onClick={() => handleTableRowClick(row)} style={{ cursor: "pointer" }}  >
-                                <TableCell>{row.firstName}</TableCell>
-                                <TableCell>{row.lastName}</TableCell>
-                                <TableCell>{row.badgeNumber}</TableCell>
-                                <TableCell>{row.employeeNumber}</TableCell>
-                                <TableCell>{row.jobTitle}</TableCell>
-                                <TableCell>{row.department}</TableCell>
-                                <TableCell>
-                                    <EmailIcon color={row.email ? 'success' : 'error'} />
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <TableContainer sx={{ overflowX: 'auto', width:"100%" }}>
+                    <Table sx={{ width:"100%"}}>
+                        <TableBody>
+                            {lookupData?.length === 0 ? (
+                                <TableRow>
+                                    <TableCell align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
+                                        No data available!
+                                    </TableCell>
+                                </TableRow>
+                            ) : lookupData?.map((row: any, index) => (
+                                <TableRow key={index} sx={{
+                                    '&:nth-of-type(odd)': { backgroundColor: '#f2f2f2' },
+                                }} onClick={() => handleTableRowClick(row)} style={{ cursor: "pointer" }}  >
+                                    <TableCell>{row.firstName}</TableCell>
+                                    <TableCell>{row.lastName}</TableCell>
+                                    <TableCell>{row.badgeNumber}</TableCell>
+                                    <TableCell>{row.employeeNumber}</TableCell>
+                                    <TableCell>{row.jobTitle}</TableCell>
+                                    <TableCell>{row.department}</TableCell>
+                                    <TableCell>
+                                        <EmailIcon color={row.email ? 'success' : 'error'} />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Grid>
             {successMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
                     {successMessage}
                 </Alert>}
-
-                {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+            {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
                     {errorMessage}
                 </Alert>}
         </div>
-    )
-}
+    );
+};
 
-export default AddInspector
+export default AddInspector;

@@ -175,6 +175,8 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 open={showInspector}
                 scroll={"body"}
                 handleClose={handleCloseInspector}
+                // maxWidth="lg"
+                fullWidth={true}
 
                 contentComponent={(props) => <AddInspector selectedRow={selectedRow} />}
             />

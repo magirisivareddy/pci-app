@@ -4,6 +4,7 @@ import InspectionsFilters from './inspections-filters/InspectionsFilters'
 import InspectionsTable from './Inspections-table/InspectionsTable'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getInspections } from '@/redux/features/InspectionsSlice';
+import { format } from 'date-fns';
 
 
 
@@ -16,11 +17,12 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
     const dispatch = useAppDispatch()
     const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections?.inspectionFilterData)
     const { inspectionsList, status } = useAppSelector(state => state.Inspections)
+   
     const initialPayload = {
-        //  FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
-        //  ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
-        FromDate: selectedDateRange[0],
-        ToDate: selectedDateRange[1],
+         FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
+         ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
+        // FromDate: selectedDateRange[0],
+        // ToDate: selectedDateRange[1],
         InspectorNumber: inspectionForm.inspector,
         ReportStatus: inspectionForm.reportStatus,
         VenueId: inspectionForm.venue,
@@ -35,11 +37,13 @@ const Inspections: React.FC<InspectionsProps> = ({ venueDropdown, inspectorsDrop
 
 
     const handelSubmit = async () => {
+        console.log("selectedDateRange0",selectedDateRange[0])
+        console.log("selectedDateRange1",selectedDateRange[1])
         const obj = {
-            FromDate: selectedDateRange[0],
-            ToDate: selectedDateRange[1],
-            // FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
-            // ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
+            // FromDate: selectedDateRange[0],
+            // ToDate: selectedDateRange[1],
+            FromDate : selectedDateRange[0] ? format(selectedDateRange[0], 'dd/MM/yyyy') : null,
+            ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'dd/MM/yyyy') : null,
             InspectorNumber: inspectionForm.inspector.toString(),
             ReportStatus: inspectionForm.reportStatus,
             VenueId: inspectionForm.venue.toString(),

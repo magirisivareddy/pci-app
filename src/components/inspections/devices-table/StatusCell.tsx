@@ -6,10 +6,14 @@ import React from 'react'
 const StatusCell = ({ row }: any) => {
     const dispatch = useAppDispatch(); // Use the useAppDispatch hook here
     const handleStatusChange = (event: any) => {
-        dispatch(updateRow({ deviceId: row.deviceId, status: event.target.value }));
-        console.log("status", event.target.value)
-
+        if (event.target.value === "fail") {
+            dispatch(updateRow({ deviceId: row.deviceId, status: -1 }));
+        }
+        if (event.target.value === "Questionable") {
+            dispatch(updateRow({ deviceId: row.deviceId, status: 0 }));
+        }
         if (event.target.value === "pass") {
+            dispatch(updateRow({ deviceId: row.deviceId, status: 1 }));
             dispatch(updateRow({ deviceId: row.deviceId, reason: "" }));
         } else {
             dispatch(updateRow({ deviceId: row.deviceId, reason: "Not Applicable" }));

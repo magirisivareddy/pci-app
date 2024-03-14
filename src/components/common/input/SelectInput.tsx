@@ -29,8 +29,8 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selecte
         <div>
             <FormControl fullWidth>
             <label style={{
-                    color:"rgba(0, 0, 0, 0.6)",
-                    fontWeight: "400",
+                    color:"rgba(0, 0, 0, 0.8)",
+                    fontWeight: "600",
                     fontSize: "0.6428571428571428rem",
                     lineHeight: "1.66",
                     textAlign: "left",

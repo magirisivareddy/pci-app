@@ -7,6 +7,7 @@ interface TextInputProps {
     defaultValue?: string;
     id: string;
     onChange?: (name: string, value: string) => void;
+    onBlur?: () => void;
     isRequired?: boolean;
     disabled?:boolean
 
@@ -34,7 +35,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange, id, isRequired = false, disabled=false }) => {
+const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange,onBlur, id, isRequired = false, disabled=false }) => {
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -47,8 +48,8 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
     return (
         <FormControl fullWidth>
             <label style={{
-                color:"rgba(0, 0, 0, 0.6)",
-                fontWeight: "400",
+                color:"rgba(0, 0, 0, 0.8)",
+                fontWeight: "600",
                 fontSize: " 0.6428571428571428rem",
                 lineHeight: "1.66",
                 textAlign: "left",
@@ -64,6 +65,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
                 name={name}
                 placeholder={`${label}...`}
                 onChange={handleInputChange}
+                onBlur={onBlur}
                 id={id} 
                 disabled={disabled}
                 />

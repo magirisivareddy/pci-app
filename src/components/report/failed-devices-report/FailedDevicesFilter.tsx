@@ -11,8 +11,8 @@ import SelectInput from '@/components/common/input/SelectInput';
 const FailedDevicesFilter = ({ dropdowns, handelSubmit, formData, onChange, failedDevicesData }: any) => {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const updatedVenueDropdown = [...dropdowns.venueDropdown, { label: "All", value: "All" }];
-    const updatedInspectorsDropdown = [...dropdowns.inspectorsDropdown, { label: "All", value: "All" }];
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...dropdowns.venueDropdown];
+    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...dropdowns.inspectorsDropdown];
     const handleExport = () => {
         const header = [
             'Device Id',

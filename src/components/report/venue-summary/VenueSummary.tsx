@@ -2,6 +2,7 @@
 import { getVenueSummaryReport } from '@/actions/api';
 import CustomTable from '@/components/common/table/Table';
 import VenuesFilters from '@/components/venues/venues-filters/VenuesFilters';
+import { Box, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 interface FormData {
   venueId: string;
@@ -71,9 +72,56 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
     const employeeNumber = "5860"
     getVenueInspectorList(employeeNumber, formData.venueId, formData.inspectorEmployeeNumber)
   }
-  console.log("isLoading", isLoading)
+  console.log("data",data)
+  const handleExport = () => {
+    const header = [
+        'Device Id',
+        'Venue Name',
+        'Device Name',
+        'Device Location',
+        'Device Type',
+        'Notes',
+        'Device Status',
+        'Inspection Actual Date',
+        'Inspector',
+        'Inspection Type'
+    ];
+    const body: (string | undefined)[][] = data.map((venue: any) => [
+        venue.deviceId,
+        venue.venueName,
+        venue.deviceName,
+        venue.deviceLocation,
+        venue.deviceType,
+        venue.notes,
+        venue.deviceStatus,
+        venue.inspectionActualDate,
+        venue.inspector,
+        venue.inspectionType
+    ]);
+
+    const csvData = [header, ...body];
+    const csvFileName = 'VenueSummary.csv';
+
+    const csvContent = csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', csvFileName);
+
+
+    document.body.appendChild(link);
+    link.click();
+};
   return (
     <>
+      <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
+        <Button onClick={handleExport} size="small" variant="outlined">
+          Export to Excel
+        </Button>
+      </Box>
       <VenuesFilters dropdowns={dropdowns} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
       <CustomTable data={data} headers={headers} isloading={isLoading} />
     </>

@@ -29,8 +29,8 @@ const AddGroupInspector = ({ venues }: any) => {
     const [isloading, setLoading] = useState(false)
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [selectedTableRow, setSelectedTableRow] = useState(null)
     const handleTableRowClick = async (row: any) => {
-        console.log("row", row)
         setSelectedTableRow(row);
         const payload = {
             employeeNumber: row.employeeNumber.toString(),
@@ -82,7 +82,7 @@ const AddGroupInspector = ({ venues }: any) => {
         setFirstName(value);
         debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
     }
-    const updatedVenueDropdown = [...venues, { label: "All", value: "All" }];
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venues];
     return (
         <div>
             <Grid container spacing={2} mb={2}>

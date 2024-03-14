@@ -26,8 +26,8 @@ const GroupInspectorsFilter = ({ dropdowns, handelSubmit, onChange, formData }: 
         // Use the data as needed within the AddGroupInspector component
         return <AddGroupInspector venues={dropdowns.venueDropdown} />;
     };
-    const updatedVenueDropdown = [...dropdowns.venueDropdown, { label: "All", value: "All" }];
-    const updatedInspectorsDropdown = [...dropdowns.inspectorsDropdown, { label: "All", value: "All" }];
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...dropdowns.venueDropdown];
+    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...dropdowns.inspectorsDropdown];
     return (<>
         <Box display="flex" justifyContent="flex-end" pr={2}>
             <Button onClick={onAddGroupInspector} size="small" variant="outlined">Add Group Inspector</Button>

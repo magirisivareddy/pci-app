@@ -88,7 +88,7 @@ const VenueStatusReport = ({ venueDropdown }: any) => {
     // Render the VenueStatusReport component
     return (
         <div>
-            <VenueStatusFilter venueDropdown={venueDropdown} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+            <VenueStatusFilter venueDropdown={venueDropdown} venueStatusReportData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
             <CustomTable data={data} headers={headers} isloading={isLoading} />
         </div>
     );
