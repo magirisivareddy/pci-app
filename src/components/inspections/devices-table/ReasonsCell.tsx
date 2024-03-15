@@ -28,7 +28,7 @@ const ReasonsCell = ({ row }: any) => {
                 onChange={handleChange}
                 size='small'
                 displayEmpty
-                disabled={device?.status === "pass"}
+                disabled={device?.status === 1}
                 inputProps={{ 'aria-label': 'Without label' }}
             >
                 <MenuItem value={"Not Applicable"}>Not Applicable</MenuItem>

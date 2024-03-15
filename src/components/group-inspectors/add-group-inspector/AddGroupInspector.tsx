@@ -1,6 +1,6 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
-import { Alert, Grid } from '@mui/material';
+import { Alert, Button, Grid, Paper, TableBody, TableContainer, TableFooter, Typography } from '@mui/material';
 import React, { useState } from 'react'
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
@@ -19,9 +19,9 @@ const debounce = (func: Function, delay: number) => {
         timeoutId = setTimeout(() => func(...args), delay);
     };
 };
-const AddGroupInspector = ({ venues }: any) => {
+const AddGroupInspector = ({ venues ,onClose}: any) => {
     const [formData, setFormData] = useState<FormData>({
-        venue: "All"
+        venue: "101"
     });
     const [lastName, setLastName] = useState("")
     const [firstName, setFirstName] = useState("")
@@ -43,13 +43,14 @@ const AddGroupInspector = ({ venues }: any) => {
             setSuccessMessage(data.message)
             setLoading(false);
             setTimeout(() => {
+                onClose()
                 setSuccessMessage("")
-            }, 3000)
+            }, 2000)
         } catch (e: any) {
             setErrorMessage(e.message)
             setTimeout(() => {
                 setErrorMessage("")
-            }, 3000)
+            }, 2000)
         } finally {
             setLoading(false);
         }
@@ -64,7 +65,6 @@ const AddGroupInspector = ({ venues }: any) => {
             setLoading(false);
         }
     };
-
     const onChange = (value: any, name: any) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -72,84 +72,126 @@ const AddGroupInspector = ({ venues }: any) => {
         }));
     }
 
-    const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 3000);
+
     const onChangeLastName = (value: any) => {
         setLastName(value);
-        debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
+
     }
 
     const onChangeFirstName = (value: any) => {
         setFirstName(value);
-        debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
+
+    }
+    const onSearch = () => {
+        fetchDataAndSetDate(firstName, lastName)
     }
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venues];
     return (
         <div>
             <Grid container spacing={2} mb={2}>
-            {isloading && <Loading/>}
-                <Grid item xs={12} md={4}>
+                {isloading && <Loading />}
+                <Grid item xs={12} md={3.3}>
                     <TextInput
                         defaultValue={lastName ?? ""}
                         onChange={onChangeLastName}
+
                         label={'Last Name'}
                         name={'lastName'}
                         id={'lastName'}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3.3}>
                     <TextInput
                         defaultValue={firstName ?? ""}
                         onChange={onChangeFirstName}
+
                         label={'First Name'}
                         name={'firstName'}
                         id={'firstName'}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+
+                <Grid item xs={12} md={3.3}>
+
                     <SelectInput
                         selectedOption={formData.venue}
                         onChange={onChange}
                         label={'Add Venue'}
                         options={updatedVenueDropdown}
-                        name={'addVenue'}
-                        id={'addVenue'} size={'small'} />
+                        name={'venue'}
+                        id={'venue'} 
+                        size={'small'} />
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <Button sx={{ marginTop: "20px" }} onClick={onSearch} variant='contained'>Search</Button>
                 </Grid>
             </Grid>
             <Grid container mt={2}>
-                <Table sx={{ border: 'none' }}>
-                    {lookupData?.length === 0 ? (
-                        <TableRow>
-                            <TableCell align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
-                                No data available!
-                            </TableCell>
-                        </TableRow>
-                    ) : lookupData?.map((row: any, index) => (
-                        <TableRow key={index} sx={{
-                            '&:nth-of-type(odd)': { backgroundColor: '#f2f2f2' },
+                <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
+                    <Table>
+                        <TableBody>
+                            {lookupData?.length === 0 ? (
+                                <TableRow>
+                                    <TableCell align="center" sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
+                                        No data available!
+                                    </TableCell>
+                                </TableRow>
+                            ) : lookupData?.map((row: any, index) => (
+                                <TableRow key={index} sx={{
+                                    '&:nth-of-type(odd)': { backgroundColor: '#f2f2f2' },
+                                }} onClick={() => handleTableRowClick(row)} style={{ cursor: "pointer" }}  >
+                                    <TableCell>{row.firstName}</TableCell>
+                                    <TableCell>{row.lastName}</TableCell>
+                                    <TableCell>{row.badgeNumber}</TableCell>
+                                    <TableCell>{row.employeeNumber}</TableCell>
+                                    <TableCell>{row.jobTitle}</TableCell>
+                                    <TableCell>{row.department}</TableCell>
+                                    <TableCell>
+                                        <EmailIcon color={row.email ? 'success' : 'error'} />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                        <TableFooter sx={{ background: '#fff', position: "sticky", bottom: -1, zIndex: 100, width: '100%' }}>
+                            {lookupData?.length !== 0 && (
+                                <>
+                                    <TableRow>
+                                        <TableCell colSpan={12} align="center">
+                                            <Typography variant='subtitle2' sx={{ display: "flex", gap: "5px", alignItems: "center", justifyContent: "center" }}>
+                                                <EmailIcon color={'error'} />
+                                                Has no email address
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow>
 
-                        }} onClick={() => handleTableRowClick(row)} style={{ cursor: "pointer" }}  >
-                            <TableCell>{row.firstName}</TableCell>
-                            <TableCell>{row.lastName}</TableCell>
-                            <TableCell>{row.badgeNumber}</TableCell>
-                            <TableCell>{row.employeeNumber}</TableCell>
-                            <TableCell>{row.jobTitle}</TableCell>
-                            <TableCell>{row.department}</TableCell>
-                            <TableCell>
-                                <EmailIcon color={row.email ? 'success' : 'error'} />
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </Table>
+                                    {successMessage && (
+                                        <TableRow>
+                                            <TableCell colSpan={12} align="center">
+                                                <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
+                                                    {successMessage}
+                                                </Alert>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                    {errorMessage && (
+                                        <TableRow>
+                                            <TableCell colSpan={12} align="center">
+                                                <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+                                                    {errorMessage}
+                                                </Alert>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
 
-                {successMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
-                    {successMessage}
-                </Alert>}
+                                </>
+                            )}
+                        </TableFooter>
 
-                {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
-                    {errorMessage}
-                </Alert>}
 
+                    </Table>
+                </TableContainer>
             </Grid>
+
         </div>
     )
 }

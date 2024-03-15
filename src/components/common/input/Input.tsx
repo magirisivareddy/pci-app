@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, FocusEvent } from 'react';
 import { FormControl, InputBase, InputLabel, alpha, styled } from '@mui/material';
 
 interface TextInputProps {
@@ -7,7 +7,7 @@ interface TextInputProps {
     defaultValue?: string;
     id: string;
     onChange?: (name: string, value: string) => void;
-    onBlur?: () => void;
+    onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     isRequired?: boolean;
     disabled?:boolean
 

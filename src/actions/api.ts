@@ -98,23 +98,6 @@ export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "PO
     }
 }
 
-
-//Inspections page apis
-// export async function fetchInspections(payload: any) {
-//     return fetchData('inspections', 'POST', payload);
-// }
-
-
-
-//Post Api
-
-
-
-
-// Admin/ChangeAdminLevel
-
-
-
 export async function fetchInspections(payload: any) {
     return fetchQueryparamsData('Search/SearchInspections', 'POST', payload);
 }
@@ -172,13 +155,9 @@ export async function addVenueInspector(payload: any) {
 export async function helpDeskTicket(payload: any) {
     return fetchQueryparamsData('Common/HelpDeskTicket', 'POST', payload);
 }
-
-
-
-
-
-
-
+export async function receiveNoticesGroupInspector(inspectorId: any) {
+    return fetchQueryparamsData(`Inspector/ReceiveNoticesGroupInspector?inspectorId=${inspectorId}`, 'GET',null);
+}
 export async function getDeviceHistory(deviceId: any) {
     return fetchQueryparamsData(`device/GetDeviceHistory?deviceId=${deviceId}`, "GET", null);
 }

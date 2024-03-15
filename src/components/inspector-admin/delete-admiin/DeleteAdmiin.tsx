@@ -20,7 +20,7 @@ export const DeleteAdmiin = () => {
             setTimeout(() => {
                 dispatch(setinspectorAdminDeleteModal(false))
                 setMessage("")
-            }, 3000)
+            }, 2000)
             const obj =
             {
               "lastName": "",

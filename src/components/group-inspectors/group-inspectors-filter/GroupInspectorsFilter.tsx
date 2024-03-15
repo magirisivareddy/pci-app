@@ -24,7 +24,7 @@ const GroupInspectorsFilter = ({ dropdowns, handelSubmit, onChange, formData }: 
     }
     const ContentComponent = () => {
         // Use the data as needed within the AddGroupInspector component
-        return <AddGroupInspector venues={dropdowns.venueDropdown} />;
+        return <AddGroupInspector onClose={handleClose} venues={dropdowns.venueDropdown} />;
     };
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...dropdowns.venueDropdown];
     const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...dropdowns.inspectorsDropdown];
@@ -60,6 +60,8 @@ const GroupInspectorsFilter = ({ dropdowns, handelSubmit, onChange, formData }: 
             open={groupInspectorModal}
             scroll={'body'}
             handleClose={handleClose}
+            maxWidth="md"
+            fullWidth={true}
             contentComponent={(props) => <ContentComponent />}
         />
 

@@ -13,7 +13,10 @@ interface CounterState {
         isDeleteInspectorModal:boolean
         groupInspectorModal:boolean
         isdeleteVenuModal:boolean
-        deletedVenuId:any
+        deletedVenuId:any,
+        receiveNoticeStatus:any,
+        receiveNoticeLoading:boolean,
+        receiveNoticeStatusError:any
 
     },
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -30,7 +33,10 @@ const initialState: CounterState = {
         isDeleteInspectorModal:false,
         groupInspectorModal:false,
         isdeleteVenuModal:false,
-        deletedVenuId:null
+        deletedVenuId:null,
+        receiveNoticeStatus:"",
+        receiveNoticeLoading:false,
+        receiveNoticeStatusError:''
   
     },
     status: 'idle',
@@ -72,7 +78,15 @@ export const groupInspectorsSlice = createSlice({
         setdeleteVenuModal: (state, actions) => {
             state.groupInspectorsInfo.isdeleteVenuModal = actions.payload
         },
-        
+        setReceiveNoticeStatus: (state, actions) => {
+            state.groupInspectorsInfo.receiveNoticeStatus = actions.payload
+        },
+        setReceiveNoticeLoading: (state, actions) => {
+            state.groupInspectorsInfo.receiveNoticeLoading = actions.payload
+        },
+        setReceiveNoticeStatusError: (state, actions) => {
+            state.groupInspectorsInfo.receiveNoticeStatusError = actions.payload
+        },
      
     },
     extraReducers: (builder) => {
@@ -92,7 +106,7 @@ export const groupInspectorsSlice = createSlice({
     },
 })
 
-export const { setSelectedGroupInspectors,setAddVenuToInspectorModal,setDeleteInspectorModal,setGroupInspectorModal,setdeleteVenuModal,setDeletedVenuId } = groupInspectorsSlice.actions
+export const { setSelectedGroupInspectors,setAddVenuToInspectorModal,setDeleteInspectorModal,setGroupInspectorModal,setdeleteVenuModal,setDeletedVenuId,setReceiveNoticeStatus, setReceiveNoticeLoading, setReceiveNoticeStatusError } = groupInspectorsSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectGroupInspector = (state: RootState) => state.groupInspector

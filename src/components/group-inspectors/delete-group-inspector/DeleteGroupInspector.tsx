@@ -27,7 +27,7 @@ const DeleteGroupInspector = () => {
                 setMessage("")
                 dispatch(setDeleteInspectorModal(false))
                 dispatch(getGroupInspectors(payload))
-            }, 3000)
+            }, 2000)
         } catch (error: any) {
             console.log("error", error)
             setLoading(false)

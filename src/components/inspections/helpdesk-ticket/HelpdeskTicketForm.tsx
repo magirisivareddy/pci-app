@@ -77,7 +77,7 @@ const HelpdeskTicketForm: React.FC<{ handleModalClose: () => void }> = ({ handle
             setTimeout(() => {
                 setMessage("");
                 handleModalClose();
-            }, 3000);
+            }, 2000);
         } catch (error: any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong");

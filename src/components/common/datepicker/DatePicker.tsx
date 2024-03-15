@@ -6,6 +6,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { getDefaultWeekRange } from '@/utils/helpers';
+import { useAppDispatch } from '@/redux/hooks';
+import { setSelectedDateRange } from '@/redux/features/InspectionsSlice';
 
 type DateRange = [Date | null, Date | null];
 
@@ -15,53 +17,57 @@ interface RangeDatePickerProps {
 }
 
 const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onDateRangeChange }) => {
+  const dispatch = useAppDispatch()
   const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange || getDefaultWeekRange());
   const [startDate, endDate] = dateRange;
+
   useEffect(() => {
     // Call the callback when dateRange changes
     onDateRangeChange(dateRange);
   }, [dateRange, onDateRangeChange]);
-
+  // useEffect(() => {
+  //   dispatch(setSelectedDateRange(getDefaultWeekRange))
+  // }, [])
   const handleSelect = (dates: DateRange, event: React.SyntheticEvent<any> | undefined) => {
     setDateRange(dates);
   };
   const handlePreviousWeek = () => {
     const newEndDate = new Date(startDate || new Date());
     const newStartDate = new Date(newEndDate);
-  
+
     // Calculate the days to Monday and Sunday
-    const daysToMonday = (newStartDate.getDay() - 1 + 7) % 7; // Calculate days from current day to Monday
-    const daysToSunday = (newEndDate.getDay() + 7) % 7; // Calculate days from current day to Sunday
-  
+    const daysToMonday = (newStartDate.getDay()  + 7) % 7; // Calculate days from current day to Monday
+    const daysToSunday = (newEndDate.getDay()  + 7) % 6; // Calculate days from current day to Sunday
+
     // Calculate the start and end dates for the previous week
     newStartDate.setDate(newStartDate.getDate() - daysToMonday - 6); // Set to Monday of the previous week
     newEndDate.setDate(newEndDate.getDate() - daysToSunday); // Set to Sunday of the previous week
-  
+
     setDateRange([newStartDate, newEndDate]);
   };
-  
-  
-  
-  
-  
+
+
+
+
+
 
   const handleNextWeek = () => {
     const newStartDate = new Date(endDate || new Date());
     const newEndDate = new Date(newStartDate);
-  
+
     const daysToAdd = (8 - newStartDate.getDay()) % 7; // Calculate days to the next Monday
     newStartDate.setDate(newStartDate.getDate() + daysToAdd); // Set to Monday of the next week
-  
+
     // Check if the end date needs to be in the next month
     if (newStartDate.getMonth() !== newEndDate.getMonth()) {
       newEndDate.setMonth(newStartDate.getMonth());
     }
-  
+
     newEndDate.setDate(newStartDate.getDate() + 5); // Set to Saturday of the next week
-  
+
     setDateRange([newStartDate, newEndDate]);
   };
-  
+
 
 
   return (

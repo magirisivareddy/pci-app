@@ -13,6 +13,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
 import { setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
 import Modal from '@/components/common/modal/Modal';
 import Inspector from '../inspector/Inspector';
@@ -93,7 +94,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     dispatch(setModalInspectOpen(true));
   };
   const isValidStatus = (status: any) => {
-    const validStatuses = [0, -1, 1];
+    const validStatuses = [2, -1, 1];
     return validStatuses.includes(status);
   };
   
@@ -124,7 +125,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     }
   
     // Check notes field validation based on status
-    const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 0) && !device.notes);
+    const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 2) && !device.notes);
   
     if (deviceWithEmptyNotes) {
       setOpen(true);
@@ -152,7 +153,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           message: "",
           severity: "",
         }));
-      }, 3000);
+      }, 2000);
     } catch (error: any) {
       dispatch(setSaveReportStatus(false));
       dispatch(setDeviceStatus({
@@ -258,7 +259,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       onMouseLeave={handlePopoverClose}
       sx={{ marginLeft: "2px" }}
     >
-      NOTES:
+      NOTES: <FormatListBulletedRoundedIcon  color='primary' sx={{width:"15px",height:'15px', position:'relative',top:"4px"}}/>
     </Typography>
 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />

@@ -67,11 +67,15 @@ export const InspectionsSlice = createSlice({
   name: 'Inspections',
   initialState,
   reducers: {
+    setIntialFilterFormData: (state, action) => {
+      state.inspectionFilterData.inspectionForm = action.payload;
+    },
     setInspectionFilterFormData: (state, action) => {
       const { name, value } = action.payload;
       state.inspectionFilterData.inspectionForm[name] = value;
     },
     setSelectedDateRange: (state, action) => {
+      console.log("action.payload",action.payload)
       state.inspectionFilterData.selectedDateRange = action.payload;
     },
     setSaveReportStatus: (state, action) => {
@@ -134,7 +138,7 @@ export const InspectionsSlice = createSlice({
   },
 });
 
-export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus,setDeviceStatus } = InspectionsSlice.actions;
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus,setDeviceStatus,setIntialFilterFormData } = InspectionsSlice.actions;
 
 export const selectInspections = (state: RootState) => state.Inspections;
 

@@ -38,7 +38,7 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
 
                 setMessage("")
                 dispatch(getGroupInspectors(payload))
-            }, 3000)
+            }, 2000)
         } catch (error: any) {
             setLoading(false)
             setErrorMessage(error.message ?? "something went wrong ")

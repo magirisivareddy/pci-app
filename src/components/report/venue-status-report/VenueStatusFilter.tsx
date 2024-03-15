@@ -74,8 +74,8 @@ const VenueStatusFilter = ({ venueDropdown, handelSubmit, formData, onChange, ve
                         label={"Location"}
                         onChange={onChange}
                         defaultValue={formData.deviceLocation}
-                        name={"location"}
-                        id={"location"}
+                        name={"deviceLocation"}
+                        id={"deviceLocation"}
                     />
                 </Grid>
                 <Grid item xs={12} md={1}>

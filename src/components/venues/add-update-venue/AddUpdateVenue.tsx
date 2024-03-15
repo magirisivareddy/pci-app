@@ -45,7 +45,7 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
                 };
     
                 dispatch(getVenues(obj));
-            }, 3000);
+            }, 2000);
         } catch (error:any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong");

@@ -1,13 +1,13 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
-import { Alert, Grid, TableContainer } from '@mui/material';
+import { Alert, Button, Grid, Paper, TableContainer, TableFooter, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import EmailIcon from '@mui/icons-material/Email';
-import { addGroupInspector, addVenueInspector, doLookup } from '@/actions/api';
+import { addVenueInspector, doLookup } from '@/actions/api';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getVenues } from '@/redux/features/VenuesSlice';
 import Loading from '@/app/loading';
@@ -24,7 +24,7 @@ const debounce = (func: Function, delay: number) => {
     };
 };
 
-const AddInspector = ({ selectedRow }: any) => {
+const AddInspector = ({ selectedRow, onClose }: any) => {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<FormData>({
         inspectorType: "Backup Inspector"
@@ -38,7 +38,6 @@ const AddInspector = ({ selectedRow }: any) => {
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
 
     const handleTableRowClick = async (row: any) => {
-        console.log("row", row);
         const payload = {
             employeeNumber: row.employeeNumber.toString(),
             venueId: selectedVenueRow.venue_id.toString(),
@@ -51,6 +50,7 @@ const AddInspector = ({ selectedRow }: any) => {
             setSuccessMessage(data.message);
             setLoading(false);
             setTimeout(() => {
+                onClose()
                 setSuccessMessage("");
                 const obj = {
                     "employeeNumber": "0004236",
@@ -62,12 +62,12 @@ const AddInspector = ({ selectedRow }: any) => {
                 };
 
                 dispatch(getVenues(obj));
-            }, 3000);
+            }, 2000);
         } catch (e: any) {
             setErrorMessage(e.message);
             setTimeout(() => {
                 setErrorMessage("");
-            }, 3000);
+            }, 2000);
         } finally {
             setLoading(false);
         }
@@ -90,41 +90,48 @@ const AddInspector = ({ selectedRow }: any) => {
         }));
     };
 
-    const debouncedFetchDataAndSetDate = debounce(fetchDataAndSetDate, 3000);
+
 
     const onChangeLastName = (value: any) => {
         setLastName(value);
-        debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
+        // debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
     };
 
     const onChangeFirstName = (value: any) => {
         setFirstName(value);
-        debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
+        // debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
     };
+    const onSearch = () => {
+        fetchDataAndSetDate(firstName, lastName)
+    }
+
 
     return (
         <div>
             <Grid container spacing={2} mb={2}>
-                {isLoading && <Loading/>}
-                <Grid item xs={12} md={4}>
+                {isLoading && <Loading />}
+                <Grid item xs={12} md={3.3}>
                     <TextInput
                         defaultValue={lastName ?? ""}
                         onChange={onChangeLastName}
+                    
                         label={'Last Name'}
                         name={'lastName'}
                         id={'lastName'}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3.3}>
                     <TextInput
                         defaultValue={firstName ?? ""}
                         onChange={onChangeFirstName}
+               
                         label={'First Name'}
                         name={'firstName'}
                         id={'firstName'}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+
+                <Grid item xs={12} md={3.3}>
                     <SelectInput
                         selectedOption={formData.inspectorType}
                         onChange={onChange}
@@ -133,15 +140,18 @@ const AddInspector = ({ selectedRow }: any) => {
                             { label: "Backup Inspector", value: "Backup Inspector" },
                             { label: "Group Inspector", value: "Group Inspector" },
                             { label: "Main Inspector", value: "Main Inspector" },
-                        
+
                         ]}
                         name={'inspectorType'}
                         id={'inspectorType'} size={'small'} />
                 </Grid>
+                <Grid item xs={12} md={2}>
+                    <Button sx={{ marginTop: "20px" }} onClick={onSearch} variant='contained'>Search</Button>
+                </Grid>
             </Grid>
             <Grid container mt={2}>
-                <TableContainer sx={{ overflowX: 'auto', width:"100%" }}>
-                    <Table sx={{ width:"100%"}}>
+                <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
+                    <Table>
                         <TableBody>
                             {lookupData?.length === 0 ? (
                                 <TableRow>
@@ -165,15 +175,40 @@ const AddInspector = ({ selectedRow }: any) => {
                                 </TableRow>
                             ))}
                         </TableBody>
+                        <TableFooter sx={{ background: '#fff', position: "sticky", bottom: -1, zIndex: 100, width: '100%' }}>
+                            {lookupData?.length !== 0 && (
+                                <>
+                                    <TableRow>
+                                        <TableCell colSpan={12} align="center">
+                                            <Typography variant='subtitle2' sx={{ display: "flex", gap: "5px", alignItems: "center", justifyContent: "center" }}>
+                                                <EmailIcon color={'error'} />
+                                                Has no email address
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell colSpan={12} align="center">
+                                            {successMessage && (
+                                                <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
+                                                    {successMessage}
+                                                </Alert>
+                                            )}
+                                            {errorMessage && (
+                                                <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+                                                    {errorMessage}
+                                                </Alert>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                </>
+                            )}
+                        </TableFooter>
+
+
                     </Table>
                 </TableContainer>
             </Grid>
-            {successMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
-                    {successMessage}
-                </Alert>}
-            {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
-                    {errorMessage}
-                </Alert>}
+
         </div>
     );
 };

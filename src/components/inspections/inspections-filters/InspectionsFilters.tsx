@@ -1,10 +1,11 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import RangeDatePicker from '@/components/common/datepicker/DatePicker';
 import { Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setInspectionFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
+import { setInspectionFilterFormData, setIntialFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
+import { getDefaultWeekRange } from '@/utils/helpers';
 
 interface InspectionsFiltersProps {
   venueDropdown: Array<{ label: string; value: string }>;
@@ -19,21 +20,23 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const { inspectionForm,selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
+  useEffect(() => {
+    dispatch(setIntialFilterFormData({
+        venue: 'All',
+        inspector: 'All',
+        reportStatus: 'to be inspected',
+    }))
+    const date =getDefaultWeekRange()
+    dispatch(setSelectedDateRange(date))
   
+}, []);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const onChange = (value: any, name: any) => {
     dispatch(setInspectionFilterFormData({ name: name, value: value }))
   }
   const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
-    console.log("dateRange",dateRange)
     dispatch(setSelectedDateRange(dateRange));
-    // const serializedDateRange = dateRange.map(date => (date ? date.toISOString() : null));
-    // if (JSON.stringify(serializedDateRange) !== JSON.stringify(dateRange)) {
-    //   console.log("dateRange",dateRange)
-    //   dispatch(setSelectedDateRange(serializedDateRange));
-
-    // }
   };
   const updatedVenueDropdown = [{ label: "All", value: "All" },...venueDropdown];
   const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorsDropdown];

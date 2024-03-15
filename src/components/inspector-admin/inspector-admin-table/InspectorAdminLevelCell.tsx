@@ -37,7 +37,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
             dispatch(getAdminList(obj))
             setTimeout(() => {
                 dispatch(setAdminLevelStatus(null))
-            }, 3000)
+            }, 2000)
         } catch (error: any) {
             console.log("error",error)
             dispatch(setAdminLevelStatus({
@@ -47,7 +47,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
             }))
             setTimeout(() => {
                 dispatch(setAdminLevelStatus(null))
-            }, 3000)
+            }, 2000)
 
         }
     }

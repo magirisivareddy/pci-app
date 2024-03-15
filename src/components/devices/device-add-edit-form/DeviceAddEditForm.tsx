@@ -62,7 +62,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         setAssetStatus(value)
         setFormData((prevData) => ({
             ...prevData,
-            assetNumber: value ? '' : prevData.assetNumber, // Reset asset number if asset status is true
+            assetNumber: value ? '0' : prevData.assetNumber, // Reset asset number if asset status is true
         }));
         const assetName = "assetNumber";
         // Clear validation error when the checkbox is checked
@@ -75,6 +75,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         }));
         // Clear validation error when the field is changed
         clearValidationError(name);
+        setErrorMessage("")
     };
 
     const clearValidationError = (name: string) => {
@@ -102,7 +103,10 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
                 errors[key] = 'This field is required';
             }
         });
-
+        // Add additional validation for assetNumber
+        if (!assetStatus && !/^\d+$/.test(formData.assetNumber)) {
+            errors['assetNumber'] = 'Asset number must contain only numbers';
+        }
         // If there are validation errors, set them in state and return
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
@@ -144,7 +148,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
                     employeeNumber: "789",
                 };
                 dispatch(getDevices(obj));
-            }, 3000);
+            }, 2000);
         } catch (error: any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong ");

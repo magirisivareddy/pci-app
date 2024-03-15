@@ -20,7 +20,7 @@ const Inspector = () => {
     const dispatch = useAppDispatch();
     const [isModal, setModal] = useState(false)
     const { inspectorData, selectedInspector,saveReportStatus } = useAppSelector(state => state.Inspections)
-
+console.log("selectedInspector",selectedInspector.venue_name)
     const [isLoading, setLoading] = useState(true)
     const [viewReport, setViewReport] = useState<Device[]>([]);
     const inspectorHandlechange = (name: string, value: string) => {
@@ -80,7 +80,7 @@ const Inspector = () => {
                     <TextInput defaultValue={inspectorData.employee ?? ""} onChange={inspectorHandlechange} label={'Employee'} name={'employee'} id={'employee'} />
                 </Grid>
                 <Grid item xs={12} md={3.3}>
-                    <TextInput defaultValue={inspectorData.venue ?? ""} onChange={inspectorHandlechange} label={'Venue'} name={'venue'} id={'venue'} />
+                    <TextInput defaultValue={selectedInspector.venue_name ?? inspectorData.venue} onChange={inspectorHandlechange} label={'Venue'} name={'venue'} id={'venue'} />
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <Typography variant='caption' sx={{

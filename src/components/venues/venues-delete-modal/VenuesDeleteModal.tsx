@@ -36,7 +36,7 @@ const VenuesDeleteModal = () => {
                 }
         
                 dispatch(getVenues(obj))
-            }, 3000)
+            }, 2000)
 
         } catch (error: any) {
             setLoading(false)

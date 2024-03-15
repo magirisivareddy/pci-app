@@ -57,7 +57,7 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
-    const { isAddVenueToInspectorModal, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+    const { isAddVenueToInspectorModal, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId, receiveNoticeStatus,receiveNoticeLoading,receiveNoticeStatusError } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
     const handleClose = () => {
         dispatch(setAddVenuToInspectorModal(false))
         dispatch(setDeleteInspectorModal(false))
@@ -86,7 +86,7 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                     });
                     setMessage("")
                     dispatch(getGroupInspectors(obj))
-                }, 3000)
+                }, 2000)
                 handleClose()
 
             } catch (error: any) {
@@ -119,6 +119,14 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
     }
     return (
         <>
+            {receiveNoticeLoading&& <Loading/>}
+            {receiveNoticeStatus && <Alert sx={{ marginTop: "10px" ,marginBottom:"10px" }} variant="filled" severity="success">
+                    {receiveNoticeStatus}
+                </Alert>}
+
+                {receiveNoticeStatusError && <Alert sx={{ marginTop: "10px",marginBottom:"10px" }} variant="filled" severity="error">
+                    {receiveNoticeStatusError}
+                </Alert>}
             <CustomTable data={groupInspectorsData} headers={myHeaders} isloading={status === "loading"} />
             <Modal
                 title={`Group Inspector -Add venue: ${selectedGroupInspector?.lastName} ${selectedGroupInspector?.firstName}`}

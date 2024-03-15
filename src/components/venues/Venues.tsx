@@ -15,6 +15,7 @@ import { getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspection
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import InspectionDeleteModal from "./inspection-delete-modal/InspectionDeleteModal";
 import VenuesDeleteModal from "./venues-delete-modal/VenuesDeleteModal";
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
 type Dropdowns = {
     venueDropdown: any; // replace with the actual type
@@ -114,15 +115,15 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         dispatch(setShowInspector(false))
 
     };
-    const handleDeleteInspector = (row: any,inspector:any) => {
+    const handleDeleteInspector = (row: any, inspector: any) => {
         console.log("row", row)
-        console.log("inspector",inspector)
+        console.log("inspector", inspector)
         dispatch(setDeletInspectionModal(true))
     };
 
 
 
- 
+
     const myHeaders: any = [
         { id: 'venue_name', label: 'Venue' },
         {
@@ -132,7 +133,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 <InspectorCell
                     inspectorDetails={row.inspectorDetails}
                     onAdd={() => handleAddInspector(row)}
-                 
+
                 />
             )
         },
@@ -165,20 +166,20 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 aria-haspopup="true"
                 onMouseEnter={handlePopoverOpen}
                 onMouseLeave={handlePopoverClose}
-                sx={{marginLeft:"2px"}}
+                sx={{ marginLeft: "2px" }}
             >
-                NOTES:
+                 NOTES: <FormatListBulletedRoundedIcon  color='primary' sx={{width:"15px",height:'15px', position:'relative',top:"4px"}}/>
             </Typography>
             <CustomTable data={venuesData} headers={myHeaders} isloading={status === "loading"} />
             <Modal
                 title={"Lookup"}
                 open={showInspector}
-                scroll={"body"}
+                scroll={"paper"}
                 handleClose={handleCloseInspector}
-                // maxWidth="lg"
+                maxWidth="md"
                 fullWidth={true}
 
-                contentComponent={(props) => <AddInspector selectedRow={selectedRow} />}
+                contentComponent={(props) => <AddInspector onClose={handleCloseInspector} selectedRow={selectedRow} />}
             />
             <Modal
                 title={`${modalType} Venue`}

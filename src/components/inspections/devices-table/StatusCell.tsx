@@ -10,7 +10,7 @@ const StatusCell = ({ row }: any) => {
             dispatch(updateRow({ deviceId: row.deviceId, status: -1 }));
         }
         if (event.target.value === "Questionable") {
-            dispatch(updateRow({ deviceId: row.deviceId, status: 0 }));
+            dispatch(updateRow({ deviceId: row.deviceId, status: 2 }));
         }
         if (event.target.value === "pass") {
             dispatch(updateRow({ deviceId: row.deviceId, status: 1 }));

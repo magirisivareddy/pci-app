@@ -4,9 +4,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import "./DeleteVenue.css"
-import { getGroupInspectors, setAddVenuToInspectorModal, setDeletedVenuId, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/GroupInspectorsSlice';
+import {  setAddVenuToInspectorModal, setDeletedVenuId, setSelectedGroupInspectors, setdeleteVenuModal } from '@/redux/features/GroupInspectorsSlice';
 import { useAppDispatch } from '@/redux/hooks';
-import { groupInspectorRemoveVenue } from '@/actions/api';
+
 
 const AddAndDeleteVenue = ({ row }: any) => {
     console.log("row", row)
