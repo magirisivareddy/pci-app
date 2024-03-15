@@ -31,13 +31,14 @@ type Header = {
   id: string;
   label: string;
   customRender?: (_value: any, row: any) => JSX.Element;
+  
 };
 interface TableRowData {
   status: string;
   reportDate: string;
   weekNumber: number;
   venue: string;
-  inspectorEmployeeNumber: string;
+  inspector_enumber: string;
   totalDevices: number;
   totalQuestionableDevices: number;
   totalFailedDevices: number;
@@ -100,7 +101,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
   
   const handleSave = async () => {
     const obj = {
-      inspectorENumber: selectedInspector?.inspectorEmployeenumber,
+      inspectorENumber: selectedInspector?.inspector_enumber,
       reportId: selectedInspector.reportId,
       venueId: selectedInspector.venue_id,
       venueName: selectedInspector.venue_name,
@@ -205,13 +206,13 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
         return (
           name.trim() !== '' ? (
-            <span>{name} {row.inspectorEmployeenumber}</span>
+            <span>{name} {row.inspector_enumber}</span>
           ) : (
             <span style={{ color: "#F00" }}>
               {row.venue_name !== "SPARE DEVICES" &&
                 row.venue_name !== "ARCHIVED DEVICES" &&
                 row.venue_name !== "IT STORAGE" &&
-                (row.inspectorEmployeenumber === 0)
+                (row.inspector_enumber === 0)
                 ? "No Main Inspector assigned"
                 : ""}
             </span>
@@ -228,7 +229,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       label: 'Inspect',
       customRender: (value: any, row: any): JSX.Element => {
         // console.log("row", row);
-        let title = "";
+        let title = "View";
 
         if (row.reportId === 0) {
           title = "Inspect";

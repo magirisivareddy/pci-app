@@ -124,7 +124,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         try {
             setLoading(true);
             const payLoad = {
-                ...formData, employeeNumber: "789"
+                ...formData, employeeNumber: "4236"
             }
             const res = await addUpdateDevice(payLoad);
             setMessage(res.message);

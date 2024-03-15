@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TableFooter, useTheme, CircularProgress, Box, Button, Skeleton } from '@mui/material';
 import { tokens } from '@/theme/theme';
 import { useAppDispatch } from '@/redux/hooks';
@@ -15,6 +15,7 @@ interface CustomTableProps {
         id: string;
         label: string;
         customRender?: (data: any, row: TableRowData) => React.ReactNode;
+        minWidth?:string
     }[];
     renderExportButton?: boolean; // Optional prop for rendering the export button
     isloading?: boolean;
@@ -31,6 +32,10 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
+    useEffect(()=>{
+        setRowsPerPage(15);
+        setPage(0);
+    },[data])
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
@@ -43,7 +48,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
-                                <TableCell key={header.id} sx={{ background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600", position: 'sticky', top: 0, zIndex: 100 }}>
+                                <TableCell key={header.id} align="center"  sx={{  background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600", position: 'sticky', top: 0, zIndex: 100 }}>
                                     {header.label}
                                 </TableCell>
                             ))}

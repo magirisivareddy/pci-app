@@ -25,9 +25,14 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
     // Call the callback when dateRange changes
     onDateRangeChange(dateRange);
   }, [dateRange, onDateRangeChange]);
-  // useEffect(() => {
-  //   dispatch(setSelectedDateRange(getDefaultWeekRange))
-  // }, [])
+  useEffect(() => {
+    const defaultWeekRange = getDefaultWeekRange();
+
+  
+    return () => {
+      dispatch(setSelectedDateRange(defaultWeekRange));
+    };
+  }, []);
   const handleSelect = (dates: DateRange, event: React.SyntheticEvent<any> | undefined) => {
     setDateRange(dates);
   };
@@ -45,11 +50,6 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
 
     setDateRange([newStartDate, newEndDate]);
   };
-
-
-
-
-
 
   const handleNextWeek = () => {
     const newStartDate = new Date(endDate || new Date());
