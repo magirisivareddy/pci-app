@@ -11,7 +11,7 @@ import { Button, Tooltip, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
-import { setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector } from '@/redux/features/InspectionsSlice';
+import { setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector, setSelectedInspectorType } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
@@ -21,6 +21,7 @@ import InspectionNotes from '../inspection-notes/InspectionNotes';
 import CustomTable from '@/components/common/table/Table';
 import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
 import { insertOrUpdateReport } from '@/actions/api';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Loading from '@/app/loading';
 
 interface InspectionsTableProps {
@@ -31,7 +32,7 @@ type Header = {
   id: string;
   label: string;
   customRender?: (_value: any, row: any) => JSX.Element;
-  
+
 };
 interface TableRowData {
   status: string;
@@ -48,7 +49,6 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
   const { devices, selectedInspector, saveReportStatus, deviceStatus } = useAppSelector(state => state.Inspections)
-
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
 
@@ -90,7 +90,8 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       severity: ''
     }))
   };
-  const handleInspectClick = (row: any) => {
+  const handleInspectClick = (row: any,title:any) => {
+    dispatch(setSelectedInspectorType(title))
     dispatch(setSelectedInspector(row))
     dispatch(setModalInspectOpen(true));
   };
@@ -98,7 +99,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     const validStatuses = [2, -1, 1];
     return validStatuses.includes(status);
   };
-  
+
   const handleSave = async () => {
     const obj = {
       inspectorENumber: selectedInspector?.inspector_enumber,
@@ -106,15 +107,15 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       venueId: selectedInspector.venue_id,
       venueName: selectedInspector.venue_name,
     };
-  
+
     const payload = {
       ...obj,
       devices,
     };
-  
+
     // Check status field validation
     const invalidStatusDevice = devices.find(device => !isValidStatus(device.status));
-  
+
     if (invalidStatusDevice) {
       setOpen(true);
       dispatch(setDeviceStatus({
@@ -124,10 +125,10 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       }));
       return;
     }
-  
+
     // Check notes field validation based on status
     const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 2) && !device.notes);
-  
+
     if (deviceWithEmptyNotes) {
       setOpen(true);
       dispatch(setDeviceStatus({
@@ -137,7 +138,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       }));
       return;
     }
-  
+
     try {
       dispatch(setSaveReportStatus(true));
       const res = await insertOrUpdateReport(payload);
@@ -164,7 +165,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       }));
     }
   };
-  
+
 
 
 
@@ -172,30 +173,48 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     {
       id: 'status',
       label: 'Status',
-      customRender: (value: any, row: any): JSX.Element => (
-        <span>
-          {row.status === 'Active' ? (
-            <Tooltip title="Active">
-              <DoneOutlineIcon color="success" />
-            </Tooltip>
-          ) : (
-            <Tooltip title="To be inspected in 72 hours">
-              <ErrorIcon color="success" />
-            </Tooltip>
-          )}
-        </span>
-      )
+      customRender: (value: any, row: any): JSX.Element => {
+        const extractedTitle = row.title.match(/title="([^"]+)"/);
+        const tooltipTitle = extractedTitle ? extractedTitle[1] : '';
+   
+        return (
+          <span>
+            {row.status === 'To be inspected within 3 days.' ? (
+              <Tooltip title={row.title === "Has been inspected." ? row.title : tooltipTitle}>
+                <ErrorIcon sx={{ color: "yellow" }} />
+              </Tooltip>
+            ) : row.status === 'To be inspected within the present week.' ? (
+              <Tooltip title={row.title === "Has been inspected." ? row.title : tooltipTitle}>
+                <ErrorIcon color='success' />
+              </Tooltip>
+            ) : row.status === 'To be inspected within 2 days.' ? (
+              <Tooltip title={row.title === "Has been inspected." ? row.title : tooltipTitle}>
+                <ErrorIcon color='warning' />
+              </Tooltip>
+            ) : row.status === 'Today is the last day to be inspected.' ? (
+              <Tooltip title={row.title === "Has been inspected." ? row.title : tooltipTitle}>
+                <ErrorIcon color='error' />
+              </Tooltip>
+            ) : row.status === 'Was not inspected.' ? (
+              <Tooltip title={row.title === "Has been inspected." ? row.title : tooltipTitle}>
+                <CloseRoundedIcon color='error' />
+              </Tooltip>
+            ) : row.status === 'Has been inspected.' ? (
+              <Tooltip title={row.title === "Has been inspected." ? row.title : tooltipTitle}>
+                <DoneOutlineIcon color='success' />
+              </Tooltip>
+            ) : null}
+          </span>
+        )
+      }
     },
+
+
 
     { id: 'reportId', label: 'Report Id' },
     { id: 'weekNumber', label: 'Week' },
     {
       id: 'reportDateTime', label: 'Report Date',
-      customRender: (value: any, row: any): JSX.Element => (
-        <span>
-          {format(row.reportDateTime, 'dd/MM/yyyy hh:mm a')}
-        </span>
-      )
     },
     { id: 'venue_name', label: 'Venue' },
     {
@@ -242,7 +261,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         }
 
         return (
-          <Button size="small" variant="outlined" onClick={() => handleInspectClick(row)}>
+          <Button size="small" variant="outlined" onClick={() => handleInspectClick(row, title)}>
             {title}
           </Button>
         );
@@ -250,6 +269,17 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     }
 
   ];
+
+  let isDisabled = true
+  if (selectedInspector.reportId === 0) {
+    isDisabled = false
+  } else if (selectedInspector.questionable !== 0 || selectedInspector.failed !== 0) {
+    isDisabled = false
+    if (selectedInspector.dateDifference && selectedInspector.dateDifference <= 0) {
+      isDisabled = true
+    }
+  }
+  console.log("selectedInspector", selectedInspector)
   return (<>
 
     <Typography
@@ -260,7 +290,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       onMouseLeave={handlePopoverClose}
       sx={{ marginLeft: "2px" }}
     >
-      NOTES: <FormatListBulletedRoundedIcon  color='primary' sx={{width:"15px",height:'15px', position:'relative',top:"4px"}}/>
+      NOTES: <FormatListBulletedRoundedIcon color='primary' sx={{ width: "15px", height: '15px', position: 'relative', top: "4px" }} />
     </Typography>
 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />
@@ -281,7 +311,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           handleSubscribe={handleSave}
           buttonType="submit"
           buttonText="Submit"
-          isDisabled={selectedInspector.totalDevices === 0}
+          isDisabled={selectedInspector.totalDevices === 0 || isDisabled}
           footerLink="Report a Finding / Raise a ticket"
           onFooterLink={onHelpDeskModal}
 

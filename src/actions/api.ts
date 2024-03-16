@@ -111,7 +111,7 @@ export async function insertOrUpdateReport(payload: any) {
     return fetchQueryparamsData('report/InsertOrUpdateReport', 'POST', payload);
 }
 
-export async function searchDevices(payload: any) {    
+export async function searchDevices(payload: any) {
     // return fetchData('SearchDevices', 'POST', payload);
     return fetchQueryparamsData('search/SearchDevices', 'POST', payload);
 }
@@ -156,7 +156,7 @@ export async function helpDeskTicket(payload: any) {
     return fetchQueryparamsData('Common/HelpDeskTicket', 'POST', payload);
 }
 export async function receiveNoticesGroupInspector(inspectorId: any) {
-    return fetchQueryparamsData(`Inspector/ReceiveNoticesGroupInspector?inspectorId=${inspectorId}`, 'GET',null);
+    return fetchQueryparamsData(`Inspector/ReceiveNoticesGroupInspector?inspectorId=${inspectorId}`, 'GET', null);
 }
 export async function getDeviceHistory(deviceId: any) {
     return fetchQueryparamsData(`device/GetDeviceHistory?deviceId=${deviceId}`, "GET", null);
@@ -191,6 +191,9 @@ export async function getVenueSummaryReport(employeeNumber: string, venueId?: st
     }
 
     return fetchQueryparamsData(url, "GET", null);
+}
+export async function updatePciLabeled(deviceId: any, employeeNumber: any) {
+    return fetchQueryparamsData(`Device/UpdatePciLabeled?deviceId=${deviceId}&employeeNumber=${employeeNumber}`, "PUT", null);
 }
 
 export async function getVenuePassFailSummaryReport(employeeNumber: string, venueName?: string, inspector?: string) {

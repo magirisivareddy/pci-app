@@ -8,18 +8,15 @@ import { setInspectionFilterFormData, setIntialFilterFormData, setSelectedDateRa
 import { getDefaultWeekRange } from '@/utils/helpers';
 
 interface InspectionsFiltersProps {
-  venueDropdown: Array<{ label: string; value: string }>;
   handelSubmit: () => void;
-  inspectorsDropdown: Array<{ label: string; value: string }>;
 }
 
 const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
-  venueDropdown,
   handelSubmit,
-  inspectorsDropdown,
 }) => {
   const dispatch = useAppDispatch()
   const { inspectionForm,selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
+  const {venueDropdown,inspectorDropdown}=useAppSelector(state=>state.common)
   useEffect(() => {
     dispatch(setIntialFilterFormData({
         venue: 'All',
@@ -39,7 +36,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
     dispatch(setSelectedDateRange(dateRange));
   };
   const updatedVenueDropdown = [{ label: "All", value: "All" },...venueDropdown];
-  const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorsDropdown];
+  const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
   return (<>
     <Grid container spacing={2} mb={2} pr={1}>
       <Grid item xs={12} md={4} >

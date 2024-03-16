@@ -4,7 +4,7 @@ import { getDefaultWeekRange } from '@/utils/helpers';
 import { fetchInspections } from '@/actions/api';
 
 interface Row {
-  deviceId: string;
+  inspectedId: any;
   status?: any;
   notes?: string;
   reason?: string
@@ -21,6 +21,7 @@ interface InspectorFormState {
   devices: Row[];
   saveReportStatus: boolean
   selectedInspector: any;
+  selectedInspectorType:any
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   inspectionsList: any; // Change 'any' to the actual type of your data
   error: string | null;
@@ -44,6 +45,7 @@ const initialState: InspectorFormState = {
   devices: [],
   saveReportStatus: false,
   selectedInspector: {},
+  selectedInspectorType:null,
   status: 'idle',
   inspectionsList: [], // Change 'any' to the actual type of your data
   error: null,
@@ -75,7 +77,6 @@ export const InspectionsSlice = createSlice({
       state.inspectionFilterData.inspectionForm[name] = value;
     },
     setSelectedDateRange: (state, action) => {
-      console.log("action.payload",action.payload)
       state.inspectionFilterData.selectedDateRange = action.payload;
     },
     setSaveReportStatus: (state, action) => {
@@ -85,8 +86,8 @@ export const InspectionsSlice = createSlice({
       state.inspectorData[action.payload.name] = action.payload.value;
     },
     updateRow: (state, action: PayloadAction<Partial<Row>>) => {
-      const { deviceId, status, notes, reason } = action.payload;
-      const deviceIndex = state.devices.findIndex(device => device.deviceId === deviceId);
+      const { inspectedId, status, notes, reason } = action.payload;
+      const deviceIndex = state.devices.findIndex(device => device.inspectedId === inspectedId);
       if (deviceIndex !== -1) {
         if (status !== undefined) {
           state.devices[deviceIndex].status = status;
@@ -120,6 +121,9 @@ export const InspectionsSlice = createSlice({
     setDeviceStatus: (state, action: PayloadAction<any>) => {
       state.deviceStatus = action.payload;
     },
+    setSelectedInspectorType: (state, action: PayloadAction<any>) => {
+      state.selectedInspectorType = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -138,7 +142,7 @@ export const InspectionsSlice = createSlice({
   },
 });
 
-export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus,setDeviceStatus,setIntialFilterFormData } = InspectionsSlice.actions;
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus,setDeviceStatus,setIntialFilterFormData,setSelectedInspectorType } = InspectionsSlice.actions;
 
 export const selectInspections = (state: RootState) => state.Inspections;
 

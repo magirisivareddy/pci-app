@@ -9,13 +9,15 @@ import AddInspector from "./add-inspector/AddInspector";
 import { Box, Button, Grid, Paper, Popover, Typography } from "@mui/material";
 import VenuesNotes from "./notes/VenuesNotes";
 import CustomTable from "../common/table/Table";
-import { searchVenues } from "@/actions/api";
+import { fetchInspectors, fetchVenue, searchVenues } from "@/actions/api";
 import AddUpdateVenue from "./add-update-venue/AddUpdateVenue";
 import { getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspectionModal, setDeletVenueModal, setShowInspector } from "@/redux/features/VenuesSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import InspectionDeleteModal from "./inspection-delete-modal/InspectionDeleteModal";
 import VenuesDeleteModal from "./venues-delete-modal/VenuesDeleteModal";
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import Loading from "@/app/loading";
+import { getInspectors, getVenue } from "@/redux/features/CommonSlice";
 
 type Dropdowns = {
     venueDropdown: any; // replace with the actual type
@@ -38,12 +40,15 @@ interface FormData {
 }
 const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const dispatch = useAppDispatch()
+  
+   
     const { venuesData, status, venueInfo } = useAppSelector(state => state.Venues)
     const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal } = venueInfo
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
+    const {  addUpdateVenueMessage, venuesDeletMessage } = useAppSelector(state => state.Venues.venueInfo)
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -67,6 +72,11 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         });
         dispatch(getVenues(obj))
     }
+
+    useEffect(()=>{
+     dispatch(getVenue())
+     dispatch(getInspectors())
+    },[])
     useEffect(() => {
         const obj = {
             "employeeNumber": "0004236",
@@ -120,27 +130,24 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         console.log("inspector", inspector)
         dispatch(setDeletInspectionModal(true))
     };
-
-
-
-
     const myHeaders: any = [
-        { id: 'venue_name', label: 'Venue' },
+        { id: 'venue_name', label: 'Venue',width:"70px" },
         {
             id: 'inspectorDetails',
             label: 'Inspector',
+            width:"350px",
             customRender: (data: any, row: any): ReactNode => (
                 <InspectorCell
                     inspectorDetails={row.inspectorDetails}
                     onAdd={() => handleAddInspector(row)}
-
                 />
             )
         },
-        { id: 'totalDevices', label: 'Total Devices' },
+        { id: 'totalDevices', label: 'Total Devices',width:"70px"},
         {
             id: 'Edit',
             label: 'Edit',
+            width:"70px",
             customRender: (data: any, row: TableRowData): ReactNode => (
                 <EditableCell onEdit={() => onEditVenue(row)} />
             )
@@ -148,6 +155,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         {
             id: 'delete',
             label: 'Delete',
+            width:"70px",
             customRender: (data: any, row: TableRowData): ReactNode => (
                 <DeleteCell onDelete={() => onDeleteVenue(row)} />
             )
@@ -155,11 +163,11 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     ];
     return (
         <>
-            {/* <CustomBreadcrumbs /> */}
+       
             <Box display="flex" justifyContent="flex-end" pr={2}>
                 <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button>
             </Box>
-            <VenuesFilters dropdowns={dropdowns} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+            <VenuesFilters  formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
             <Typography
                 variant='caption'
                 // aria-owns={open ? 'mouse-over-popover' : undefined}
@@ -168,7 +176,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 onMouseLeave={handlePopoverClose}
                 sx={{ marginLeft: "2px" }}
             >
-                 NOTES: <FormatListBulletedRoundedIcon  color='primary' sx={{width:"15px",height:'15px', position:'relative',top:"4px"}}/>
+                NOTES: <FormatListBulletedRoundedIcon color='primary' sx={{ width: "15px", height: '15px', position: 'relative', top: "4px" }} />
             </Typography>
             <CustomTable data={venuesData} headers={myHeaders} isloading={status === "loading"} />
             <Modal

@@ -2,6 +2,8 @@
 import { getVenueSummaryReport } from '@/actions/api';
 import CustomTable from '@/components/common/table/Table';
 import VenuesFilters from '@/components/venues/venues-filters/VenuesFilters';
+import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
+import { useAppDispatch } from '@/redux/hooks';
 import { Box, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 interface FormData {
@@ -16,6 +18,7 @@ type VenuesProps = {
   dropdowns: Dropdowns;
 }
 const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
+  const dispatch =useAppDispatch()
   const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -65,6 +68,8 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   }
 
   useEffect(() => {
+    dispatch(getVenue())
+    dispatch(getInspectors())
     const employeeNumber = "5860"
     getVenueInspectorList(employeeNumber)
   }, [])
@@ -72,7 +77,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
     const employeeNumber = "5860"
     getVenueInspectorList(employeeNumber, formData.venueId, formData.inspectorEmployeeNumber)
   }
-  console.log("data",data)
+
   const handleExport = () => {
     const header = [
         'Device Id',
@@ -122,7 +127,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
           Export to Excel
         </Button>
       </Box>
-      <VenuesFilters dropdowns={dropdowns} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+      <VenuesFilters formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
       <CustomTable data={data} headers={headers} isloading={isLoading} />
     </>
 

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Modal from '@/components/common/modal/Modal';
 import { setinspectorAdminDeleteModal } from '@/redux/features/InspectorAdminSlice';
 import DeleteAdmiin from '../delete-admiin/DeleteAdmiin';
+import Loading from '@/app/loading';
 
 const headers = [
     {
@@ -34,12 +35,13 @@ const headers = [
 const InspectorAdminTable = () => {
     const dispatch = useAppDispatch()
     const { adminData,error,status } = useAppSelector(state => state.inspectorAdmin)
-    const { isinspectorAdminDeleteModal } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
+    const { isinspectorAdminDeleteModal ,adminLevelStatusLoader} = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
     const handleClose = () => {
         dispatch(setinspectorAdminDeleteModal(false))
     }
     return (
         <>
+        {adminLevelStatusLoader && <Loading/> }
             <CustomTable data={adminData} headers={headers} isloading={status==="loading"} />
             <Modal
                 title={`Delete Admin`}

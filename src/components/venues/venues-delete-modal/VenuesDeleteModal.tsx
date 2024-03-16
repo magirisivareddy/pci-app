@@ -2,30 +2,33 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Alert, Box, Button, Typography } from '@mui/material';
 import { deleteVenue } from '@/actions/api';
-import { getVenues, setDeletVenueModal } from '@/redux/features/VenuesSlice';
+import { getVenues, setDeletVenueModal, setVenuesDeletMessage } from '@/redux/features/VenuesSlice';
 import Loading from '@/app/loading';
+import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
 
 const VenuesDeleteModal = () => {
     const dispatch =useAppDispatch()
-    const [message, setMessage] = useState("")
+  
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
     const isDevices = selectedVenueRow.totalDevices !== 0;
-    console.log("selectedVenueRow", selectedVenueRow)
     const employeeNumber = "0004236";
     const venue_id =selectedVenueRow.venue_id.toString()
+    const {venuesDeletMessage}=useAppSelector(state=>state.Venues.venueInfo)
 
     const onDeleteVenue = async () => {
 
         try {
             setLoading(true)
             const res = await deleteVenue(employeeNumber, venue_id)
-            setMessage(res.message)
+            dispatch(setVenuesDeletMessage(res.message))
+            dispatch(getVenue())
+            dispatch(getInspectors())
             setLoading(false)
             setTimeout(() => {
                 dispatch(setDeletVenueModal(false))
-                setMessage("")
+                dispatch(setVenuesDeletMessage(""))
                 const obj = {
                     "employeeNumber": "0004236",
                     "is_it": "1",
@@ -40,6 +43,7 @@ const VenuesDeleteModal = () => {
 
         } catch (error: any) {
             setLoading(false)
+            dispatch(setVenuesDeletMessage(""))
             setErrorMessage(error.message ?? "something went wrong ")
         }
     }
@@ -76,8 +80,8 @@ const VenuesDeleteModal = () => {
                 <Box display="flex" gap={2} mt={2} justifyContent="center">
                     {renderButtons()}
                 </Box>
-                {message && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
-                    {message}
+                {venuesDeletMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="success">
+                    {venuesDeletMessage}
                 </Alert>}
 
                 {errorMessage && <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">

@@ -1,12 +1,10 @@
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, useTheme } from "@mui/material";
+
 import React from "react";
-import { setModalInspectOpen } from '@/redux/features/ModalSlice';
-import { useAppDispatch } from "@/redux/hooks";
-import { updateRow } from "@/redux/features/InspectionsSlice";
 import DeviceActions from "@/components/devices/devices-table/DeviceActions";
 import StatusCell from "@/components/inspections/devices-table/StatusCell";
 import NotesCell from "@/components/inspections/devices-table/NotesCell";
 import ReasonsCell from "@/components/inspections/devices-table/ReasonsCell";
+import DeviceLocationCell from "@/components/devices/devices-table/DeviceLocationCell";
 
 
 
@@ -73,7 +71,9 @@ export const devicesHeader: Header[] = [
         }
     },
     { id: 'venueName', label: 'Assigned Venue' },
-    { id: 'deviceLocation', label: 'Location' },
+    { id: 'deviceLocation', label: 'Location',customRender: (_: any, row: any) => (
+        <DeviceLocationCell row={row} />
+    ) },
     {
         id: 'action', label: 'Action', customRender: (_: any, row: any) => (
             <DeviceActions row={row} />

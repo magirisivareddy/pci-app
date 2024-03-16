@@ -2,17 +2,19 @@
 import React, { useState } from 'react'
 import { Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
+import { useAppSelector } from '@/redux/hooks';
 
 // Function to get the default date range for the current week
 
 
 
 
-const VenuesFilters = ({ dropdowns, handelSubmit, formData, onChange }: any) => {
+const VenuesFilters = ({  handelSubmit, formData, onChange }: any) => {
+    const {venueDropdown, inspectorDropdown}=useAppSelector(state=>state.common)
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...dropdowns.venueDropdown];
-    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...dropdowns.inspectorsDropdown];
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown ?? []];
+    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown ?? []];
 
     return (<>
 

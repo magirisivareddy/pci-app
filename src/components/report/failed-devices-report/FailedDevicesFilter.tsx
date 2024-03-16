@@ -2,17 +2,16 @@
 import React, { useState } from 'react'
 import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
+import { useAppSelector } from '@/redux/hooks';
 
 // Function to get the default date range for the current week
 
-
-
-
-const FailedDevicesFilter = ({ dropdowns, handelSubmit, formData, onChange, failedDevicesData }: any) => {
+const FailedDevicesFilter = ({handelSubmit, formData, onChange, failedDevicesData }: any) => {
+    const {venueDropdown, inspectorDropdown}=useAppSelector(state=>state.common)
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...dropdowns.venueDropdown];
-    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...dropdowns.inspectorsDropdown];
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
+    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
     const handleExport = () => {
         const header = [
             'Device Id',

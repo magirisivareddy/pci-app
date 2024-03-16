@@ -1,12 +1,15 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput'
+import { useAppSelector } from '@/redux/hooks';
 import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react'
 
-const VenueStatusFilter = ({ venueDropdown, handelSubmit, formData, onChange, venueStatusReportData }: any) => {
+const VenueStatusFilter = ({ handelSubmit, formData, onChange, venueStatusReportData }: any) => {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
+    const {venueDropdown} =useAppSelector(state=>state.common)
+  console.log("venueDropdown",venueDropdown)
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown??[]];
     const handleExport = () => {
         const header = [
             'Device Id',

@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 
 export const ReceiveNotices = ({ row }: any) => {
   const dispatch = useAppDispatch()
-  const defaultNoticeValue = row.receive_notices === "1";
+  const defaultNoticeValue = row.recieveNotes === 1;
   const [notices, setNotices] = useState(defaultNoticeValue);
   const onChangeNotice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNotices(e.target.checked);

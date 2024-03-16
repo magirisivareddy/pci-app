@@ -8,6 +8,9 @@ interface CounterState {
     devicesInfo: {
         isDeviceModal: boolean
         deviceModalType: string
+        deviceLocationStatus:boolean
+        deviceLocationSuccessMessage:any
+        deviceLocationErrorMessage:any
     },
     deviceFormData: any,
     deviceHistory: {
@@ -22,11 +25,15 @@ interface CounterState {
 const initialState: CounterState = {
     devicesInfo: {
         isDeviceModal: false,
-        deviceModalType: ""
+        deviceModalType: "",
+        deviceLocationStatus:false,
+        deviceLocationSuccessMessage:"",
+        deviceLocationErrorMessage:""
     },
     deviceHistory: {
         isDeviceHistoryModal: false,
     },
+    
     deviceFormData: null,
     status: 'idle',
     devicesData: [],
@@ -56,6 +63,15 @@ export const devicesSlice = createSlice({
         setDeviceHistoryInfo: (state, actions) => {
             state.deviceHistory.isDeviceHistoryModal = actions.payload
         },
+        setDeviceLocationStatus: (state, actions) => {
+            state.devicesInfo.deviceLocationStatus = actions.payload
+        },
+        setDeviceLocationSuccessMessage: (state, actions) => {
+            state.devicesInfo.deviceLocationSuccessMessage = actions.payload
+        },
+        setDeviceLocationErrorMessage: (state, actions) => {
+            state.devicesInfo.deviceLocationErrorMessage = actions.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -74,7 +90,7 @@ export const devicesSlice = createSlice({
     },
 })
 
-export const { setDeviceInfo, setDeviceFormData, setDeviceHistoryInfo } = devicesSlice.actions
+export const { setDeviceInfo, setDeviceFormData, setDeviceHistoryInfo,setDeviceLocationStatus,setDeviceLocationSuccessMessage, setDeviceLocationErrorMessage } = devicesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectDevices = (state: RootState) => state.devices.devicesInfo

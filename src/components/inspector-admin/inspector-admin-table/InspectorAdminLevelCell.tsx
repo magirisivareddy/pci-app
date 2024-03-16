@@ -1,5 +1,5 @@
 import { changeAdminLevel } from '@/actions/api'
-import { getAdminList, setAdminLevelStatus } from '@/redux/features/InspectorAdminSlice'
+import { getAdminList, setAdminLevelStatus, setAdminLevelStatusLoader } from '@/redux/features/InspectorAdminSlice'
 import { useAppDispatch } from '@/redux/hooks'
 import { Box, MenuItem, Select } from '@mui/material'
 import React, { useState } from 'react'
@@ -20,8 +20,11 @@ const InspectorAdminLevelCell = ({ row }: any) => {
             adminId: row.adminId.toString(),
             adminLevel: e.target.value
         }
+   
         try {
+            dispatch(setAdminLevelStatusLoader(true))
             const res = await changeAdminLevel(paylaod)
+            dispatch(setAdminLevelStatusLoader(false))
             dispatch(setAdminLevelStatus({
                 errorMessage: "",
                 suucessMessage: res.message
@@ -39,7 +42,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
                 dispatch(setAdminLevelStatus(null))
             }, 2000)
         } catch (error: any) {
-            console.log("error",error)
+            dispatch(setAdminLevelStatusLoader(false))
             dispatch(setAdminLevelStatus({
                 errorMessage: error.messsage ?? "Failed to change admin level",
                 suucessMessage: ""

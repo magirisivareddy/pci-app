@@ -8,6 +8,8 @@ import TableCell from '@mui/material/TableCell';
 import EmailIcon from '@mui/icons-material/Email';
 import { addGroupInspector, doLookup } from '@/actions/api';
 import Loading from '@/app/loading';
+import { getGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
+import { useAppDispatch } from '@/redux/hooks';
 
 interface FormData {
     venue: any;
@@ -19,7 +21,8 @@ const debounce = (func: Function, delay: number) => {
         timeoutId = setTimeout(() => func(...args), delay);
     };
 };
-const AddGroupInspector = ({ venues ,onClose}: any) => {
+const AddGroupInspector = ({ venues, onClose }: any) => {
+    const dispatch = useAppDispatch()
     const [formData, setFormData] = useState<FormData>({
         venue: "101"
     });
@@ -30,20 +33,34 @@ const AddGroupInspector = ({ venues ,onClose}: any) => {
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [selectedTableRow, setSelectedTableRow] = useState(null)
+    const [textErrorMessage, setTextErrorMessage] = useState("");
     const handleTableRowClick = async (row: any) => {
         setSelectedTableRow(row);
         const payload = {
             employeeNumber: row.employeeNumber.toString(),
             venueId: formData.venue.toString()
         }
-
         try {
             setLoading(true);
             const data = await addGroupInspector(payload)
+            if (data?.validationMessage) {
+                setLoading(false);
+                setErrorMessage(data.validationMessage);
+                setTimeout(() => {
+                    setErrorMessage("");
+                }, 2000)
+                return
+            }
             setSuccessMessage(data.message)
             setLoading(false);
             setTimeout(() => {
                 onClose()
+                const obj = {
+                    venueId: 'All',
+                    inspectorEmployeeNumber: 'All',
+                    is_It: '1'
+                };
+                dispatch(getGroupInspectors(obj));
                 setSuccessMessage("")
             }, 2000)
         } catch (e: any) {
@@ -74,17 +91,27 @@ const AddGroupInspector = ({ venues ,onClose}: any) => {
 
 
     const onChangeLastName = (value: any) => {
+        setTextErrorMessage("")
         setLastName(value);
 
     }
 
     const onChangeFirstName = (value: any) => {
+        setTextErrorMessage("")
         setFirstName(value);
 
     }
+    // const onSearch = () => {
+    //     fetchDataAndSetDate(firstName, lastName)
+    // }
     const onSearch = () => {
-        fetchDataAndSetDate(firstName, lastName)
-    }
+        if (!firstName.trim() && !lastName.trim()) {
+            setTextErrorMessage("Please enter at least one field (First Name or Last Name).");
+            return;
+        }
+
+        fetchDataAndSetDate(firstName, lastName);
+    };
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venues];
     return (
         <div>
@@ -110,22 +137,27 @@ const AddGroupInspector = ({ venues ,onClose}: any) => {
                         id={'firstName'}
                     />
                 </Grid>
-
                 <Grid item xs={12} md={3.3}>
-
                     <SelectInput
                         selectedOption={formData.venue}
                         onChange={onChange}
                         label={'Add Venue'}
                         options={updatedVenueDropdown}
                         name={'venue'}
-                        id={'venue'} 
+                        id={'venue'}
                         size={'small'} />
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <Button sx={{ marginTop: "20px" }} onClick={onSearch} variant='contained'>Search</Button>
                 </Grid>
             </Grid>
+            {textErrorMessage && (
+                <Grid item xs={12} md={12}>
+                    <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+                        {textErrorMessage}
+                    </Alert>
+                </Grid>
+            )}
             <Grid container mt={2}>
                 <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
                     <Table>

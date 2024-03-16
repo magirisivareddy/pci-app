@@ -12,6 +12,10 @@ interface CounterState {
         showInspector:boolean
         isDeletInspectionModal:boolean
         selectedVenueInspector:any
+        addUpdateVenueMessage:any
+        addUpdateVenueErrorMessage:any
+        venuesDeletMessage:any
+        
     },
 
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -27,7 +31,10 @@ const initialState: CounterState = {
         isDeletVenueModal:false,
         showInspector:false,
         isDeletInspectionModal:false,
-        selectedVenueInspector:null
+        selectedVenueInspector:null,
+        addUpdateVenueMessage:null,
+        addUpdateVenueErrorMessage:null,
+        venuesDeletMessage:null
     },
     status: 'idle',
     venuesData: [],
@@ -65,6 +72,16 @@ export const VenuesSlice = createSlice({
         setSelectedVenueInspector: (state, action: PayloadAction<boolean>) => {
             state.venueInfo.selectedVenueInspector = action.payload;
         },
+        setAddUpdateVenueMessage: (state, action: PayloadAction<any>) => {
+            state.venueInfo.addUpdateVenueMessage = action.payload;
+        },
+        setAddUpdateVenueErrorMessage: (state, action: PayloadAction<any>) => {
+            state.venueInfo.addUpdateVenueErrorMessage = action.payload;
+        },
+        setVenuesDeletMessage: (state, action: PayloadAction<any>) => {
+            state.venueInfo.venuesDeletMessage = action.payload;
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -83,7 +100,9 @@ export const VenuesSlice = createSlice({
     },
 })
 
-export const {selectedVenueRow, setAddOrEditVenueModal,setDeletVenueModal,setShowInspector,setDeletInspectionModal,setSelectedVenueInspector } = VenuesSlice.actions
+export const {selectedVenueRow, setAddOrEditVenueModal,setDeletVenueModal,
+    setShowInspector,setDeletInspectionModal,setSelectedVenueInspector,
+    setAddUpdateVenueMessage,setAddUpdateVenueErrorMessage,setVenuesDeletMessage } = VenuesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectVenues = (state: RootState) => state.Venues

@@ -8,6 +8,9 @@ import { getDevices, setDeviceFormData, setDeviceHistoryInfo, setDeviceInfo } fr
 import DeviceAddEditForm from './device-add-edit-form/DeviceAddEditForm'
 import DeviceHistory from './device-history/DeviceHistory'
 import { searchDevices } from '@/actions/api'
+import { Alert } from '@mui/material'
+import Loading from '@/app/loading'
+import { getInspectors, getVenue } from '@/redux/features/CommonSlice'
 
 interface FormData {
   commonAssetName: string;
@@ -28,7 +31,7 @@ const Devices = ({ venueDropdown }: any) => {
     profileId: ''
   });
 
- 
+
 
   useEffect(() => {
     const obj = {
@@ -41,16 +44,19 @@ const Devices = ({ venueDropdown }: any) => {
       "profileId": "",
       "employeeNumber": "789"
     }
+    dispatch(getVenue())
+    dispatch(getInspectors())
     dispatch(getDevices(obj))
   }, []);
   const handelSearchDevices = () => {
-    const obj:any ={
-      ...formData, employeeNumber:"789",is_It:"1"
+    const obj: any = {
+      ...formData, employeeNumber: "789", is_It: "1"
     }
     Object.keys(obj).forEach(key => {
       obj[key] = String(obj[key]);
     });
     dispatch(getDevices(obj))
+
   }
   const onChange = (value: any, name: any) => {
     setFormData((prevData) => ({
@@ -59,7 +65,7 @@ const Devices = ({ venueDropdown }: any) => {
     }));
   }
   const { devicesInfo, deviceHistory, deviceFormData } = useAppSelector(state => state.devices)
-  const { deviceModalType, isDeviceModal } = devicesInfo
+  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage } = devicesInfo
   const { isDeviceHistoryModal } = deviceHistory
   const handleClose = () => {
     dispatch(setDeviceInfo({
@@ -72,19 +78,26 @@ const Devices = ({ venueDropdown }: any) => {
 
   return (
     <>
+    {deviceLocationStatus && <Loading/>}
       <DeviceFilter
-        venueDropdown={venueDropdown}
         formData={formData}
         onChange={onChange}
         handelSubmit={handelSearchDevices}
       />
+      {deviceLocationSuccessMessage && <Alert sx={{ marginTop: "20px", marginBottom:"20px" }} variant="filled" severity="success">
+        {deviceLocationSuccessMessage}
+      </Alert>}
+
+      {deviceLocationErrorMessage && <Alert sx={{ marginTop: "20px",marginBottom:"20px"  }} variant="filled" severity="error">
+        {deviceLocationErrorMessage}
+      </Alert>}
       <DevicesTable />
       <Modal
         title={deviceModalType === "Add" ? "Add Device" : "Edit Device"}
         open={isDeviceModal}
         maxWidth="md"
         scroll={'body'}
-        contentComponent={(props) => <DeviceAddEditForm {...props} venueDropdown={venueDropdown} />}
+        contentComponent={(props) => <DeviceAddEditForm {...props} />}
         handleClose={handleClose}
       />
       <Modal

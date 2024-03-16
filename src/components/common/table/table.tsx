@@ -15,7 +15,7 @@ interface CustomTableProps {
         id: string;
         label: string;
         customRender?: (data: any, row: TableRowData) => React.ReactNode;
-        minWidth?:string
+        width?: string
     }[];
     renderExportButton?: boolean; // Optional prop for rendering the export button
     isloading?: boolean;
@@ -32,10 +32,10 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
-    useEffect(()=>{
+    useEffect(() => {
         setRowsPerPage(15);
         setPage(0);
-    },[data])
+    }, [data])
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
@@ -48,7 +48,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
-                                <TableCell key={header.id} align="center"  sx={{  background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600", position: 'sticky', top: 0, zIndex: 100 }}>
+                                <TableCell key={header.id} align="center" sx={{ width: header.width ?? "auto", background: '#9ddbe0', color: 'rgba(0, 0, 0, 0.7)', fontWeight: "600", position: 'sticky', top: 0, zIndex: 100 }}>
                                     {header.label}
                                 </TableCell>
                             ))}
@@ -74,7 +74,8 @@ const CustomTable: React.FC<CustomTableProps> = ({ data, headers, isloading, isP
                                     key={index}
                                 >
                                     {headers.map((header) => (
-                                        <TableCell key={header.id}
+                                        <TableCell align="center" key={header.id}
+                                            sx={{ width: header.width ?? "auto" }}
                                         >
                                             {header.customRender ? header.customRender(row[header.id], row) : row[header.id]}
                                         </TableCell>

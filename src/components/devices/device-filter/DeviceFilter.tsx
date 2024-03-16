@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setDeviceInfo } from '@/redux/features/DevicesSlice';
 
 interface DeviceFilterProps {
-  venueDropdown: { label: string; value: string }[];
   formData: {
     commonAssetName?: string;
     venueId?: string;
@@ -21,12 +20,13 @@ interface DeviceFilterProps {
   handelSubmit: () => void;
 }
 
-const DeviceFilter: React.FC<DeviceFilterProps> = ({ venueDropdown, formData, onChange, handelSubmit }) => {
+const DeviceFilter: React.FC<DeviceFilterProps> = ({ formData, onChange, handelSubmit }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const is_it = "1"
   const { devicesData } = useAppSelector(state => state.devices);
+  const { venueDropdown} =useAppSelector(state=>state.common)
   let updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
   const assignedVenue = [
     { label: "ARCHIVED DEVICES", value: "-1" }, { label: "IT STORAGE", value: '-2' }, { label: "RMA DEVICES", value: "0" }
@@ -90,7 +90,9 @@ const DeviceFilter: React.FC<DeviceFilterProps> = ({ venueDropdown, formData, on
     ]);
 
     const csvData = [header, ...body];
-    const csvFileName = 'devices.csv';
+    const currentDate = new Date();
+    const timestamp = currentDate.toISOString().replace(/[-:T.]/g, '').slice(0, 14); // Get timestamp in format YYYYMMDDHHmmss
+    const csvFileName = `NQ_PCI_Devices${timestamp}.csv`;
 
     const csvContent = csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
 

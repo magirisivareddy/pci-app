@@ -8,43 +8,59 @@ import React, { Suspense, useState } from 'react'
 
 const AddVenueToGroupInspector = ({ venues, }: any) => {
     const dispatch = useAppDispatch()
-    const [venueId, setVenue] = useState("All")
+    const [venueId, setVenue] = useState("")
     const [message, setMessage] = useState("")
     const [isLoading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const { selectedGroupInspector } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
 
     const onChange = (val: any) => {
+        setErrorMessage("")
         setVenue(val)
     }
     const addVenue = async () => {
+        if (!venueId) {
+            setErrorMessage("Venue cannot be empty");
+            return;
+        }
+    
         const obj = {
             employeeNumber: selectedGroupInspector.employeeNumber.toString(),
             venueId: venueId.toString(),
             inspectorType: "1"
-        }
+        };
+    
         try {
-            setLoading(true)
-            const res: any = await addVenueToGroupInspector(obj)
-            setMessage(res.message)
+            setLoading(true);
+            const res = await addVenueToGroupInspector(obj);
+            if (res?.validationMessage) {
+                setErrorMessage(res.validationMessage);
+                setLoading(false);
+                setTimeout(() => {
+                    setErrorMessage("");
+                }, 2000)
+                return
+            }
+            setMessage(res.message);
+    
             const payload = {
                 venueId: 'All',
                 inspectorEmployeeNumber: 'All',
                 is_It: '1'
-            }
-            setLoading(false)
+            };
+    
+            setLoading(false);
             setTimeout(() => {
-                dispatch(setAddVenuToInspectorModal(false))
-
-                setMessage("")
-                dispatch(getGroupInspectors(payload))
-            }, 2000)
-        } catch (error: any) {
-            setLoading(false)
-            setErrorMessage(error.message ?? "something went wrong ")
+                dispatch(setAddVenuToInspectorModal(false));
+                setMessage("");
+                dispatch(getGroupInspectors(payload));
+            }, 2000);
+        } catch (error:any) {
+            setLoading(false);
+            setErrorMessage(error.message ?? "Something went wrong");
         }
-    }
-
+    };
+    
     return (
         <div>
             {isLoading && <Loading />}

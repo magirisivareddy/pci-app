@@ -19,8 +19,7 @@ interface Device {
 const Inspector = () => {
     const dispatch = useAppDispatch();
     const [isModal, setModal] = useState(false)
-    const { inspectorData, selectedInspector,saveReportStatus } = useAppSelector(state => state.Inspections)
-console.log("selectedInspector",selectedInspector.venue_name)
+    const { inspectorData, selectedInspector, saveReportStatus } = useAppSelector(state => state.Inspections)
     const [isLoading, setLoading] = useState(true)
     const [viewReport, setViewReport] = useState<Device[]>([]);
     const inspectorHandlechange = (name: string, value: string) => {
@@ -39,17 +38,16 @@ console.log("selectedInspector",selectedInspector.venue_name)
         try {
             setLoading(true);
             dispatch(setInitialValues([]));
-            const payload ={
+            const payload = {
                 reportId: selectedInspector.reportId.toString(),
                 venueId: selectedInspector.venue_id
-          
-              }
+            }
             const viewReport = await fetchviewReport(payload);
             const initialFormData = viewReport.map((report: {
-                inspectedId: any; deviceId: string;
+                inspectedId: any; deviceId: string; deviceStatus: any
             }) => ({
                 deviceId: report.deviceId,
-                status: null,
+                status: report.deviceStatus !== 0 ? report.deviceStatus : null,
                 notes: null,
                 inspectedId: report.inspectedId,
             }));
@@ -59,7 +57,6 @@ console.log("selectedInspector",selectedInspector.venue_name)
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchDataAndSetDate();
     }, []);

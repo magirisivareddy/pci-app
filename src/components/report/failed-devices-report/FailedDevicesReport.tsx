@@ -4,15 +4,16 @@ import React, { useEffect, useState } from 'react'
 import FailedDevicesFilter from './FailedDevicesFilter';
 import { format } from 'date-fns';
 import { getVenuePassFailSummaryReport } from '@/actions/api';
+import { useDispatch } from 'react-redux';
+import { getVenue, getInspectors } from '@/redux/features/CommonSlice';
+import { useAppDispatch } from '@/redux/hooks';
 
 type Dropdowns = {
   venueDropdown: any; // replace with the actual type
   inspectorsDropdown: any; // replace with the actual type
 }
 
-type VenuesProps = {
-  dropdowns: Dropdowns;
-}
+
 interface TableRowData {
   inspectorDetails: any;
   id: number;
@@ -24,7 +25,7 @@ interface FormData {
   venueId: string;
   inspectorId: string;
 }
-const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
+const FailedDevicesReport = () => {
 
 
   const headers = [
@@ -47,7 +48,7 @@ const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
     venueId: 'All',
     inspectorId: 'All'
   });
-
+  const dispatch = useAppDispatch()
   const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
   const employeeNumber = "5860"
@@ -67,8 +68,11 @@ const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
   }
 
   useEffect(() => {
+    dispatch(getVenue())
+    dispatch(getInspectors())
     getVenueInspectorList(employeeNumber)
   }, [])
+
 
   const onChange = (value: any, name: any) => {
     setFormData((prevData) => ({
@@ -80,7 +84,7 @@ const FailedDevicesReport: React.FC<VenuesProps> = ({ dropdowns }) => {
     getVenueInspectorList(formData.venueId, formData.inspectorId);
   };
   return (<>
-    <FailedDevicesFilter dropdowns={dropdowns} failedDevicesData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+    <FailedDevicesFilter  failedDevicesData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
     <CustomTable data={data} headers={headers} isloading={isLoading} />
   </>
 

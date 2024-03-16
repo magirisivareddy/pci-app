@@ -1,5 +1,6 @@
 import { deleteVenue, deleteVenueInspector } from '@/actions/api'
 import Loading from '@/app/loading'
+import { getInspectors, getVenue } from '@/redux/features/CommonSlice'
 import { getVenues, setDeletInspectionModal } from '@/redux/features/VenuesSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Box, Button, Typography } from '@mui/material'
@@ -18,6 +19,7 @@ const InspectionDeleteModal = () => {
             setLoading(true)
             const res = await deleteVenueInspector(inspectorId)
             setMessage(res.message)
+      
             setLoading(false)
             setTimeout(() => {
                 setMessage("")

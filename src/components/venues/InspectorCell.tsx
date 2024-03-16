@@ -24,9 +24,6 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
     const onDelete = (inspector: any) => {
         dispatch(setDeletInspectionModal(true))
         dispatch(setSelectedVenueInspector(inspector))
-
-
-        console.log("inspector",inspector)
     }
     return (
         <div className="inspector-cell-container">
@@ -50,12 +47,12 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                                     <span>{inspector.inspector}</span>
                                 </Box>
                             ) : (
-                                <Box sx={{ color: "red" }}>Missing main inspector</Box>
+                                <Box sx={{ color: "red", textAlign:"center" }}>Missing main inspector</Box>
                             )}
                         </Box>
                     ))
                 ) : (
-                    <Box sx={{ color: "#9c4040" }}>Missing main inspector</Box>
+                    <Box sx={{ color: "#9c4040", textAlign:"center" }}>Missing main inspector</Box>
                 )}
             </div>
             <Box className='add-inspector-btn'>

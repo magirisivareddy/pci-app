@@ -9,7 +9,6 @@ import { useAppDispatch } from '@/redux/hooks';
 
 
 const AddAndDeleteVenue = ({ row }: any) => {
-    console.log("row", row)
     const venues: any[] = row?.venueDetails ?? []
     const dispatch = useAppDispatch();
 

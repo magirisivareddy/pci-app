@@ -4,6 +4,8 @@ import CustomTable from '@/components/common/table/Table';
 import VenueStatusFilter from './VenueStatusFilter';
 import { getVenueSummaryReport } from '@/actions/api';
 import { format } from 'date-fns';
+import { useAppDispatch } from '@/redux/hooks';
+import { getVenue } from '@/redux/features/CommonSlice';
 
 // Define the FormData interface
 interface FormData {
@@ -12,8 +14,8 @@ interface FormData {
 }
 
 // Define the VenueStatusReport functional component
-const VenueStatusReport = ({ venueDropdown }: any) => {
-    // Define the headers for the table
+const VenueStatusReport = () => {
+  const dispatch =useAppDispatch()
     const headers = [
         { id: 'venueName', label: 'Venue Name' },
         { id: 'deviceId', label: 'Device Id' },
@@ -74,7 +76,9 @@ const VenueStatusReport = ({ venueDropdown }: any) => {
 
     // Use the employeeNumber constant
     const employeeNumber = "5860";
-
+useEffect(()=>{
+    dispatch(getVenue())
+},[])
     // Define the useEffect hook to fetch data on component mount
     useEffect(() => {
         getVenueInspectorList(employeeNumber);
@@ -88,7 +92,7 @@ const VenueStatusReport = ({ venueDropdown }: any) => {
     // Render the VenueStatusReport component
     return (
         <div>
-            <VenueStatusFilter venueDropdown={venueDropdown} venueStatusReportData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+            <VenueStatusFilter  venueStatusReportData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
             <CustomTable data={data} headers={headers} isloading={isLoading} />
         </div>
     );

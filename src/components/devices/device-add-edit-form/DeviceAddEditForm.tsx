@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, useMediaQuery } from '@mui/material';
+import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, Typography, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { addUpdateDevice } from '@/actions/api';
-import { getDevices, setDeviceInfo } from '@/redux/features/DevicesSlice';
+import { getDevices, setDeviceFormData, setDeviceInfo } from '@/redux/features/DevicesSlice';
 import Loading from '@/app/loading';
 
 interface FormData {
@@ -24,9 +24,10 @@ interface FormData {
     [key: string]: string | boolean; // Index signature
 }
 
-const DeviceAddEditForm = ({ venueDropdown }: any) => {
+const DeviceAddEditForm = () => {
     const dispatch = useAppDispatch()
     const { devicesInfo, deviceFormData } = useAppSelector((state) => state.devices);
+     const { venueDropdown} =useAppSelector(state=>state.common)
     const { deviceModalType } = devicesInfo;
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [message, setMessage] = useState("");
@@ -35,7 +36,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
     const [assetStatus, setAssetStatus] = useState(false)
     const [formData, setFormData] = useState<FormData>({
         commonAssetName: deviceFormData?.commonAssetName ?? '',
-        venueId: deviceFormData?.venueId ?? '',
+        venueId: deviceFormData?.venueId ?? 'All',
         assetNumber: deviceFormData?.assetNumber ?? '',
         manufacturer: deviceFormData?.manufacturer ?? '',
         vendor: deviceFormData?.vendor ?? '',
@@ -122,9 +123,16 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
         }
 
         try {
+
             setLoading(true);
-            const payLoad = {
-                ...formData, employeeNumber: "4236"
+            let payLoad: any = { ...formData, employeeNumber: "4236" };
+
+            if (deviceFormData?.deviceId) {
+                // If deviceFormData exists and has deviceId property
+                payLoad = {
+                    ...payLoad, // Spread the existing properties
+                    deviceId: deviceFormData.deviceId // Add or update deviceId property
+                };
             }
             const res = await addUpdateDevice(payLoad);
             setMessage(res.message);
@@ -149,6 +157,7 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
                 };
                 dispatch(getDevices(obj));
             }, 2000);
+            dispatch(setDeviceFormData(null))
         } catch (error: any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong ");
@@ -383,7 +392,12 @@ const DeviceAddEditForm = ({ venueDropdown }: any) => {
                     id={'ipAddress'}
                 />
             </Grid>
-
+            <Grid item xs={12} md={12}>
+                <Typography>
+                    <b>RMA DEVICES:</b> This is for devices that are no longer in use and have been or going to be
+                    returned to the vendor
+                </Typography>
+            </Grid>
             <Grid item xs={12} md={12}>
                 <Box sx={{ display: "flex", justifyContent: 'flex-end', alignItems: "end", textAlign: "end" }} >
                     <Button

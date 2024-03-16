@@ -8,10 +8,11 @@ import Modal from '@/components/common/modal/Modal';
 import AddGroupInspector from '../add-group-inspector/AddGroupInspector';
 
 
-const GroupInspectorsFilter = ({ dropdowns, handelSubmit, onChange, formData }: any) => {
+const GroupInspectorsFilter = ({ handelSubmit, onChange, formData }: any) => {
     const dispatch = useAppDispatch()
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+    const { inspectorDropdown, venueDropdown } = useAppSelector(state => state.common)
 
     const { groupInspectorModal } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
 
@@ -23,11 +24,10 @@ const GroupInspectorsFilter = ({ dropdowns, handelSubmit, onChange, formData }: 
         dispatch(setGroupInspectorModal(false))
     }
     const ContentComponent = () => {
-        // Use the data as needed within the AddGroupInspector component
-        return <AddGroupInspector onClose={handleClose} venues={dropdowns.venueDropdown} />;
+        return <AddGroupInspector onClose={handleClose} venues={venueDropdown} />;
     };
-    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...dropdowns.venueDropdown];
-    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...dropdowns.inspectorsDropdown];
+    const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
+    const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
     return (<>
         <Box display="flex" justifyContent="flex-end" pr={2}>
             <Button onClick={onAddGroupInspector} size="small" variant="outlined">Add Group Inspector</Button>

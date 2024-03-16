@@ -15,16 +15,7 @@ import Loading from '@/app/loading';
 interface FormData {
     inspectorType: string;
 }
-
-const debounce = (func: Function, delay: number) => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    return (...args: any) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func(...args), delay);
-    };
-};
-
-const AddInspector = ({ selectedRow, onClose }: any) => {
+const AddInspector = ({ onClose }: any) => {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<FormData>({
         inspectorType: "Backup Inspector"
@@ -35,6 +26,7 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
     const [isLoading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [textErrorMessage, setTextErrorMessage] = useState("");
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
 
     const handleTableRowClick = async (row: any) => {
@@ -47,6 +39,14 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
         try {
             setLoading(true);
             const data = await addVenueInspector(payload);
+            if (data?.validationMessage) {
+                setLoading(false);
+                setErrorMessage(data.validationMessage);
+                setTimeout(() => {
+                    setErrorMessage("");
+                }, 2000)
+                return
+            }
             setSuccessMessage(data.message);
             setLoading(false);
             setTimeout(() => {
@@ -89,23 +89,22 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
             [name]: value,
         }));
     };
-
-
-
     const onChangeLastName = (value: any) => {
+        setTextErrorMessage("")
         setLastName(value);
-        // debouncedFetchDataAndSetDate(firstName, value);  // Use current state values
     };
-
     const onChangeFirstName = (value: any) => {
+        setTextErrorMessage("")
         setFirstName(value);
-        // debouncedFetchDataAndSetDate(value, lastName);  // Use current state values
     };
     const onSearch = () => {
-        fetchDataAndSetDate(firstName, lastName)
-    }
+        if (!firstName.trim() && !lastName.trim()) {
+            setTextErrorMessage("Please enter at least one field (First Name or Last Name).");
+            return;
+        }
 
-
+        fetchDataAndSetDate(firstName, lastName);
+    };
     return (
         <div>
             <Grid container spacing={2} mb={2}>
@@ -114,7 +113,7 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
                     <TextInput
                         defaultValue={lastName ?? ""}
                         onChange={onChangeLastName}
-                    
+
                         label={'Last Name'}
                         name={'lastName'}
                         id={'lastName'}
@@ -124,7 +123,7 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
                     <TextInput
                         defaultValue={firstName ?? ""}
                         onChange={onChangeFirstName}
-               
+
                         label={'First Name'}
                         name={'firstName'}
                         id={'firstName'}
@@ -140,7 +139,6 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
                             { label: "Backup Inspector", value: "Backup Inspector" },
                             { label: "Group Inspector", value: "Group Inspector" },
                             { label: "Main Inspector", value: "Main Inspector" },
-
                         ]}
                         name={'inspectorType'}
                         id={'inspectorType'} size={'small'} />
@@ -148,6 +146,13 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
                 <Grid item xs={12} md={2}>
                     <Button sx={{ marginTop: "20px" }} onClick={onSearch} variant='contained'>Search</Button>
                 </Grid>
+                {textErrorMessage && (
+                    <Grid item xs={12} md={12}>
+                        <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">
+                            {textErrorMessage}
+                        </Alert>
+                    </Grid>
+                )}
             </Grid>
             <Grid container mt={2}>
                 <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
@@ -203,12 +208,9 @@ const AddInspector = ({ selectedRow, onClose }: any) => {
                                 </>
                             )}
                         </TableFooter>
-
-
                     </Table>
                 </TableContainer>
             </Grid>
-
         </div>
     );
 };

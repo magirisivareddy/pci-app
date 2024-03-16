@@ -4,6 +4,7 @@ import { GroupInspectorsTable } from './group-inspectors-table/GroupInspectorsTa
 import GroupInspectorsFilter from './group-inspectors-filter/GroupInspectorsFilter'
 import { useAppDispatch } from '@/redux/hooks';
 import { getGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
+import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
 type Dropdowns = {
   venueDropdown: any; // replace with the actual type
   inspectorsDropdown: any; // replace with the actual type
@@ -29,12 +30,15 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
     }));
   }
   useEffect(() => {
+    dispatch(getVenue())
+    dispatch(getInspectors())
     const obj = {
       venueId: 'All',
       inspectorEmployeeNumber: 'All',
       is_It: '1'
     };
     dispatch(getGroupInspectors(obj));
+    
   }, []);
   const handelSubmit = (event: any) => {
     const obj: any = {
@@ -50,7 +54,6 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
   return (
     <div>
       <GroupInspectorsFilter
-        dropdowns={dropdowns}
         handelSubmit={handelSubmit}
         onChange={onChange}
         formData={formData}

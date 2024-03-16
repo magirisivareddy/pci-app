@@ -7,6 +7,7 @@ interface CounterState {
         isinspectorAdminDeleteModal: boolean;
         selectedAdminRow: any;
         adminLevelStatus:any
+        adminLevelStatusLoader:boolean
     };
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     adminData: any; // Change 'any' to the actual type of your data
@@ -17,7 +18,8 @@ const initialState: CounterState = {
     inspectorAdminInfo: {
         isinspectorAdminDeleteModal: false,
         selectedAdminRow: null,
-        adminLevelStatus:null
+        adminLevelStatus:null,
+        adminLevelStatusLoader:false
     },
     status: 'idle',
     adminData: [],
@@ -47,6 +49,9 @@ export const inspectorAdminSlice = createSlice({
         setAdminLevelStatus: (state, action: PayloadAction<any>) => {
             state.inspectorAdminInfo.adminLevelStatus = action.payload;
         },
+        setAdminLevelStatusLoader: (state, action: PayloadAction<any>) => {
+            state.inspectorAdminInfo.adminLevelStatusLoader = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -65,7 +70,7 @@ export const inspectorAdminSlice = createSlice({
     },
 });
 
-export const { setinspectorAdminDeleteModal, setSelectedAdminrow, setAdminLevelStatus } = inspectorAdminSlice.actions;
+export const { setinspectorAdminDeleteModal, setSelectedAdminrow, setAdminLevelStatus, setAdminLevelStatusLoader } = inspectorAdminSlice.actions;
 
 export const selectInspectorAdmin = (state: RootState) => state.inspectorAdmin;
 
