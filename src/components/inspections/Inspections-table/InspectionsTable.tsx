@@ -279,7 +279,6 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       isDisabled = true
     }
   }
-  console.log("selectedInspector", selectedInspector)
   return (<>
 
     <Typography

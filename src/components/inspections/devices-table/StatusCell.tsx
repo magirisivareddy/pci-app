@@ -1,11 +1,12 @@
 import { updateRow } from '@/redux/features/InspectionsSlice';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 const StatusCell = ({ row }: any) => {
     const [deviceStatus, setDeviceStatus] = useState(row?.deviceStatus ?? null)
     const dispatch = useAppDispatch(); // Use the useAppDispatch hook here
+    const { selectedInspectorType } = useAppSelector(state => state.Inspections)
 
     let defaultValue;
     if (deviceStatus === 1) {
@@ -19,15 +20,29 @@ const StatusCell = ({ row }: any) => {
     }
     const handleStatusChange = (event: any) => {
         if (event.target.value === "fail") {
-            console.log("{ inspectedId: row.inspectedId, status: -1 }",{ inspectedId: row.inspectedId, status: -1 })
-            dispatch(updateRow({ inspectedId: row.inspectedId, status: -1 }));
+            if (selectedInspectorType === "Inspect") {
+                dispatch(updateRow({ deviceId: row.deviceId, status: -1 }));
+            } else {
+                dispatch(updateRow({ inspectedId: row.inspectedId, status: -1 }));
+            }
         }
         if (event.target.value === "Questionable") {
-            dispatch(updateRow({ inspectedId: row.inspectedId, status: 2 }));
+            if (selectedInspectorType === "Inspect") {
+                dispatch(updateRow({ deviceId: row.deviceId, status: 2 }));
+            } else {
+                dispatch(updateRow({ inspectedId: row.inspectedId, status: 2 }));
+            }
+
         }
         if (event.target.value === "pass") {
-            dispatch(updateRow({ inspectedId: row.inspectedId, status: 1 }));
-            dispatch(updateRow({ inspectedId: row.inspectedId, reason: "" }));
+            if (selectedInspectorType === "Inspect") {
+                dispatch(updateRow({ deviceId: row.deviceId, status: 1 }));
+                dispatch(updateRow({ deviceId: row.deviceId, reason: "" }));
+            } else {
+                dispatch(updateRow({ inspectedId: row.inspectedId, status: 1 }));
+                dispatch(updateRow({ inspectedId: row.inspectedId, reason: "" }));
+            }
+
         } else {
             dispatch(updateRow({ inspectedId: row.inspectedId, reason: "Not Applicable" }));
         }

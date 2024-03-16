@@ -7,19 +7,31 @@ import TextField from '@mui/material/TextField';
 
 const NotesCell = ({ row }: any) => {
     const dispatch = useAppDispatch();
-    const [note, setNote]=useState(row.notes)
-    useEffect(()=>{
-        dispatch(updateRow({ inspectedId: row.inspectedId, notes:row.notes }));
-    })
-  
+    const [note, setNote] = useState(row.notes)
+    useEffect(() => {
+        if (selectedInspectorType === "Inspect") {
+            dispatch(updateRow({ deviceId: row.deviceId, notes: row.notes }));
+        } else {
+            dispatch(updateRow({ inspectedId: row.inspectedId, notes: row.notes }));
+        }
+    }, [])
+
     const theme = createTheme(); // Use createTheme to get access to breakpoints
     const xs = theme.breakpoints.down('xs');
     const { devices, selectedInspectorType } = useAppSelector(state => state.Inspections)
-    console.log("selectedInspectorType",selectedInspectorType)
+
+
     const device = devices.find(device => device.inspectedId === row.inspectedId);
     const handleNotesChange = (event: any) => {
         setNote(event.target.value)
-        dispatch(updateRow({ inspectedId: row.inspectedId, notes: event.target.value }));
+        if (selectedInspectorType === "Inspect") {
+            dispatch(updateRow({ deviceId: row.deviceId, notes: event.target.value }));
+
+        } else {
+            console.log("Note value", event.target.value)
+            dispatch(updateRow({ inspectedId: row.inspectedId, notes: event.target.value }));
+        }
+
     }
     return (
         <>
@@ -33,7 +45,7 @@ const NotesCell = ({ row }: any) => {
                 name={"notes"}
                 rows={4}
                 variant="outlined"
-                 value={note}
+                value={note}
                 onChange={handleNotesChange}
             />
         </>

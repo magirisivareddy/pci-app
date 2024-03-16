@@ -8,6 +8,7 @@ interface Row {
   status?: any;
   notes?: string;
   reason?: string
+  deviceId?: string
 }
 
 interface InspectorFormState {
@@ -21,11 +22,11 @@ interface InspectorFormState {
   devices: Row[];
   saveReportStatus: boolean
   selectedInspector: any;
-  selectedInspectorType:any
+  selectedInspectorType: any
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   inspectionsList: any; // Change 'any' to the actual type of your data
   error: string | null;
-  deviceStatus:any
+  deviceStatus: any
 }
 
 const initialState: InspectorFormState = {
@@ -45,11 +46,11 @@ const initialState: InspectorFormState = {
   devices: [],
   saveReportStatus: false,
   selectedInspector: {},
-  selectedInspectorType:null,
+  selectedInspectorType: null,
   status: 'idle',
   inspectionsList: [], // Change 'any' to the actual type of your data
   error: null,
-  deviceStatus:{
+  deviceStatus: {
     open: false,
     message: "",
     severity: ''
@@ -86,8 +87,14 @@ export const InspectionsSlice = createSlice({
       state.inspectorData[action.payload.name] = action.payload.value;
     },
     updateRow: (state, action: PayloadAction<Partial<Row>>) => {
-      const { inspectedId, status, notes, reason } = action.payload;
-      const deviceIndex = state.devices.findIndex(device => device.inspectedId === inspectedId);
+      const { deviceId, inspectedId, status, notes, reason } = action.payload;
+      let deviceIndex
+      if (state.selectedInspectorType === "Inspect") {
+        deviceIndex = state.devices.findIndex(device => device.deviceId === deviceId);
+      } else {
+        deviceIndex = state.devices.findIndex(device => device.inspectedId === inspectedId);
+      }
+
       if (deviceIndex !== -1) {
         if (status !== undefined) {
           state.devices[deviceIndex].status = status;
@@ -142,7 +149,7 @@ export const InspectionsSlice = createSlice({
   },
 });
 
-export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus,setDeviceStatus,setIntialFilterFormData,setSelectedInspectorType } = InspectionsSlice.actions;
+export const { updateInspectorData, updateRow, setInitialValues, setSelectedInspector, setInspectionFilterFormData, setSelectedDateRange, setSaveReportStatus, setDeviceStatus, setIntialFilterFormData, setSelectedInspectorType } = InspectionsSlice.actions;
 
 export const selectInspections = (state: RootState) => state.Inspections;
 

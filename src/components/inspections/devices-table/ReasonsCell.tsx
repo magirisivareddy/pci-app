@@ -9,13 +9,24 @@ import { updateRow } from '@/redux/features/InspectionsSlice';
 
 const ReasonsCell = ({ row }: any) => {
     const dispatch = useAppDispatch();
-    const { devices } = useAppSelector(state => state.Inspections)
+    const { devices, selectedInspectorType } = useAppSelector(state => state.Inspections)
     const theme = createTheme(); // Use createTheme to get access to breakpoints
     const xs = theme.breakpoints.down('xs');
-    const device = devices.find(device => device.inspectedId === row.inspectedId);
-console.log("device",device)
+
+    let device;
+    if (selectedInspectorType === "Inspect") {
+        device = devices.find(device => device.deviceId === row.deviceId);
+    } else {
+        device = devices.find(device => device.inspectedId === row.inspectedId);
+    }
     const handleChange = (event: any) => {
-        dispatch(updateRow({ inspectedId: row.inspectedId, reason: event.target.value }));
+
+        if (selectedInspectorType === "Inspect") {
+            dispatch(updateRow({ deviceId: row.deviceId, reason: event.target.value }));
+
+        } else {
+            dispatch(updateRow({ inspectedId: row.inspectedId, reason: event.target.value }));
+        }
     }
 
 
