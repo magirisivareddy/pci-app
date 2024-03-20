@@ -52,7 +52,7 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                         </Box>
                     ))
                 ) : (
-                    <Box sx={{ color: "#9c4040", textAlign:"center" }}>Missing main inspector</Box>
+                    <Box sx={{ color: "#9c4040", textAlign:"center", marginRight:"auto",marginLeft:"auto" }}>Missing main inspector</Box>
                 )}
             </div>
             <Box className='add-inspector-btn'>

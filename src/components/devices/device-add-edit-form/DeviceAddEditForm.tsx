@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, Typography, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { addUpdateDevice } from '@/actions/api';
-import { getDevices, setDeviceFormData, setDeviceInfo } from '@/redux/features/DevicesSlice';
+import { getDevices, setDeviceFilterFormData, setDeviceInfo } from '@/redux/features/DevicesSlice';
 import Loading from '@/app/loading';
 
 interface FormData {
@@ -26,8 +26,11 @@ interface FormData {
 
 const DeviceAddEditForm = () => {
     const dispatch = useAppDispatch()
-    const { devicesInfo, deviceFormData } = useAppSelector((state) => state.devices);
-     const { venueDropdown} =useAppSelector(state=>state.common)
+    const { devicesInfo, deviceSelectedFormData } = useAppSelector((state) => state.devices);
+    const filterDeviceForm = useAppSelector((state) => state.devices.formData);
+    console.log("filterDeviceForm",filterDeviceForm)
+  
+    const { venueDropdown } = useAppSelector(state => state.common)
     const { deviceModalType } = devicesInfo;
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [message, setMessage] = useState("");
@@ -35,28 +38,30 @@ const DeviceAddEditForm = () => {
     const [isloading, setLoading] = useState(false);
     const [assetStatus, setAssetStatus] = useState(false)
     const [formData, setFormData] = useState<FormData>({
-        commonAssetName: deviceFormData?.commonAssetName ?? '',
-        venueId: deviceFormData?.venueId ?? 'All',
-        assetNumber: deviceFormData?.assetNumber ?? '',
-        manufacturer: deviceFormData?.manufacturer ?? '',
-        vendor: deviceFormData?.vendor ?? '',
-        modelNumber: deviceFormData?.modelNumber ?? '',
-        serialNumber: deviceFormData?.serialNumber ?? '',
-        deviceLocation: deviceFormData?.deviceLocation ?? '',
-        terminalId: deviceFormData?.terminalId ?? '',
-        profileId: deviceFormData?.profileId ?? '',
-        ipAddress: deviceFormData?.ipAddress ?? '',
+        commonAssetName: deviceSelectedFormData?.commonAssetName ?? '',
+        venueId: deviceSelectedFormData?.venueId ?? 'All',
+        assetNumber: deviceSelectedFormData?.assetNumber ?? '',
+        manufacturer: deviceSelectedFormData?.manufacturer ?? '',
+        vendor: deviceSelectedFormData?.vendor ?? '',
+        modelNumber: deviceSelectedFormData?.modelNumber ?? '',
+        serialNumber: deviceSelectedFormData?.serialNumber ?? '',
+        deviceLocation: deviceSelectedFormData?.deviceLocation ?? '',
+        terminalId: deviceSelectedFormData?.terminalId ?? '',
+        profileId: deviceSelectedFormData?.profileId ?? '',
+        ipAddress: deviceSelectedFormData?.ipAddress ?? '',
 
     });
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
     const is_it = "1";
-    let updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
-    const assignedVenue = [{ label: "IT STORAGE", value: '-2' }, { label: "RMA DEVICES", value: "0" }];
 
-    if (is_it === "1") {
-        updatedVenueDropdown = [...updatedVenueDropdown, ...assignedVenue];
-    }
+    const assignedVenue = [
+        { label: "ARCHIVED DEVICES", value: "-1" }, { label: "IT STORAGE", value: '-2' }, { label: "SPARE DEVICES", value: "50" }, { label: "RMA DEVICES", value: "0" }
+    ]
+    let updatedVenueDropdown = [...assignedVenue, ...venueDropdown];
+    // if (is_it === "1") {
+    //     updatedVenueDropdown = [...updatedVenueDropdown, ...assignedVenue];
+    // }
 
     const onChangeAsset = (e: any) => {
         const value = e.target.checked;
@@ -123,15 +128,13 @@ const DeviceAddEditForm = () => {
         }
 
         try {
-
             setLoading(true);
             let payLoad: any = { ...formData, employeeNumber: "4236" };
-
-            if (deviceFormData?.deviceId) {
+            if (deviceSelectedFormData?.deviceId) {
                 // If deviceFormData exists and has deviceId property
                 payLoad = {
                     ...payLoad, // Spread the existing properties
-                    deviceId: deviceFormData.deviceId // Add or update deviceId property
+                    deviceId: deviceSelectedFormData.deviceId // Add or update deviceId property
                 };
             }
             const res = await addUpdateDevice(payLoad);
@@ -147,17 +150,20 @@ const DeviceAddEditForm = () => {
                 );
                 const obj = {
                     is_It: "1",
-                    venueId: "All",
-                    commonAssetName: "",
-                    serialNumber: "",
-                    assetNumber: "",
-                    terminalId: "",
-                    profileId: "",
                     employeeNumber: "789",
+                    venueId: filterDeviceForm.venueId.toString() ?? "All",
+                    commonAssetName: filterDeviceForm.commonAssetName ?? "",
+                    serialNumber: filterDeviceForm.serialNumber.toString() ?? "",
+                    assetNumber: filterDeviceForm.assetNumber.toString() ?? "",
+                    terminalId: filterDeviceForm.terminalId ?? "",
+                    profileId: filterDeviceForm.profileId ?? "",
+
                 };
+             
+
                 dispatch(getDevices(obj));
-            }, 2000);
-            dispatch(setDeviceFormData(null))
+            }, 3000);
+
         } catch (error: any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong ");
@@ -237,6 +243,7 @@ const DeviceAddEditForm = () => {
                     defaultValue={formData.assetNumber}
                     onChange={onChange}
                     label={'Asset'}
+                    placeholder={"22858"}
                     name={'assetNumber'}
                     id={'assetNumber'}
                     isRequired={!assetStatus}
@@ -281,6 +288,7 @@ const DeviceAddEditForm = () => {
                     onChange={onChange}
                     label={'Manufacturer'}
                     name={'manufacturer'}
+                    placeholder={"Agilysys"}
                     id={'manufacturer'}
                     isRequired={true}
                 />
@@ -300,6 +308,7 @@ const DeviceAddEditForm = () => {
                     label={'Vendor'}
                     name={'vendor'}
                     id={'vendor'}
+                    placeholder={"Par"}
                     isRequired={true}
                 />
                 {validationErrors?.vendor && <Alert icon={false} sx={{
@@ -319,6 +328,7 @@ const DeviceAddEditForm = () => {
                     name={'modelNumber'}
                     id={'modelNumber'}
                     isRequired={true}
+                    placeholder={"M5100"}
                 />
                 {validationErrors?.modelNumber && <Alert icon={false} sx={{
                     background: 'unset',
@@ -337,6 +347,7 @@ const DeviceAddEditForm = () => {
                     name={'serialNumber'}
                     id={'serialNumber'}
                     isRequired={true}
+                    placeholder={"P817990211"}
                 />
                 {validationErrors?.serialNumber && <Alert icon={false} sx={{
                     background: 'unset',
@@ -355,6 +366,7 @@ const DeviceAddEditForm = () => {
                     name={'deviceLocation'}
                     id={'deviceLocation'}
                     isRequired={true}
+                    placeholder={"2nd from left when facing customers"}
                 />
                 {validationErrors?.deviceLocation && <Alert icon={false} sx={{
                     background: 'unset',
@@ -390,6 +402,7 @@ const DeviceAddEditForm = () => {
                     label={'Ip Address'}
                     name={'ipAddress'}
                     id={'ipAddress'}
+                    placeholder={"192.168.123.132"}
                 />
             </Grid>
             <Grid item xs={12} md={12}>

@@ -54,7 +54,7 @@ const VenuesDeleteModal = () => {
         if (isDevices) {
             return <Typography variant="body1">A venue cannot be deleted until you have removed/transferred all its associated devices from it.</Typography>;
         } else {
-            return <Typography variant="body1">Are you sure you want to delete this inspector?</Typography>;
+            return <Typography variant="body1">Are you sure you want to delete this venue?</Typography>;
         }
     };
 

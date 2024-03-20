@@ -15,18 +15,18 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   handelSubmit,
 }) => {
   const dispatch = useAppDispatch()
-  const { inspectionForm,selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
-  const {venueDropdown,inspectorDropdown}=useAppSelector(state=>state.common)
+  const { inspectionForm, selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
+  const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
   useEffect(() => {
     dispatch(setIntialFilterFormData({
-        venue: 'All',
-        inspector: 'All',
-        reportStatus: 'to be inspected',
+      venue: 'All',
+      inspector: 'All',
+      reportStatus: 'to be inspected',
     }))
-    const date =getDefaultWeekRange()
+    const date = getDefaultWeekRange()
     dispatch(setSelectedDateRange(date))
-  
-}, []);
+
+  }, []);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const onChange = (value: any, name: any) => {
@@ -35,17 +35,27 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
     dispatch(setSelectedDateRange(dateRange));
   };
-  const updatedVenueDropdown = [{ label: "All", value: "All" },...venueDropdown];
+  const handleClear = () => {
+    dispatch(setIntialFilterFormData({
+      venue: 'All',
+      inspector: 'All',
+      reportStatus: 'to be inspected',
+    }))
+    const date = getDefaultWeekRange()
+    dispatch(setSelectedDateRange(date))
+
+  }
+  const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
   const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
   return (<>
     <Grid container spacing={2} mb={2} pr={1}>
-      <Grid item xs={12} md={4} >
+      <Grid item xs={12} md={3.6} >
         <RangeDatePicker
           defaultDateRange={selectedDateRange}
           onDateRangeChange={handleDateRangeChange}
         />
       </Grid>
-      <Grid item xs={12} md={2.3}>
+      <Grid item xs={12} md={2}>
         <SelectInput
           selectedOption={inspectionForm.venue}
           onChange={onChange}
@@ -56,7 +66,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           size={'small'}
         />
       </Grid>
-      <Grid item xs={12} md={2.3}>
+      <Grid item xs={12} md={2}>
         <SelectInput
           selectedOption={inspectionForm.inspector}
           onChange={onChange}
@@ -66,7 +76,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           id={'inspector'}
           size={'small'} />
       </Grid>
-      <Grid item xs={12} md={2.3}>
+      <Grid item xs={12} md={2}>
         <SelectInput
           selectedOption={inspectionForm.reportStatus}
           onChange={onChange}
@@ -81,7 +91,8 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           id={'reportStatus'} size={'small'}
         />
       </Grid>
-      <Grid item xs={12} md={1}>
+      <Grid item xs={12} md={2.2} gap={2}>
+        <Button onClick={handleClear} sx={{ marginTop: "22px", marginRight: "3px", width: isDesktop ? "auto" : "100%", padding: "6px 16px " }} variant='outlined'>clear</Button>
         <Button onClick={handelSubmit} sx={{ marginTop: "22px", width: isDesktop ? "auto" : "100%" }} variant='contained'>Search</Button>
       </Grid>
     </Grid>

@@ -11,7 +11,7 @@ import { Button, Tooltip, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
-import { setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector, setSelectedInspectorType } from '@/redux/features/InspectionsSlice';
+import { getInspections, setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector, setSelectedInspectorType } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
@@ -27,11 +27,13 @@ import Loading from '@/app/loading';
 interface InspectionsTableProps {
   data: TableRowData[];
   isLoading?: boolean; // Assuming data is an array of TableRowData
+  initialPayload?: any
 }
 type Header = {
   id: string;
   label: string;
   customRender?: (_value: any, row: any) => JSX.Element;
+  width: string
 
 };
 interface TableRowData {
@@ -48,7 +50,10 @@ interface TableRowData {
 const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
-  const { devices, selectedInspector, saveReportStatus, deviceStatus } = useAppSelector(state => state.Inspections)
+  const { devices, selectedInspector, saveReportStatus, deviceStatus, inspectionFilterData } = useAppSelector(state => state.Inspections)
+  const inspectionForm = inspectionFilterData.inspectionForm
+  const selectedDateRange = inspectionFilterData.selectedDateRange
+
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
 
@@ -90,7 +95,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       severity: ''
     }))
   };
-  const handleInspectClick = (row: any,title:any) => {
+  const handleInspectClick = (row: any, title: any) => {
     dispatch(setSelectedInspectorType(title))
     dispatch(setSelectedInspector(row))
     dispatch(setModalInspectOpen(true));
@@ -120,7 +125,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       setOpen(true);
       dispatch(setDeviceStatus({
         open: true,
-        message: "Invalid status value found!",
+        message: "Please select a status!",
         severity: "error",
       }));
       return;
@@ -128,7 +133,6 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
     // Check notes field validation based on status
     const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 2) && !device.notes);
-
     if (deviceWithEmptyNotes) {
       setOpen(true);
       dispatch(setDeviceStatus({
@@ -138,7 +142,17 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       }));
       return;
     }
+    const deviceWithInvalidReason = devices.find(device => (device.status === -1 || device.status === 2) && device.reason === "Not Applicable");
 
+    if (deviceWithInvalidReason) {
+      setOpen(true);
+      dispatch(setDeviceStatus({
+        open: true,
+        message: "Reason cannot be 'Not Applicable' for devices with 'Failed' or 'Questionable' status!",
+        severity: "error",
+      }));
+      return;
+    }
     try {
       dispatch(setSaveReportStatus(true));
       const res = await insertOrUpdateReport(payload);
@@ -155,6 +169,17 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
           message: "",
           severity: "",
         }));
+        const initialPayload = {
+          FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
+          ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
+          ReportStatus: inspectionForm.reportStatus,
+          InspectorNumber: inspectionForm.inspector.toString() ??"All",
+          VenueId: inspectionForm.venue.toString() ?? "All",
+          Is_it: "1",
+          EmployeeNumber: "0004236",
+          AdminLevel: "1"
+        }
+        dispatch(getInspections(initialPayload))
       }, 2000);
     } catch (error: any) {
       dispatch(setSaveReportStatus(false));
@@ -173,10 +198,11 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
     {
       id: 'status',
       label: 'Status',
+      width: "100px",
       customRender: (value: any, row: any): JSX.Element => {
         const extractedTitle = row.title.match(/title="([^"]+)"/);
         const tooltipTitle = extractedTitle ? extractedTitle[1] : '';
-   
+
         return (
           <span>
             {row.status === 'To be inspected within 3 days.' ? (
@@ -211,15 +237,15 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
 
 
 
-    { id: 'reportId', label: 'Report Id' },
-    { id: 'weekNumber', label: 'Week' },
+    { id: 'reportId', label: 'Report Id', width: "100px", },
+    { id: 'weekNumber', label: 'Week', width: "100px",},
     {
-      id: 'reportDateTime', label: 'Report Date',
+      id: 'reportDateTime', label: 'Report Date',width: "100px",
     },
-    { id: 'venue_name', label: 'Venue' },
+    { id: 'venue_name', label: 'Venue', width: "100px", },
     {
       id: 'inspector Employee',
-      label: 'Inspector Employee',
+      label: 'Inspector Employee', width: "100px",
       customRender: (value: any, row: any): JSX.Element => {
         const name = `${row.inpsectorLastName} ${row.inpsectorFirstName}`;
 
@@ -240,12 +266,14 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       }
 
     },
-    { id: 'totalDevices', label: 'Total Devices' },
-    { id: 'questionable', label: 'Total Questionable Devices' },
-    { id: 'failed', label: 'Total Failed Devices' },
+    { id: 'totalDevices', label: 'Total Devices',width: "100px",  },
+    { id: 'questionable', label: 'Total Questionable Devices',width: "100px", },
+    { id: 'failed', label: 'Total Failed Devices',width: "100px",},
     {
       id: 'inspect',
       label: 'Inspect',
+      width: "100px",
+   
       customRender: (value: any, row: any): JSX.Element => {
         // console.log("row", row);
         let title = "View";
@@ -267,7 +295,6 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
         );
       }
     }
-
   ];
 
   let isDisabled = true

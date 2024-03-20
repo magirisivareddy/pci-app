@@ -12,7 +12,8 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
     const [message, setMessage] = useState("")
     const [isLoading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
-    const { selectedGroupInspector } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+    
+    const { selectedGroupInspector , formData} = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
 
     const onChange = (val: any) => {
         setErrorMessage("")
@@ -23,13 +24,13 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
             setErrorMessage("Venue cannot be empty");
             return;
         }
-    
+
         const obj = {
             employeeNumber: selectedGroupInspector.employeeNumber.toString(),
             venueId: venueId.toString(),
             inspectorType: "1"
         };
-    
+
         try {
             setLoading(true);
             const res = await addVenueToGroupInspector(obj);
@@ -42,25 +43,25 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
                 return
             }
             setMessage(res.message);
-    
+
             const payload = {
-                venueId: 'All',
-                inspectorEmployeeNumber: 'All',
+                venueId: formData.venue.toString(),
+                inspectorEmployeeNumber: formData.inspector.toString(),
                 is_It: '1'
             };
-    
+
             setLoading(false);
             setTimeout(() => {
                 dispatch(setAddVenuToInspectorModal(false));
                 setMessage("");
                 dispatch(getGroupInspectors(payload));
             }, 2000);
-        } catch (error:any) {
+        } catch (error: any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong");
         }
     };
-    
+
     return (
         <div>
             {isLoading && <Loading />}

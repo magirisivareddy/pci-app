@@ -2,33 +2,19 @@
 import React, { useEffect, useState } from 'react'
 import InspectorAdminTable from './inspector-admin-table/InspectorAdminTable'
 import InspectorAdminFilter from './inspector-admin-filter/InspectorAdminFilter'
-import { searchAdmins } from '@/actions/api'
-import { getAdminList } from '@/redux/features/InspectorAdminSlice'
+import { clearInspectorAdminFilterFormData, getAdminList, setInspectorAdminFilterFormData } from '@/redux/features/InspectorAdminSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert } from '@mui/material'
-interface FormData {
-  lastName: string;
-  firstName: string;
-  employeeNumber: string;
-  badgeNumber: string;
 
-}
 const InspectorAdmin = () => {
   const dispatch = useAppDispatch()
-  const { adminLevelStatus } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
-  const [formData, setFormData] = useState<FormData>({
-    lastName: '',
-    firstName: '',
-    employeeNumber: '',
-    badgeNumber: ''
-  });
+  const { adminLevelStatus, formData } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
+ 
   const onChange = (value: any, name: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    dispatch(setInspectorAdminFilterFormData({ value, name }))
   }
   useEffect(() => {
+    dispatch(clearInspectorAdminFilterFormData())
     const obj =
     {
       "lastName": "",

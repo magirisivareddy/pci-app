@@ -34,7 +34,7 @@ export const ReceiveNotices = ({ row }: any) => {
       setTimeout(()=>{
         setNotices(defaultNoticeValue);
         dispatch(setReceiveNoticeStatusError(""))
-      },2000)
+      },3000)
     
       dispatch(setReceiveNoticeLoading(false))
     }

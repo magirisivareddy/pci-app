@@ -9,14 +9,15 @@ import { searchGroupInspectors } from '@/actions/api';
 interface CounterState {
     groupInspectorsInfo: {
         selectedGroupInspector: any
-        isAddVenueToInspectorModal:boolean
-        isDeleteInspectorModal:boolean
-        groupInspectorModal:boolean
-        isdeleteVenuModal:boolean
-        deletedVenuId:any,
-        receiveNoticeStatus:any,
-        receiveNoticeLoading:boolean,
-        receiveNoticeStatusError:any
+        isAddVenueToInspectorModal: boolean
+        isDeleteInspectorModal: boolean
+        groupInspectorModal: boolean
+        isdeleteVenuModal: boolean
+        deletedVenuId: any,
+        receiveNoticeStatus: any,
+        receiveNoticeLoading: boolean,
+        receiveNoticeStatusError: any
+        formData: any
 
     },
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -29,31 +30,35 @@ interface CounterState {
 const initialState: CounterState = {
     groupInspectorsInfo: {
         selectedGroupInspector: null,
-        isAddVenueToInspectorModal:false,
-        isDeleteInspectorModal:false,
-        groupInspectorModal:false,
-        isdeleteVenuModal:false,
-        deletedVenuId:null,
-        receiveNoticeStatus:"",
-        receiveNoticeLoading:false,
-        receiveNoticeStatusError:''
-  
+        isAddVenueToInspectorModal: false,
+        isDeleteInspectorModal: false,
+        groupInspectorModal: false,
+        isdeleteVenuModal: false,
+        deletedVenuId: null,
+        receiveNoticeStatus: "",
+        receiveNoticeLoading: false,
+        receiveNoticeStatusError: '',
+        formData: {
+            venue: 'All',
+            inspector: 'All'
+        }
+
     },
     status: 'idle',
     groupInspectorsData: [],
     error: null,
- 
+
 }
 
 export const getGroupInspectors = createAsyncThunk('groupInspectors/getGroupInspectors', async (obj: any) => {
     try {
-      const response = await searchGroupInspectors(obj);
-      return response;
+        const response = await searchGroupInspectors(obj);
+        return response;
     } catch (error) {
-      console.error('Error in getGroupInspectors:', error);
-      throw error;
+        console.error('Error in getGroupInspectors:', error);
+        throw error;
     }
-  });
+});
 
 export const groupInspectorsSlice = createSlice({
     name: 'groupInspectors',
@@ -63,7 +68,7 @@ export const groupInspectorsSlice = createSlice({
         setSelectedGroupInspectors: (state, actions) => {
             state.groupInspectorsInfo.selectedGroupInspector = actions.payload
         },
-        setDeletedVenuId:(state, actions) => {
+        setDeletedVenuId: (state, actions) => {
             state.groupInspectorsInfo.deletedVenuId = actions.payload
         },
         setAddVenuToInspectorModal: (state, actions) => {
@@ -87,7 +92,20 @@ export const groupInspectorsSlice = createSlice({
         setReceiveNoticeStatusError: (state, actions) => {
             state.groupInspectorsInfo.receiveNoticeStatusError = actions.payload
         },
-     
+        setGroupInspectorsFilterFormData: (state, action: PayloadAction<{ value: any; name: string }>) => {
+            const { value, name } = action.payload;
+            state.groupInspectorsInfo.formData = {
+                ...state.groupInspectorsInfo.formData,
+                [name]: value,
+            };
+        },
+        setGroupInspectorsFilterClearFormData: (state) => {
+            state.groupInspectorsInfo.formData = {
+                venue: 'All',
+                inspector: 'All'
+            };
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -106,7 +124,10 @@ export const groupInspectorsSlice = createSlice({
     },
 })
 
-export const { setSelectedGroupInspectors,setAddVenuToInspectorModal,setDeleteInspectorModal,setGroupInspectorModal,setdeleteVenuModal,setDeletedVenuId,setReceiveNoticeStatus, setReceiveNoticeLoading, setReceiveNoticeStatusError } = groupInspectorsSlice.actions
+export const { setSelectedGroupInspectors, setAddVenuToInspectorModal,
+    setDeleteInspectorModal, setGroupInspectorModal, setdeleteVenuModal,
+    setDeletedVenuId, setReceiveNoticeStatus, setReceiveNoticeLoading,
+    setReceiveNoticeStatusError, setGroupInspectorsFilterFormData,setGroupInspectorsFilterClearFormData } = groupInspectorsSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectGroupInspector = (state: RootState) => state.groupInspector

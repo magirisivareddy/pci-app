@@ -1,7 +1,7 @@
 "use client"
 import { getVenueSummaryReport } from '@/actions/api';
 import CustomTable from '@/components/common/table/Table';
-import VenuesFilters from '@/components/venues/venues-filters/VenuesFilters';
+import VenuesFilters from '@/components/report/failed-devices-report/FailedDevicesFilter';
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { Box, Button } from '@mui/material';
@@ -18,7 +18,7 @@ type VenuesProps = {
   dropdowns: Dropdowns;
 }
 const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
-  const dispatch =useAppDispatch()
+  const dispatch = useAppDispatch()
   const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -66,7 +66,6 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
       setLoading(false)
     }
   }
-
   useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
@@ -80,28 +79,28 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
 
   const handleExport = () => {
     const header = [
-        'Device Id',
-        'Venue Name',
-        'Device Name',
-        'Device Location',
-        'Device Type',
-        'Notes',
-        'Device Status',
-        'Inspection Actual Date',
-        'Inspector',
-        'Inspection Type'
+      'Device Id',
+      'Venue Name',
+      'Device Name',
+      'Device Location',
+      'Device Type',
+      'Notes',
+      'Device Status',
+      'Inspection Actual Date',
+      'Inspector',
+      'Inspection Type'
     ];
     const body: (string | undefined)[][] = data.map((venue: any) => [
-        venue.deviceId,
-        venue.venueName,
-        venue.deviceName,
-        venue.deviceLocation,
-        venue.deviceType,
-        venue.notes,
-        venue.deviceStatus,
-        venue.inspectionActualDate,
-        venue.inspector,
-        venue.inspectionType
+      venue.deviceId,
+      venue.venueName,
+      venue.deviceName,
+      venue.deviceLocation,
+      venue.deviceType,
+      venue.notes,
+      venue.deviceStatus,
+      venue.inspectionActualDate,
+      venue.inspector,
+      venue.inspectionType
     ]);
 
     const csvData = [header, ...body];
@@ -119,7 +118,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
 
     document.body.appendChild(link);
     link.click();
-};
+  };
   return (
     <>
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>

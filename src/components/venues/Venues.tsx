@@ -11,7 +11,7 @@ import VenuesNotes from "./notes/VenuesNotes";
 import CustomTable from "../common/table/Table";
 import { fetchInspectors, fetchVenue, searchVenues } from "@/actions/api";
 import AddUpdateVenue from "./add-update-venue/AddUpdateVenue";
-import { getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspectionModal, setDeletVenueModal, setShowInspector } from "@/redux/features/VenuesSlice";
+import { clearVenueFilterFormData, getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspectionModal, setDeletVenueModal, setShowInspector, setVenueFilterFormData } from "@/redux/features/VenuesSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import InspectionDeleteModal from "./inspection-delete-modal/InspectionDeleteModal";
 import VenuesDeleteModal from "./venues-delete-modal/VenuesDeleteModal";
@@ -34,34 +34,28 @@ interface TableRowData {
     totalDevices: number;
 }
 
-interface FormData {
-    venueId: string;
-    inspectorEmployeeNumber: string;
-}
+
 const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     const dispatch = useAppDispatch()
-  
-   
+
+
     const { venuesData, status, venueInfo } = useAppSelector(state => state.Venues)
-    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal } = venueInfo
+    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal, formData } = venueInfo
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
-    const {  addUpdateVenueMessage, venuesDeletMessage } = useAppSelector(state => state.Venues.venueInfo)
+    useEffect(() => {
+        dispatch(clearVenueFilterFormData())
+    }, [])
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-    const [formData, setFormData] = useState<FormData>({
-        venueId: 'All',
-        inspectorEmployeeNumber: 'All'
-    });
-
+    const handleClear = () => {
+        dispatch(clearVenueFilterFormData())
+    }
     const onChange = (value: any, name: any) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        dispatch(setVenueFilterFormData({ value, name }));
     }
     const handelSubmit = () => {
         const obj: any = {
@@ -73,10 +67,10 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         dispatch(getVenues(obj))
     }
 
-    useEffect(()=>{
-     dispatch(getVenue())
-     dispatch(getInspectors())
-    },[])
+    useEffect(() => {
+        dispatch(getVenue())
+        dispatch(getInspectors())
+    }, [])
     useEffect(() => {
         const obj = {
             "employeeNumber": "0004236",
@@ -100,6 +94,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     }
     const onAddVenue = () => {
         setSelectedRow(null)
+        dispatch(clearVenueFilterFormData())
         setModalTyep("Add")
         dispatch(setAddOrEditVenueModal(true))
     }
@@ -131,11 +126,11 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         dispatch(setDeletInspectionModal(true))
     };
     const myHeaders: any = [
-        { id: 'venue_name', label: 'Venue',width:"70px" },
+        { id: 'venue_name', label: 'Venue', width: "70px" },
         {
             id: 'inspectorDetails',
             label: 'Inspector',
-            width:"350px",
+            width: "400px",
             customRender: (data: any, row: any): ReactNode => (
                 <InspectorCell
                     inspectorDetails={row.inspectorDetails}
@@ -143,11 +138,11 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 />
             )
         },
-        { id: 'totalDevices', label: 'Total Devices',width:"70px"},
+        { id: 'totalDevices', label: 'Total Devices', width: "70px" },
         {
             id: 'Edit',
             label: 'Edit',
-            width:"70px",
+            width: "70px",
             customRender: (data: any, row: TableRowData): ReactNode => (
                 <EditableCell onEdit={() => onEditVenue(row)} />
             )
@@ -155,7 +150,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         {
             id: 'delete',
             label: 'Delete',
-            width:"70px",
+            width: "70px",
             customRender: (data: any, row: TableRowData): ReactNode => (
                 <DeleteCell onDelete={() => onDeleteVenue(row)} />
             )
@@ -163,11 +158,11 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
     ];
     return (
         <>
-       
+
             <Box display="flex" justifyContent="flex-end" pr={2}>
                 <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button>
             </Box>
-            <VenuesFilters  formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+            <VenuesFilters handleClear={handleClear} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
             <Typography
                 variant='caption'
                 // aria-owns={open ? 'mouse-over-popover' : undefined}
@@ -194,7 +189,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 open={isAddOrEditVenueModal}
                 scroll={"body"}
                 handleClose={handleCloseAddorEdit}
-                contentComponent={(props) => <AddUpdateVenue modalType={modalType} selectedRow={selectedRow} />}
+                contentComponent={(props) => <AddUpdateVenue modalType={modalType} setSelectedRow={setSelectedRow} selectedRow={selectedRow} />}
                 maxWidth='sm'
                 fullWidth={true}
             />

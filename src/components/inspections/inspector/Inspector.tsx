@@ -44,12 +44,13 @@ const Inspector = () => {
             }
             const viewReport = await fetchviewReport(payload);
             const initialFormData = viewReport.map((report: {
-                inspectedId: any; deviceId: string; deviceStatus: any
+                inspectedId: any; deviceId: string; deviceStatus: any, resolution: any
             }) => ({
                 deviceId: report.deviceId,
                 status: report.deviceStatus !== 0 ? report.deviceStatus : null,
                 notes: null,
                 inspectedId: report.inspectedId,
+                reason: report?.resolution !== "" ? report?.resolution : "Not Applicable"
             }));
             dispatch(setInitialValues(initialFormData));
             setViewReport(viewReport);

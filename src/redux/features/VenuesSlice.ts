@@ -7,15 +7,16 @@ import { searchDevices, searchVenues } from '@/actions/api';
 interface CounterState {
     venueInfo: {
         selectedVenueRow: any
-        isAddOrEditVenueModal:boolean
-        isDeletVenueModal:boolean
-        showInspector:boolean
-        isDeletInspectionModal:boolean
-        selectedVenueInspector:any
-        addUpdateVenueMessage:any
-        addUpdateVenueErrorMessage:any
-        venuesDeletMessage:any
-        
+        isAddOrEditVenueModal: boolean
+        isDeletVenueModal: boolean
+        showInspector: boolean
+        isDeletInspectionModal: boolean
+        selectedVenueInspector: any
+        addUpdateVenueMessage: any
+        addUpdateVenueErrorMessage: any
+        venuesDeletMessage: any
+        formData: any
+
     },
 
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -27,14 +28,18 @@ interface CounterState {
 const initialState: CounterState = {
     venueInfo: {
         selectedVenueRow: null,
-        isAddOrEditVenueModal:false,
-        isDeletVenueModal:false,
-        showInspector:false,
-        isDeletInspectionModal:false,
-        selectedVenueInspector:null,
-        addUpdateVenueMessage:null,
-        addUpdateVenueErrorMessage:null,
-        venuesDeletMessage:null
+        isAddOrEditVenueModal: false,
+        isDeletVenueModal: false,
+        showInspector: false,
+        isDeletInspectionModal: false,
+        selectedVenueInspector: null,
+        addUpdateVenueMessage: null,
+        addUpdateVenueErrorMessage: null,
+        venuesDeletMessage: null,
+        formData: {
+            venueId: 'All',
+            inspectorEmployeeNumber: 'All'
+        }
     },
     status: 'idle',
     venuesData: [],
@@ -81,6 +86,19 @@ export const VenuesSlice = createSlice({
         setVenuesDeletMessage: (state, action: PayloadAction<any>) => {
             state.venueInfo.venuesDeletMessage = action.payload;
         },
+        setVenueFilterFormData: (state, action: PayloadAction<{ value: any; name: string }>) => {
+            const { value, name } = action.payload;
+            state.venueInfo.formData = {
+                ...state.venueInfo.formData,
+                [name]: value,
+            };
+        },
+        clearVenueFilterFormData: (state) => {
+            state.venueInfo.formData = {
+                venueId: 'All',
+                inspectorEmployeeNumber: 'All'
+            };
+        },
 
     },
     extraReducers: (builder) => {
@@ -100,9 +118,9 @@ export const VenuesSlice = createSlice({
     },
 })
 
-export const {selectedVenueRow, setAddOrEditVenueModal,setDeletVenueModal,
-    setShowInspector,setDeletInspectionModal,setSelectedVenueInspector,
-    setAddUpdateVenueMessage,setAddUpdateVenueErrorMessage,setVenuesDeletMessage } = VenuesSlice.actions
+export const { selectedVenueRow, setAddOrEditVenueModal, setDeletVenueModal,
+    setShowInspector, setDeletInspectionModal, setSelectedVenueInspector,
+    setAddUpdateVenueMessage, setAddUpdateVenueErrorMessage, setVenuesDeletMessage, setVenueFilterFormData,clearVenueFilterFormData } = VenuesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectVenues = (state: RootState) => state.Venues

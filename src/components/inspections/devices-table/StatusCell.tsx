@@ -37,10 +37,10 @@ const StatusCell = ({ row }: any) => {
         if (event.target.value === "pass") {
             if (selectedInspectorType === "Inspect") {
                 dispatch(updateRow({ deviceId: row.deviceId, status: 1 }));
-                dispatch(updateRow({ deviceId: row.deviceId, reason: "" }));
+                dispatch(updateRow({ deviceId: row.deviceId, reason: "Not Applicable" }));
             } else {
                 dispatch(updateRow({ inspectedId: row.inspectedId, status: 1 }));
-                dispatch(updateRow({ inspectedId: row.inspectedId, reason: "" }));
+                dispatch(updateRow({ inspectedId: row.inspectedId, reason: "Not Applicable" }));
             }
 
         } else {
@@ -50,12 +50,15 @@ const StatusCell = ({ row }: any) => {
 
     return (
         <>
-            {defaultValue === "pass" ? <Typography color={"green"}> Pass</Typography> : <FormControl>
+            {defaultValue === "pass" ? <Typography color={"green"}> Pass</Typography> : <FormControl sx={{
+                display:"flex", alignItems:"center"
+            }}>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue={defaultValue}
                     name="status"
                     onChange={handleStatusChange}
+                   
                 >
                     <FormControlLabel value="pass" control={<Radio />} label="Pass" />
                     <FormControlLabel value="fail" control={<Radio />} label="Fail" />

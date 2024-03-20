@@ -35,7 +35,8 @@
     "react-dom": "^18",
     "react-export-table-to-excel": "^1.0.6",
     "react-pro-sidebar": "^1.1.0-alpha.2",
-    "react-redux": "^9.1.0"
+    "react-redux": "^9.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/json2csv": "^5.0.7",

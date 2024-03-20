@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { GroupInspectorsTable } from './group-inspectors-table/GroupInspectorsTable'
 import GroupInspectorsFilter from './group-inspectors-filter/GroupInspectorsFilter'
-import { useAppDispatch } from '@/redux/hooks';
-import { getGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { getGroupInspectors, setGroupInspectorsFilterClearFormData, setGroupInspectorsFilterFormData } from '@/redux/features/GroupInspectorsSlice';
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
 type Dropdowns = {
   venueDropdown: any; // replace with the actual type
@@ -13,23 +13,17 @@ type VenuesProps = {
   dropdowns: Dropdowns;
 }
 
-interface FormData {
-  venue: string;
-  inspector: string;
-}
+
 const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
   const dispatch = useAppDispatch()
-  const [formData, setFormData] = useState<FormData>({
-    venue: 'All',
-    inspector: 'All'
-  });
+  const {formData}=useAppSelector(state=>state.groupInspector.groupInspectorsInfo)
+  
   const onChange = (value: any, name: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    dispatch(setGroupInspectorsFilterFormData({ value, name }))
+
   }
   useEffect(() => {
+    dispatch(setGroupInspectorsFilterClearFormData())
     dispatch(getVenue())
     dispatch(getInspectors())
     const obj = {
@@ -37,6 +31,7 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
       inspectorEmployeeNumber: 'All',
       is_It: '1'
     };
+  
     dispatch(getGroupInspectors(obj));
     
   }, []);
@@ -56,7 +51,7 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
       <GroupInspectorsFilter
         handelSubmit={handelSubmit}
         onChange={onChange}
-        formData={formData}
+       
 
       />
       <GroupInspectorsTable

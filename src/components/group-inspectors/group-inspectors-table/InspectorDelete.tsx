@@ -17,7 +17,7 @@ const InspectorDelete = ({ row }: any) => {
         dispatch(setDeleteInspectorModal(true))
     }
     return (
-        <Box display={'flex'} gap={'10px'}>
+        <Box display={'flex'} justifyContent="center" gap={'10px'}>
             <Tooltip color='primary' title="Delete Inspector">
                 <IconButton onClick={onDelete} sx={{ padding: 0 }}>
                     <RemoveCircleRoundedIcon color='warning' fontSize='medium' />

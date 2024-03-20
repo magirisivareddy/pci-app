@@ -19,6 +19,7 @@ const ReasonsCell = ({ row }: any) => {
     } else {
         device = devices.find(device => device.inspectedId === row.inspectedId);
     }
+    const value = device?.reason !== ""?device?.reason : "Not Applicable"
     const handleChange = (event: any) => {
 
         if (selectedInspectorType === "Inspect") {
@@ -28,15 +29,13 @@ const ReasonsCell = ({ row }: any) => {
             dispatch(updateRow({ inspectedId: row.inspectedId, reason: event.target.value }));
         }
     }
-
-
     return (
         <>
             <FormControl sx={{
                 width: xs ? "200px" : "100%",
             }} >
                 <Select
-                    value={device?.reason ?? "Not Applicable"}
+                    value={device?.status === 1 ? "Not Applicable" : value}
                     onChange={handleChange}
                     size='small'
                     displayEmpty

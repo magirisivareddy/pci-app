@@ -9,8 +9,8 @@ import { useAppSelector } from '@/redux/hooks';
 
 
 
-const VenuesFilters = ({  handelSubmit, formData, onChange }: any) => {
-    const {venueDropdown, inspectorDropdown}=useAppSelector(state=>state.common)
+const VenuesFilters = ({ handelSubmit, formData, onChange,handleClear }: any) => {
+    const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown ?? []];
@@ -19,7 +19,7 @@ const VenuesFilters = ({  handelSubmit, formData, onChange }: any) => {
     return (<>
 
         <Grid container spacing={2} mb={2} pr={2}>
-            <Grid item xs={12} md={5.5}>
+            <Grid item xs={12} md={5}>
                 <SelectInput
                     selectedOption={formData.venueId}
                     onChange={onChange}
@@ -28,7 +28,7 @@ const VenuesFilters = ({  handelSubmit, formData, onChange }: any) => {
                     name={'venueId'}
                     id={'venueId'} size={'small'} />
             </Grid>
-            <Grid item xs={12} md={5.5}>
+            <Grid item xs={12} md={5}>
                 <SelectInput
                     selectedOption={formData.inspectorEmployeeNumber}
                     onChange={onChange}
@@ -37,7 +37,8 @@ const VenuesFilters = ({  handelSubmit, formData, onChange }: any) => {
                     name={'inspectorEmployeeNumber'}
                     id={'inspectorEmployeeNumber'} size={'small'} />
             </Grid>
-            <Grid item xs={12} md={1}>
+            <Grid item xs={12} md={2}>
+                <Button onClick={handleClear} sx={{ marginTop: "22px", marginRight: "3px", width: isDesktop ? "auto" : "100%", padding: "6px 16px " }} variant='outlined'>Clear</Button>
                 <Button onClick={handelSubmit} sx={{ marginTop: "22px", width: isDesktop ? "auto" : "100%" }} variant='contained'>Search</Button>
             </Grid>
         </Grid>

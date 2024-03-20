@@ -12,6 +12,7 @@ import {
     IconButton,
     Divider,
     Theme,
+    useMediaQuery,
 } from '@mui/material';
 import { usePathname } from "next/navigation";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -45,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
     const path = usePathname()
     const router = useRouter(); // Use the useRouter hook
     const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
-
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iconColor = "#008c99";
     const hoverBackgroundColor = "#f1fafb";
     const activeBackgroundColor = "#9ddbe0";
@@ -82,11 +83,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
 
         // Update the state to reflect these changes.
         setOpenSubMenus(newOpenSubMenusState);
-
+       
         // Navigate if the item has a path and it's either being opened or has no children.
         // This prevents navigation from occurring on the closing of a menu or if the intent is to just open a submenu.
         if (item.path && (!item.children || !isCurrentlyOpen)) {
             handleNavigation(item.path);
+        }
+        if (isMobile) {
+            onClose();
         }
     };
 
@@ -119,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                 // { text: 'Device Log Report', icon: <StarBorder />, path: '/report/device-log-report' }
             ]
         },
-     
+
 
 
     ];
@@ -142,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                             },
                             backgroundColor: path === item.path ? activeBackgroundColor : "inherit",
                             color: path === item.path ? "#fff" : "inherit"
-                            
+
                         }}
                     >
                         <ListItemIcon sx={{ color: iconColor, paddingLeft: !open ? "5px" : "16px", }}>

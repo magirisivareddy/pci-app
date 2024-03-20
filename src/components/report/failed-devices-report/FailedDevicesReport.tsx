@@ -7,6 +7,7 @@ import { getVenuePassFailSummaryReport } from '@/actions/api';
 import { useDispatch } from 'react-redux';
 import { getVenue, getInspectors } from '@/redux/features/CommonSlice';
 import { useAppDispatch } from '@/redux/hooks';
+import { Box, Button } from '@mui/material';
 
 type Dropdowns = {
   venueDropdown: any; // replace with the actual type
@@ -52,6 +53,12 @@ const FailedDevicesReport = () => {
   const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
   const employeeNumber = "5860"
+  const onClear = () => {
+    setFormData({
+      venueId: 'All',
+      inspectorId: 'All'
+    })
+  }
   const getVenueInspectorList = async (
     employeeNumber: string,
     venueId?: string,
@@ -83,8 +90,60 @@ const FailedDevicesReport = () => {
   const handelSubmit = () => {
     getVenueInspectorList(formData.venueId, formData.inspectorId);
   };
+  const handleExport = () => {
+    const header = [
+      'Device Id',
+      'Venue Name',
+      'Device Name',
+      'Device Location',
+      'Device Type',
+      'Notes',
+      'Device Status',
+      'Inspection Actual Date',
+      'Inspector',
+      'Inspection Type'
+    ];
+    const body: (string | undefined)[][] = data.map((device: any) => [
+      device.deviceId,
+      device.venueName,
+      device.deviceName,
+      device.deviceLocation,
+      device.deviceType,
+      device.notes,
+      device.deviceStatus,
+      device.inspectionActualDate,
+      device.inspector,
+      device.inspectionType
+    ]);
+
+    const csvData = [header, ...body];
+    const csvFileName = 'Failed-devices-report.csv';
+
+    const csvContent = csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', csvFileName);
+
+
+    document.body.appendChild(link);
+    link.click();
+  };
   return (<>
-    <FailedDevicesFilter  failedDevicesData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+    <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
+      <Button onClick={handleExport} size="small" variant="outlined">
+        Export to Excel
+      </Button>
+    </Box>
+    <FailedDevicesFilter
+      formData={formData}
+      handelSubmit={handelSubmit}
+      onClear={onClear}
+      onChange={onChange}
+    />
     <CustomTable data={data} headers={headers} isloading={isLoading} />
   </>
 

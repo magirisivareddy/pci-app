@@ -24,10 +24,12 @@ const AddInspector = ({ onClose }: any) => {
     const [firstName, setFirstName] = useState("");
     const [lookupData, setLookup] = useState([]);
     const [isLoading, setLoading] = useState(false);
+    const [showGrid, setShowGrid] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [textErrorMessage, setTextErrorMessage] = useState("");
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
+    const venueFormData = useAppSelector(state => state.Venues.venueInfo.formData);
 
     const handleTableRowClick = async (row: any) => {
         const payload = {
@@ -53,12 +55,12 @@ const AddInspector = ({ onClose }: any) => {
                 onClose()
                 setSuccessMessage("");
                 const obj = {
-                    "employeeNumber": "0004236",
-                    "is_it": "1",
-                    "adminLevel": "1",
-                    "inspectorType": "1",
-                    "venueId": "All",
-                    "inspectorEmployeeNumber": "All"
+                    employeeNumber: "0004236",
+                    is_it: "1",
+                    adminLevel: "1",
+                    inspectorType: "1",
+                    venueId: venueFormData.venueId.toString() ?? "All",
+                    inspectorEmployeeNumber: venueFormData.inspectorEmployeeNumber.toString() ?? "All"
                 };
 
                 dispatch(getVenues(obj));
@@ -76,9 +78,12 @@ const AddInspector = ({ onClose }: any) => {
     const fetchDataAndSetDate = async (firstname: any, lastname: any) => {
         try {
             setLoading(true);
+       
             const data = await doLookup(firstname, lastname);
             setLookup(data);
+           
         } finally {
+            setShowGrid(true)
             setLoading(false);
         }
     };
@@ -155,7 +160,7 @@ const AddInspector = ({ onClose }: any) => {
                 )}
             </Grid>
             <Grid container mt={2}>
-                <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
+                {showGrid && <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
                     <Table>
                         <TableBody>
                             {lookupData?.length === 0 ? (
@@ -209,7 +214,8 @@ const AddInspector = ({ onClose }: any) => {
                             )}
                         </TableFooter>
                     </Table>
-                </TableContainer>
+                </TableContainer>}
+
             </Grid>
         </div>
     );

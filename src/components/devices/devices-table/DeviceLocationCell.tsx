@@ -54,7 +54,7 @@ const DeviceLocationCell = ({ row }: any) => {
                 sx={{ paddingTop: "0", paddingBottom: "0" }}
                 {...label}
                 checked={pciLabeled}
-            /> Is labeled
+            /><span style={{ position: "relative", top: "3px", right: "5px" }}>Is labeled</span>
         </>
 
 

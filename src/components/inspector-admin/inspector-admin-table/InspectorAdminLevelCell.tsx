@@ -55,7 +55,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
         }
     }
     return (
-        <Box sx={{ width: "65%", }}>
+        <Box sx={{ width: "65%", margin:"0 auto" }}>
             <Select
                 size='small'
                 value={row.adminLevel ?? adminLevel}

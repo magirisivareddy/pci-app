@@ -2,20 +2,26 @@ import { addUpdateVenue } from '@/actions/api'
 import Loading from '@/app/loading'
 import TextInput from '@/components/common/input/Input'
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice'
-import { getVenues, setAddOrEditVenueModal, setAddUpdateVenueErrorMessage, setAddUpdateVenueMessage } from '@/redux/features/VenuesSlice'
+import { clearVenueFilterFormData, getVenues, setAddOrEditVenueModal, setAddUpdateVenueErrorMessage, setAddUpdateVenueMessage, setVenueFilterFormData } from '@/redux/features/VenuesSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Button, Grid } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
+const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
     const dispatch = useAppDispatch()
-    const [venue_name, setVenueName] = useState(selectedRow?.venue_name ?? "")
-    // const [message, setMessage] = useState("")
+    const [venue_name, setVenueName] = useState("");
+
+    useEffect(() => {
+        if (selectedRow) {
+            setVenueName(selectedRow.venue_name)
+        }
+    }, [selectedRow])
+
     const [isloading, setLoading] = useState(false)
-    const { addUpdateVenueErrorMessage, addUpdateVenueMessage } = useAppSelector(state => state.Venues.venueInfo)
+    const { addUpdateVenueErrorMessage, addUpdateVenueMessage, formData } = useAppSelector(state => state.Venues.venueInfo)
     const onChange = (value: any) => {
-        dispatch(setAddUpdateVenueErrorMessage("")); 
         setVenueName(value)
+        dispatch(setAddUpdateVenueErrorMessage(""));
     }
     const onAddUpdateVenue = async () => {
         try {
@@ -23,6 +29,7 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
                 dispatch(setAddUpdateVenueErrorMessage("Venue name cannot be empty"));
                 return;
             }
+            setSelectedRow(null)
             setLoading(true);
             const obj = {
                 venueId: (selectedRow?.venue_id ?? 0).toString(),
@@ -30,10 +37,12 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
                 employeeNumber: "789"
             };
             const res = await addUpdateVenue(obj);
+            setVenueName(venue_name)
             if (res.validationMessage) {
                 dispatch(setAddUpdateVenueErrorMessage(res.validationMessage));
                 setLoading(false);
                 setTimeout(() => {
+
                     dispatch(setAddUpdateVenueErrorMessage(""));
                 }, 2000)
                 return;
@@ -50,8 +59,8 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
                     is_it: "1",
                     adminLevel: "1",
                     inspectorType: "1",
-                    venueId: "All",
-                    inspectorEmployeeNumber: "All"
+                    venueId: formData.venueId.toString() ?? "All",
+                    inspectorEmployeeNumber: formData.inspectorEmployeeNumber.toString() ?? "All"
                 };
                 dispatch(getVenues(obj));
             }, 2000);
@@ -62,8 +71,7 @@ const AddUpdateVenue = ({ selectedRow, modalType }: any) => {
                 dispatch(setAddUpdateVenueErrorMessage(""));
             }, 2000)
         }
-    };
-
+    }
 
     return (
         <Grid container spacing={2} mb={2} pr={2}>

@@ -11,7 +11,7 @@ const InspectionDeleteModal = () => {
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
-    const { selectedVenueInspector } = useAppSelector(state => state.Venues.venueInfo)
+    const { selectedVenueInspector, formData } = useAppSelector(state => state.Venues.venueInfo)
 
     const onDeleteVenue = async () => {
         const inspectorId = selectedVenueInspector?.inspectorId.toString()
@@ -25,12 +25,12 @@ const InspectionDeleteModal = () => {
                 setMessage("")
                 dispatch(setDeletInspectionModal(false))
                 const obj = {
-                    "employeeNumber": "0004236",
-                    "is_it": "1",
-                    "adminLevel": "1",
-                    "inspectorType": "1",
-                    "venueId": "All",
-                    "inspectorEmployeeNumber": "All"
+                    employeeNumber: "0004236",
+                    is_it: "1",
+                    adminLevel: "1",
+                    inspectorType: "1",
+                    venueId: formData.venueId.toString() ?? "All",
+                    inspectorEmployeeNumber: formData.inspectorEmployeeNumber.toString() ?? "All"
                 }
 
                 dispatch(getVenues(obj))

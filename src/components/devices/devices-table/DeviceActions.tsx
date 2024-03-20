@@ -3,7 +3,7 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from '@/redux/hooks';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
-import { setDeviceFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice';
+import { setDeviceSelectedFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice';
 
 const DeviceActions = ({ row }: any) => {
     const dispatch = useAppDispatch();
@@ -12,13 +12,12 @@ const DeviceActions = ({ row }: any) => {
             isDeviceModal: true,
             deviceModalType: "Edit"
         }))
-        console.log("row",row)
-        dispatch(setDeviceFormData(row))
+      
+        dispatch(setDeviceSelectedFormData(row))
     }
     const onHistory=()=>{
-        
         dispatch(setDeviceHistoryInfo(true))
-        dispatch(setDeviceFormData(row))
+        dispatch(setDeviceSelectedFormData(row))
 
     }
     return (

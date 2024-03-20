@@ -4,7 +4,7 @@ import DeviceFilter from './device-filter/DeviceFilter'
 import DevicesTable from './devices-table/DevicesTable'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import Modal from '../common/modal/Modal'
-import { getDevices, setDeviceFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice'
+import { clearDeviceFilterFormData, getDevices, setDeviceFilterFormData, setDeviceSelectedFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice'
 import DeviceAddEditForm from './device-add-edit-form/DeviceAddEditForm'
 import DeviceHistory from './device-history/DeviceHistory'
 import { searchDevices } from '@/actions/api'
@@ -22,18 +22,11 @@ interface FormData {
 }
 const Devices = ({ venueDropdown }: any) => {
   const dispatch = useAppDispatch();
-  const [formData, setFormData] = useState<FormData>({
-    commonAssetName: '',
-    venueId: 'All',
-    assetNumber: '',
-    serialNumber: '',
-    terminalId: '',
-    profileId: ''
-  });
-
-
-
+  const { devicesInfo, deviceHistory, deviceSelectedFormData, formData } = useAppSelector(state => state.devices)
+  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage } = devicesInfo
+  const { isDeviceHistoryModal } = deviceHistory
   useEffect(() => {
+    dispatch(clearDeviceFilterFormData())
     const obj = {
       "is_It": "1",
       "venueId": "All",
@@ -56,39 +49,31 @@ const Devices = ({ venueDropdown }: any) => {
       obj[key] = String(obj[key]);
     });
     dispatch(getDevices(obj))
-
   }
   const onChange = (value: any, name: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    dispatch(setDeviceFilterFormData({ value, name }));
   }
-  const { devicesInfo, deviceHistory, deviceFormData } = useAppSelector(state => state.devices)
-  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage } = devicesInfo
-  const { isDeviceHistoryModal } = deviceHistory
   const handleClose = () => {
     dispatch(setDeviceInfo({
       isDeviceModal: false,
       deviceModalType: ""
     }))
     dispatch(setDeviceHistoryInfo(false))
-    dispatch(setDeviceFormData(null))
+    dispatch(setDeviceSelectedFormData(null))
   }
 
   return (
     <>
-    {deviceLocationStatus && <Loading/>}
+      {deviceLocationStatus && <Loading />}
       <DeviceFilter
-        formData={formData}
         onChange={onChange}
         handelSubmit={handelSearchDevices}
       />
-      {deviceLocationSuccessMessage && <Alert sx={{ marginTop: "20px", marginBottom:"20px" }} variant="filled" severity="success">
+      {deviceLocationSuccessMessage && <Alert sx={{ marginTop: "20px", marginBottom: "20px" }} variant="filled" severity="success">
         {deviceLocationSuccessMessage}
       </Alert>}
 
-      {deviceLocationErrorMessage && <Alert sx={{ marginTop: "20px",marginBottom:"20px"  }} variant="filled" severity="error">
+      {deviceLocationErrorMessage && <Alert sx={{ marginTop: "20px", marginBottom: "20px" }} variant="filled" severity="error">
         {deviceLocationErrorMessage}
       </Alert>}
       <DevicesTable />
@@ -101,7 +86,7 @@ const Devices = ({ venueDropdown }: any) => {
         handleClose={handleClose}
       />
       <Modal
-        title={`Device History: ${deviceFormData?.commonAssetName} , ${deviceFormData?.modelNumber}`}
+        title={`Device History: ${deviceSelectedFormData?.commonAssetName} , ${deviceSelectedFormData?.modelNumber}`}
         open={isDeviceHistoryModal}
         maxWidth="md"
         scroll={'body'}

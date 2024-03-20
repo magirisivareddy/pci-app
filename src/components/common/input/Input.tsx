@@ -10,6 +10,7 @@ interface TextInputProps {
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     isRequired?: boolean;
     disabled?:boolean
+    placeholder?:any
 
 }
 
@@ -35,7 +36,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange,onBlur, id, isRequired = false, disabled=false }) => {
+const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange,onBlur, id, isRequired = false, disabled=false,placeholder="" }) => {
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -63,7 +64,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
                 sx={{ width: { xs: '100%', md: 'auto' } }}
                 value={defaultValue}
                 name={name}
-                placeholder={`${label}...`}
+                placeholder={placeholder !== "" ? placeholder : label}
                 onChange={handleInputChange}
                 onBlur={onBlur}
                 id={id} 

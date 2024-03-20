@@ -15,7 +15,7 @@ interface FormData {
 
 // Define the VenueStatusReport functional component
 const VenueStatusReport = () => {
-  const dispatch =useAppDispatch()
+    const dispatch = useAppDispatch()
     const headers = [
         { id: 'venueName', label: 'Venue Name' },
         { id: 'deviceId', label: 'Device Id' },
@@ -25,21 +25,23 @@ const VenueStatusReport = () => {
         { id: 'notes', label: 'Notes' },
         {
             id: 'deviceStatus', label: 'Device Status', customRender: (value: any, row: any): JSX.Element => (
-              <span>
-            
-                {row.deviceStatus === 1 ? (
-                  "PASS"
-                ) : (
-                  "FAIL"
-                )}
-              </span>
+                <span>
+
+                    {row.deviceStatus === 1 ? (
+                        "PASS"
+                    ) : (
+                        "FAIL"
+                    )}
+                </span>
             )
-          },
-        { id: 'inspectionActualDate', label: 'Inspection Actual Date', customRender: (value: any, row: any): JSX.Element => (
-            <span>
-              {format(row.inspectionActualDate, 'dd/MM/yyyy hh:mm a')}
-            </span>
-          ) },
+        },
+        {
+            id: 'inspectionActualDate', label: 'Inspection Actual Date', customRender: (value: any, row: any): JSX.Element => (
+                <span>
+                    {format(row.inspectionActualDate, 'dd/MM/yyyy hh:mm a')}
+                </span>
+            )
+        },
     ];
 
     // Define state variables using TypeScript
@@ -49,7 +51,12 @@ const VenueStatusReport = () => {
     });
     const [data, setData] = useState<any[]>([]); // Change data type to any[]
     const [isLoading, setLoading] = useState(false);
-
+    const onClear = () => {
+        setFormData({
+            venueId: 'All',
+            deviceLocation: '',
+        })
+    }
     // Define the onChange handler
     const onChange = (value: any, name: string) => {
         setFormData((prevData) => ({
@@ -76,9 +83,9 @@ const VenueStatusReport = () => {
 
     // Use the employeeNumber constant
     const employeeNumber = "5860";
-useEffect(()=>{
-    dispatch(getVenue())
-},[])
+    useEffect(() => {
+        dispatch(getVenue())
+    }, [])
     // Define the useEffect hook to fetch data on component mount
     useEffect(() => {
         getVenueInspectorList(employeeNumber);
@@ -92,7 +99,13 @@ useEffect(()=>{
     // Render the VenueStatusReport component
     return (
         <div>
-            <VenueStatusFilter  venueStatusReportData={data} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+            <VenueStatusFilter
+                venueStatusReportData={data}
+                formData={formData}
+                handelSubmit={handelSubmit}
+                onChange={onChange}
+                onClear={onClear}
+            />
             <CustomTable data={data} headers={headers} isloading={isLoading} />
         </div>
     );

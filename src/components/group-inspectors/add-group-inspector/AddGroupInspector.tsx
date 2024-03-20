@@ -14,13 +14,6 @@ import { useAppDispatch } from '@/redux/hooks';
 interface FormData {
     venue: any;
 }
-const debounce = (func: Function, delay: number) => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    return (...args: any) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func(...args), delay);
-    };
-};
 const AddGroupInspector = ({ venues, onClose }: any) => {
     const dispatch = useAppDispatch()
     const [formData, setFormData] = useState<FormData>({
@@ -32,6 +25,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
     const [isloading, setLoading] = useState(false)
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [showGrid, setShowGrid] = useState(false);
     const [selectedTableRow, setSelectedTableRow] = useState(null)
     const [textErrorMessage, setTextErrorMessage] = useState("");
     const handleTableRowClick = async (row: any) => {
@@ -77,8 +71,10 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
             setLoading(true);
             const data = await doLookup(firstname, lastname);
             setLookup(data)
+           
             setLoading(false);
         } finally {
+            setShowGrid(true)
             setLoading(false);
         }
     };
@@ -159,7 +155,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
                 </Grid>
             )}
             <Grid container mt={2}>
-                <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
+                {showGrid && <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
                     <Table>
                         <TableBody>
                             {lookupData?.length === 0 ? (
@@ -221,7 +217,8 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
 
 
                     </Table>
-                </TableContainer>
+                </TableContainer>}
+
             </Grid>
 
         </div>

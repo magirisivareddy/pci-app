@@ -44,8 +44,6 @@ const Inspections = () => {
             AdminLevel: "1"
         }
         dispatch(getInspections(obj))
-
-
     }
     return (
         <>
@@ -53,7 +51,7 @@ const Inspections = () => {
             <InspectionsFilters
                 handelSubmit={handelSubmit}
             />
-            <InspectionsTable data={inspectionsList} isLoading={status === "loading"} />
+            <InspectionsTable data={inspectionsList}   isLoading={status === "loading"} />
         </>
     )
 }

@@ -6,8 +6,9 @@ interface CounterState {
     inspectorAdminInfo: {
         isinspectorAdminDeleteModal: boolean;
         selectedAdminRow: any;
-        adminLevelStatus:any
-        adminLevelStatusLoader:boolean
+        adminLevelStatus: any
+        adminLevelStatusLoader: boolean,
+        formData: any
     };
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     adminData: any; // Change 'any' to the actual type of your data
@@ -18,8 +19,14 @@ const initialState: CounterState = {
     inspectorAdminInfo: {
         isinspectorAdminDeleteModal: false,
         selectedAdminRow: null,
-        adminLevelStatus:null,
-        adminLevelStatusLoader:false
+        adminLevelStatus: null,
+        adminLevelStatusLoader: false,
+        formData: {
+            lastName: '',
+            firstName: '',
+            employeeNumber: '',
+            badgeNumber: ''
+        }
     },
     status: 'idle',
     adminData: [],
@@ -28,13 +35,13 @@ const initialState: CounterState = {
 
 export const getAdminList = createAsyncThunk('inspectorAdmin/getAdminList', async (obj: any) => {
     try {
-      const response = await searchAdmins(obj);
-      return response;
+        const response = await searchAdmins(obj);
+        return response;
     } catch (error) {
-      console.error('Error in getAdminList:', error);
-      throw error;
+        console.error('Error in getAdminList:', error);
+        throw error;
     }
-  });
+});
 
 export const inspectorAdminSlice = createSlice({
     name: 'inspectorAdmin',
@@ -51,6 +58,21 @@ export const inspectorAdminSlice = createSlice({
         },
         setAdminLevelStatusLoader: (state, action: PayloadAction<any>) => {
             state.inspectorAdminInfo.adminLevelStatusLoader = action.payload;
+        },
+        setInspectorAdminFilterFormData: (state, action: PayloadAction<{ value: any; name: string }>) => {
+            const { value, name } = action.payload;
+            state.inspectorAdminInfo.formData = {
+                ...state.inspectorAdminInfo.formData,
+                [name]: value,
+            };
+        },
+        clearInspectorAdminFilterFormData: (state) => {
+            state.inspectorAdminInfo.formData = {
+                lastName: '',
+                firstName: '',
+                employeeNumber: '',
+                badgeNumber: ''
+            };
         },
     },
     extraReducers: (builder) => {
@@ -70,7 +92,9 @@ export const inspectorAdminSlice = createSlice({
     },
 });
 
-export const { setinspectorAdminDeleteModal, setSelectedAdminrow, setAdminLevelStatus, setAdminLevelStatusLoader } = inspectorAdminSlice.actions;
+export const { setinspectorAdminDeleteModal, setSelectedAdminrow,
+    setAdminLevelStatus, setAdminLevelStatusLoader,
+    clearInspectorAdminFilterFormData, setInspectorAdminFilterFormData } = inspectorAdminSlice.actions;
 
 export const selectInspectorAdmin = (state: RootState) => state.inspectorAdmin;
 

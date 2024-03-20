@@ -21,28 +21,28 @@ import Loading from '@/app/loading';
 
 const myHeaders = [
     {
-        id: "firstName", label: "Inspectors", customRender: (_: any, row: any) => {
+        id: "firstName", label: "Inspectors", width:"100px", customRender: (_: any, row: any) => {
             return <>{row.lastName} {row.firstName} </>
         }
     },
     {
-        id: "department", label: "Department"
+        id: "department", label: "Department",width:"100px",
     },
     {
-        id: "jobTitle", label: "Job Title"
+        id: "jobTitle", label: "Job Title",width:"100px",
     },
     {
-        id: "venues", label: "Venues", customRender: (_: any, row: any) => (
+        id: "venues", label: "Venues",width:"350px", customRender: (_: any, row: any) => (
             <AddAndDeleteVenue row={row} />
         )
     },
     {
-        id: "receive_notices", label: "Receive Notices", customRender: (_: any, row: any) => (
+        id: "receive_notices", label: "Receive Notices",width:"100px", customRender: (_: any, row: any) => (
             <ReceiveNotices row={row} />
         )
     },
     {
-        id: "actions", label: "Actions", customRender: (_: any, row: any) => (
+        id: "actions", label: "Actions",width:"100px", customRender: (_: any, row: any) => (
             <InspectorDelete row={row} />
         )
     },
@@ -57,7 +57,7 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
-    const { isAddVenueToInspectorModal, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId, receiveNoticeStatus,receiveNoticeLoading,receiveNoticeStatusError } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+    const { isAddVenueToInspectorModal,formData, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId, receiveNoticeStatus,receiveNoticeLoading,receiveNoticeStatusError } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
     const handleClose = () => {
         dispatch(setAddVenuToInspectorModal(false))
         dispatch(setDeleteInspectorModal(false))
@@ -77,8 +77,8 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                 setTimeout(() => {
                   
                     const obj: any = {
-                        venueId: 'All',
-                        inspectorEmployeeNumber: 'All',
+                        venueId: formData.venue.toString(),
+                        inspectorEmployeeNumber: formData.inspector.toString(),
                         is_It: '1'
                     }
                     Object.keys(obj).forEach(key => {
@@ -139,7 +139,7 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                 fullWidth={true}
             />
             <Modal
-                title={`Delete Inspector`}
+                title={`Delete Group Inspector`}
                 open={isDeleteInspectorModal}
                 scroll={"body"}
                 handleClose={handleClose}

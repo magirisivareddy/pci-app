@@ -28,7 +28,7 @@ const NotesCell = ({ row }: any) => {
             dispatch(updateRow({ deviceId: row.deviceId, notes: event.target.value }));
 
         } else {
-            console.log("Note value", event.target.value)
+        
             dispatch(updateRow({ inspectedId: row.inspectedId, notes: event.target.value }));
         }
 

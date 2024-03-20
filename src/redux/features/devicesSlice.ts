@@ -8,11 +8,13 @@ interface CounterState {
     devicesInfo: {
         isDeviceModal: boolean
         deviceModalType: string
-        deviceLocationStatus:boolean
-        deviceLocationSuccessMessage:any
-        deviceLocationErrorMessage:any
+        deviceLocationStatus: boolean
+        deviceLocationSuccessMessage: any
+        deviceLocationErrorMessage: any
+
     },
-    deviceFormData: any,
+    formData: any
+    deviceSelectedFormData: any,
     deviceHistory: {
         isDeviceHistoryModal: boolean
     },
@@ -26,15 +28,24 @@ const initialState: CounterState = {
     devicesInfo: {
         isDeviceModal: false,
         deviceModalType: "",
-        deviceLocationStatus:false,
-        deviceLocationSuccessMessage:"",
-        deviceLocationErrorMessage:""
+        deviceLocationStatus: false,
+        deviceLocationSuccessMessage: "",
+        deviceLocationErrorMessage: "",
+
+    },
+    formData: {
+        commonAssetName: '',
+        venueId: 'All',
+        assetNumber: '',
+        serialNumber: '',
+        terminalId: '',
+        profileId: ''
     },
     deviceHistory: {
         isDeviceHistoryModal: false,
     },
-    
-    deviceFormData: null,
+
+    deviceSelectedFormData: null,
     status: 'idle',
     devicesData: [],
     error: null,
@@ -42,13 +53,13 @@ const initialState: CounterState = {
 
 export const getDevices = createAsyncThunk('devices/getDevices', async (obj: any) => {
     try {
-      const response = await searchDevices(obj);
-      return response;
+        const response = await searchDevices(obj);
+        return response;
     } catch (error) {
-      console.error('Error in getDevices:', error);
-      throw error;
+        console.error('Error in getDevices:', error);
+        throw error;
     }
-  });
+});
 export const devicesSlice = createSlice({
     name: 'devices',
     // `createSlice` will infer the state type from the `initialState` argument
@@ -57,8 +68,8 @@ export const devicesSlice = createSlice({
         setDeviceInfo: (state, actions) => {
             state.devicesInfo = actions.payload
         },
-        setDeviceFormData: (state, actions) => {
-            state.deviceFormData = actions.payload
+        setDeviceSelectedFormData: (state, actions) => {
+            state.deviceSelectedFormData = actions.payload
         },
         setDeviceHistoryInfo: (state, actions) => {
             state.deviceHistory.isDeviceHistoryModal = actions.payload
@@ -71,6 +82,23 @@ export const devicesSlice = createSlice({
         },
         setDeviceLocationErrorMessage: (state, actions) => {
             state.devicesInfo.deviceLocationErrorMessage = actions.payload
+        },
+        setDeviceFilterFormData: (state, action) => {
+            const { value, name } = action.payload;
+            state.formData = {
+                ...state.formData,
+                [name]: value,
+            };
+        },
+        clearDeviceFilterFormData: (state) => {
+            state.formData = {
+                commonAssetName: '',
+                venueId: 'All',
+                assetNumber: '',
+                serialNumber: '',
+                terminalId: '',
+                profileId: ''
+            };
         },
     },
     extraReducers: (builder) => {
@@ -90,7 +118,10 @@ export const devicesSlice = createSlice({
     },
 })
 
-export const { setDeviceInfo, setDeviceFormData, setDeviceHistoryInfo,setDeviceLocationStatus,setDeviceLocationSuccessMessage, setDeviceLocationErrorMessage } = devicesSlice.actions
+export const { setDeviceInfo, setDeviceSelectedFormData,
+    setDeviceHistoryInfo, setDeviceLocationStatus,
+    setDeviceLocationSuccessMessage, setDeviceLocationErrorMessage,
+    clearDeviceFilterFormData, setDeviceFilterFormData } = devicesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectDevices = (state: RootState) => state.devices.devicesInfo

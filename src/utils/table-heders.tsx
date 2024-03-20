@@ -12,27 +12,28 @@ type Header = {
     id: string;
     label: string;
     customRender?: (_value: any, row: any) => JSX.Element;
+    width?: string
 };
 
 export const inspectionDeviceHeader: Header[] = [
-    { id: 'commonAssetName', label: 'Device', },
-    { id: 'serialNumber', label: 'Serial' },
-    { id: 'deviceLocation', label: 'Location' },
+    { id: 'commonAssetName', label: 'Device', width: "100px" },
+    { id: 'serialNumber', label: 'Serial', width: "100px" },
+    { id: 'deviceLocation', label: 'Location', width: "100px" },
     {
-        id: 'status', label: 'Status', customRender: (value: any, row: any) => <StatusCell row={row} />
+        id: 'status', label: 'Status',width:"150px", customRender: (value: any, row: any) => <StatusCell row={row} />
     },
     {
-        id: 'notes', label: 'Notes', customRender: (value: any, row: any) => <NotesCell row={row} />
+        id: 'notes', label: 'Notes', width:"150px",customRender: (value: any, row: any) => <NotesCell row={row} />
     },
     {
-        id: 'reason', label: 'Reason', customRender: (value: any, row: any) => <ReasonsCell row={row} />
+        id: 'reason', label: 'Reason',width:"150px", customRender: (value: any, row: any) => <ReasonsCell row={row} />
     },
 ];
 
 
 export const devicesHeader: Header[] = [
-    { id: 'commonAssetName', label: 'Common Asset Name', },
-    { id: 'modelNumber', label: 'Model' },
+    { id: 'commonAssetName', label: 'Common Asset Name', width: "172px"},
+    { id: 'modelNumber', label: 'Model',width: "100px" },
     {
         id: 'assetNumber', label: 'Asset / Serial', customRender: (_, row) => {
             const assetNumber = row.assetNumber || "";
@@ -46,7 +47,7 @@ export const devicesHeader: Header[] = [
     },
     {
         id: 'terminalId',
-        label: 'Terminal ID / Profile Id',
+        label: 'Terminal ID / Profile Id',width: "180px",
         customRender: (_, row) => {
             const terminalId = row.terminalId || "";
             const profileId = row.profileId || "";
@@ -59,7 +60,7 @@ export const devicesHeader: Header[] = [
     },
 
     {
-        id: 'slotNumber', label: 'IP Address /Slot',
+        id: 'slotNumber', label: 'IP Address /Slot',width: "150px",
         customRender: (_, row) => {
             const ipAddress = row.ipAddress || "";
             const slotNumber = row.slotNumber || "";
@@ -70,12 +71,14 @@ export const devicesHeader: Header[] = [
             );
         }
     },
-    { id: 'venueName', label: 'Assigned Venue' },
-    { id: 'deviceLocation', label: 'Location',customRender: (_: any, row: any) => (
-        <DeviceLocationCell row={row} />
-    ) },
+    { id: 'venueName', label: 'Assigned Venue',width: "125px" },
     {
-        id: 'action', label: 'Action', customRender: (_: any, row: any) => (
+        id: 'deviceLocation', label: 'Location',width: "300px", customRender: (_: any, row: any) => (
+            <DeviceLocationCell row={row} />
+        )
+    },
+    {
+        id: 'action', label: 'Action',width:"70px", customRender: (_: any, row: any) => (
             <DeviceActions row={row} />
         )
     },

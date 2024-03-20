@@ -10,7 +10,7 @@ const DeleteGroupInspector = () => {
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isLoading, setLoading] = useState(false)
-    const { selectedGroupInspector } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+    const { selectedGroupInspector, formData } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
     const onDelete = async () => {
         const inspectorId = selectedGroupInspector?.inspectorId.toString()
         try {
@@ -44,7 +44,7 @@ const DeleteGroupInspector = () => {
            {isLoading && <Loading />}
            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
             <Typography variant="body1">
-                Are you sure you want to delete this inspector?
+                Are you sure you want to delete this group inspector?
             </Typography>
             <Box display="flex" gap={2} mt={2} justifyContent="center">
                 <Button onClick={onDelete} variant="outlined">Yes</Button>
