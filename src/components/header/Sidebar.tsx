@@ -88,10 +88,11 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         // This prevents navigation from occurring on the closing of a menu or if the intent is to just open a submenu.
         if (item.path && (!item.children || !isCurrentlyOpen)) {
             handleNavigation(item.path);
+            if (isMobile) {
+                onClose();
+            }
         }
-        if (isMobile) {
-            onClose();
-        }
+      
     };
 
 

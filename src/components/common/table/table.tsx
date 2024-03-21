@@ -35,6 +35,7 @@ interface CustomTableProps {
   renderExportButton?: boolean; // Optional prop for rendering the export button
   isloading?: boolean;
   isPagination?: boolean;
+  isFixed?: any
 }
 
 const CustomTable: React.FC<CustomTableProps> = ({
@@ -42,6 +43,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
   headers,
   isloading,
   isPagination = true,
+  isFixed
 }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
@@ -59,6 +61,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    console.log("event.target.value", event.target.value)
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -71,7 +74,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
       <TableContainer
         component={Paper}
         sx={{
-          maxHeight: "65vh",
+          maxHeight: isFixed?"":"65vh",
           overflow: "auto",
           width: "100%",
           position: "relative",
@@ -85,7 +88,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                   key={header.id}
                   align="center"
                   sx={{
-                    minWidth: 100,
+                    // minWidth: 100,
                     width: header.width ?? "auto",
                     background: "#9ddbe0",
                     color: "rgba(0, 0, 0, 0.7)",
@@ -128,8 +131,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
                       align="center"
                       key={header.id}
                       sx={{
-                        maxWidth: 15,
-                        wordBreak:"break-all",
+                        maxWidth: header.width ?? "15px",
+                        wordBreak: "break-all",
                         '@media (max-width: 768px)': {
                           maxWidth: '100%', // Adjusted for desktop view
                         }
@@ -148,7 +151,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
             <TableFooter
               sx={{
                 background: "#9ddbe0",
-                position: "sticky",
+                position: isFixed?"":"sticky",
                 bottom: 0,
                 zIndex: 100,
                 width: "100%",

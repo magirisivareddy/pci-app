@@ -35,7 +35,7 @@ export const devicesHeader: Header[] = [
     { id: 'commonAssetName', label: 'Common Asset Name', width: "172px"},
     { id: 'modelNumber', label: 'Model',width: "100px" },
     {
-        id: 'assetNumber', label: 'Asset / Serial', customRender: (_, row) => {
+        id: 'assetNumber', label: 'Asset / Serial',width: "172px", customRender: (_, row) => {
             const assetNumber = row.assetNumber || "";
             const serialNumber = row.serialNumber || "";
             return (

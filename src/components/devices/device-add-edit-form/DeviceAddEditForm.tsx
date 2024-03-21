@@ -28,8 +28,8 @@ const DeviceAddEditForm = () => {
     const dispatch = useAppDispatch()
     const { devicesInfo, deviceSelectedFormData } = useAppSelector((state) => state.devices);
     const filterDeviceForm = useAppSelector((state) => state.devices.formData);
-    console.log("filterDeviceForm",filterDeviceForm)
-  
+    console.log("filterDeviceForm", filterDeviceForm)
+
     const { venueDropdown } = useAppSelector(state => state.common)
     const { deviceModalType } = devicesInfo;
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -101,7 +101,11 @@ const DeviceAddEditForm = () => {
         deviceLocation: { isRequired: true },
         assetNumber: { isRequired: !assetStatus }
     };
-
+    const isValidIpAddress = (ipAddress: string) => {
+        // Regular expression to validate IP address format
+        const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        return ipRegex.test(ipAddress);
+    };
     const addDevice = async () => {
         const errors: Record<string, string> = {};
         Object.keys(formData).forEach((key) => {
@@ -112,6 +116,9 @@ const DeviceAddEditForm = () => {
         // Add additional validation for assetNumber
         if (!assetStatus && !/^\d+$/.test(formData.assetNumber)) {
             errors['assetNumber'] = 'Asset number must contain only numbers';
+        }
+        if (formData.ipAddress && !isValidIpAddress(formData.ipAddress)) {
+            errors['ipAddress'] = 'Invalid IP address format';
         }
         // If there are validation errors, set them in state and return
         if (Object.keys(errors).length > 0) {
@@ -159,7 +166,7 @@ const DeviceAddEditForm = () => {
                     profileId: filterDeviceForm.profileId ?? "",
 
                 };
-             
+
 
                 dispatch(getDevices(obj));
             }, 3000);
@@ -348,6 +355,7 @@ const DeviceAddEditForm = () => {
                     id={'serialNumber'}
                     isRequired={true}
                     placeholder={"P817990211"}
+                    maxLength={50}
                 />
                 {validationErrors?.serialNumber && <Alert icon={false} sx={{
                     background: 'unset',
@@ -404,6 +412,14 @@ const DeviceAddEditForm = () => {
                     id={'ipAddress'}
                     placeholder={"192.168.123.132"}
                 />
+                {validationErrors?.ipAddress && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.ipAddress}.</Alert>}
             </Grid>
             <Grid item xs={12} md={12}>
                 <Typography>

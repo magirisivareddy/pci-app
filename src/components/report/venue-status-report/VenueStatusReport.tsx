@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomTable from '@/components/common/table/Table';
 import VenueStatusFilter from './VenueStatusFilter';
-import { getVenueSummaryReport } from '@/actions/api';
+import { getVenueStatusReport, getVenueSummaryReport } from '@/actions/api';
 import { format } from 'date-fns';
 import { useAppDispatch } from '@/redux/hooks';
 import { getVenue } from '@/redux/features/CommonSlice';
@@ -73,7 +73,7 @@ const VenueStatusReport = () => {
     ) => {
         try {
             setLoading(true);
-            const res = await getVenueSummaryReport(employeeNumber, venueId, deviceLocation);
+            const res = await getVenueStatusReport(employeeNumber, venueId, deviceLocation);
             setData(res);
             setLoading(false);
         } catch (error) {
@@ -93,7 +93,13 @@ const VenueStatusReport = () => {
 
     // Define the handleSubmit function
     const handelSubmit = () => {
-        getVenueInspectorList(employeeNumber, formData.venueId, formData.deviceLocation);
+        let venueId = formData.venueId
+
+        if (formData.venueId === "All") {
+            venueId = ""
+        }
+
+        getVenueInspectorList(employeeNumber, venueId, formData.deviceLocation);
     };
 
     // Render the VenueStatusReport component

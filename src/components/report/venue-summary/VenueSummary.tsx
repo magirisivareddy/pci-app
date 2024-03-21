@@ -8,7 +8,7 @@ import { Box, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 interface FormData {
   venueId: string;
-  inspectorEmployeeNumber: string;
+  inspectorId: string;
 }
 type Dropdowns = {
   venueDropdown: any; // replace with the actual type
@@ -23,7 +23,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   const [isLoading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     venueId: 'All',
-    inspectorEmployeeNumber: 'All'
+    inspectorId: 'All'
   });
   const onChange = (value: any, name: any) => {
     setFormData((prevData) => ({
@@ -31,8 +31,6 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
       [name]: value,
     }));
   }
-
-
   const headers = [
     { id: 'venueName', label: 'Venue Name' },
     { id: 'deviceName', label: 'Device Name' },
@@ -50,16 +48,14 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
     { id: 'notes', label: 'Notes' },
     { id: 'inspector', label: 'Inspector' },
   ];
-
   const getVenueInspectorList = async (
     employeeNumber: string,
     venueId?: string,
     inspectorId?: string
   ) => {
-
     try {
       setLoading(true)
-      const res = await getVenueSummaryReport(employeeNumber, venueId, "", inspectorId)
+      const res = await getVenueSummaryReport(employeeNumber, venueId, inspectorId)
       setData(res)
       setLoading(false)
     } catch (error) {
@@ -74,7 +70,15 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   }, [])
   const handelSubmit = () => {
     const employeeNumber = "5860"
-    getVenueInspectorList(employeeNumber, formData.venueId, formData.inspectorEmployeeNumber)
+    let venueId = formData.venueId
+    let inspectorId = formData.inspectorId
+    if (formData.venueId === "All") {
+      venueId = ""
+    }
+    if (formData.inspectorId === "All") {
+      inspectorId = ""
+    }
+    getVenueInspectorList(employeeNumber, venueId, inspectorId)
   }
 
   const handleExport = () => {
@@ -119,6 +123,12 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
     document.body.appendChild(link);
     link.click();
   };
+  const onClear = () => {
+    setFormData({
+      venueId: 'All',
+      inspectorId: 'All'
+    })
+  }
   return (
     <>
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
@@ -126,7 +136,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
           Export to Excel
         </Button>
       </Box>
-      <VenuesFilters formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
+      <VenuesFilters formData={formData} handelSubmit={handelSubmit} onChange={onChange} onClear={onClear} />
       <CustomTable data={data} headers={headers} isloading={isLoading} />
     </>
 

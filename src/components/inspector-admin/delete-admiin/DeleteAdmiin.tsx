@@ -9,7 +9,7 @@ export const DeleteAdmiin = () => {
     const dispatch = useAppDispatch()
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    const [isloading, setLoading]=useState(false)
+    const [isloading, setLoading] = useState(false)
     const { selectedAdminRow } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
     const onDelete = async () => {
         try {
@@ -23,11 +23,11 @@ export const DeleteAdmiin = () => {
             }, 2000)
             const obj =
             {
-              "lastName": "",
-              "firstName": "",
-              "badgeNumber": "",
-              "employeeNumber": "",
-              "is_It": "2"
+                "lastName": "",
+                "firstName": "",
+                "badgeNumber": "",
+                "employeeNumber": "",
+                "is_It": "2"
             }
             dispatch(getAdminList(obj))
         } catch (error: any) {
@@ -40,9 +40,9 @@ export const DeleteAdmiin = () => {
     }
     return (
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            {isloading&& <Loading/>}
+            {isloading && <Loading />}
             <Typography variant="body1">
-                Are you sure tou want to delete this Venue?
+                Are you sure you want to delete this admin?
             </Typography>
             <Box display="flex" gap={2} mt={2} justifyContent="center">
                 <Button onClick={onDelete} variant="outlined">Yes</Button>

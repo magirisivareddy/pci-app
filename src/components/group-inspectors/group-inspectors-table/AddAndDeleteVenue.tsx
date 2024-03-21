@@ -31,7 +31,7 @@ const AddAndDeleteVenue = ({ row }: any) => {
                 ) : (
                     venues?.map((venue: any, index: any) => (
                         <>
-                            <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} color='warning' onClick={() => onDeleteVenue(venue)} /> {venue.venueName}</>
+                            <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} color='warning' onClick={() => onDeleteVenue(venue)} /> <span style={{minWidth:"70px"}}> {venue.venueName}</span></>
 
                     ))
                 )}

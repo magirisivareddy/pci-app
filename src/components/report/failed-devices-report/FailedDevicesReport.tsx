@@ -60,7 +60,6 @@ const FailedDevicesReport = () => {
     })
   }
   const getVenueInspectorList = async (
-    employeeNumber: string,
     venueId?: string,
     inspectorId?: string
   ) => {
@@ -77,7 +76,7 @@ const FailedDevicesReport = () => {
   useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
-    getVenueInspectorList(employeeNumber)
+    getVenueInspectorList()
   }, [])
 
 
@@ -88,7 +87,15 @@ const FailedDevicesReport = () => {
     }));
   }
   const handelSubmit = () => {
-    getVenueInspectorList(formData.venueId, formData.inspectorId);
+    let venueId = formData.venueId
+    let inspectorId = formData.inspectorId
+    if (formData.venueId === "All") {
+      venueId = ""
+    }
+    if (formData.inspectorId === "All") {
+      inspectorId = ""
+    }
+    getVenueInspectorList(venueId, inspectorId);
   };
   const handleExport = () => {
     const header = [

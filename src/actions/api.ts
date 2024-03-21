@@ -183,15 +183,23 @@ export async function deleteVenueInspector(inspectorId: any) {
 export async function getVenueInspectorReport(employeeNumber: any) {
     return fetchQueryparamsData(`Report/GetVenueInspectorReport?employeeNumber=${employeeNumber}`, "GET", null);
 }
-export async function getVenueSummaryReport(employeeNumber: string, venueId?: string, deviceLocation?: string, inspectorId?: string) {
+export async function getVenueStatusReport(employeeNumber: string, venueId?: string, deviceLocation?: string) {
     let url = `Report/GetVenueSummaryReport?employeeNumber=${employeeNumber}`;
 
     if (venueId || deviceLocation) {
-        url += `&venueId=${venueId || ''}&deviceLocation=${deviceLocation || ''}&inspectorId=${inspectorId || ''}`;
+        url += `&venueId=${venueId}&deviceLocation=${deviceLocation}`;
     }
 
     return fetchQueryparamsData(url, "GET", null);
 }
+export async function getVenueSummaryReport(employeeNumber: string, venueId?: string, inspectorId?: string) {
+    let url = `Report/GetVenueSummaryReport?employeeNumber=${employeeNumber}`;
+    if (venueId || inspectorId) {
+        url += `&venueId=${venueId || ''}&inspectorId=${inspectorId || ''}`;
+    }
+    return fetchQueryparamsData(url, "GET", null);
+}
+
 export async function updatePciLabeled(deviceId: any, employeeNumber: any) {
     return fetchQueryparamsData(`Device/UpdatePciLabeled?deviceId=${deviceId}&employeeNumber=${employeeNumber}`, "PUT", null);
 }

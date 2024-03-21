@@ -314,7 +314,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       aria-haspopup="true"
       onMouseEnter={handlePopoverOpen}
       onMouseLeave={handlePopoverClose}
-      sx={{ marginLeft: "2px" }}
+      sx={{ marginLeft: "2px", fontSize: "0.8rem",fontWeight:"600" }}
     >
       NOTES: <FormatListBulletedRoundedIcon color='primary' sx={{ width: "15px", height: '15px', position: 'relative', top: "4px" }} />
     </Typography>

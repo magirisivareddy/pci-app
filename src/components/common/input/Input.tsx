@@ -11,6 +11,7 @@ interface TextInputProps {
     isRequired?: boolean;
     disabled?:boolean
     placeholder?:any
+    maxLength?:any
 
 }
 
@@ -36,7 +37,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange,onBlur, id, isRequired = false, disabled=false,placeholder="" }) => {
+const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, onChange,onBlur, id, isRequired = false, disabled=false,placeholder="",maxLength }) => {
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -68,6 +69,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, defaultValue = '', name, o
                 onChange={handleInputChange}
                 onBlur={onBlur}
                 id={id} 
+                inputProps={maxLength ? { maxLength: maxLength } : undefined}
                 disabled={disabled}
                 />
         </FormControl>

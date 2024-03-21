@@ -75,7 +75,6 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                 setMessage(res.message)
                 setLoading(false)
                 setTimeout(() => {
-                  
                     const obj: any = {
                         venueId: formData.venue.toString(),
                         inspectorEmployeeNumber: formData.inspector.toString(),
@@ -84,10 +83,11 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                     Object.keys(obj).forEach(key => {
                         obj[key] = String(obj[key]);
                     });
-                    setMessage("")
                     dispatch(getGroupInspectors(obj))
-                }, 2000)
-                handleClose()
+                    setMessage("")
+                    handleClose()
+                }, 3000)
+               
 
             } catch (error: any) {
                 setLoading(false)

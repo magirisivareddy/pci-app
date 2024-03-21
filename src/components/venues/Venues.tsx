@@ -120,17 +120,13 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         dispatch(setShowInspector(false))
 
     };
-    const handleDeleteInspector = (row: any, inspector: any) => {
-        console.log("row", row)
-        console.log("inspector", inspector)
-        dispatch(setDeletInspectionModal(true))
-    };
+
     const myHeaders: any = [
         { id: 'venue_name', label: 'Venue', width: "70px" },
         {
             id: 'inspectorDetails',
             label: 'Inspector',
-            width: "400px",
+            width: "350px",
             customRender: (data: any, row: any): ReactNode => (
                 <InspectorCell
                     inspectorDetails={row.inspectorDetails}
@@ -169,7 +165,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 aria-haspopup="true"
                 onMouseEnter={handlePopoverOpen}
                 onMouseLeave={handlePopoverClose}
-                sx={{ marginLeft: "2px" }}
+                sx={{ marginLeft: "2px", fontSize: "0.8rem",fontWeight:"600" }}
             >
                 NOTES: <FormatListBulletedRoundedIcon color='primary' sx={{ width: "15px", height: '15px', position: 'relative', top: "4px" }} />
             </Typography>

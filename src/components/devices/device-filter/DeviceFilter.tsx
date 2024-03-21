@@ -29,104 +29,8 @@ const DeviceFilter: React.FC<DeviceFilterProps> = ({ onChange, handelSubmit }) =
   //   updatedVenueDropdown = [...updatedVenueDropdown, ...assignedVenue,]
   // }
 
-  const addDevice = () => {
-    dispatch(clearDeviceFilterFormData())
-    dispatch(
-      setDeviceInfo({
-        isDeviceModal: true,
-        deviceModalType: 'Add'
-      })
-    );
-  };
-  const handleExport = () => {
-    const header = [
-      'Device Id',
-      'Venue Id',
-      'Venue Name',
-      'Common AssetName',
-      'Asset Number',
-      'Manufacturer',
-      'Vendor',
-      'Model Number',
-      'Serial Number',
-      'Device Location',
-      'Terminal Id',
-      'Profile Id',
-      'Ip Address',
-      'Slot Number',
-      'Was Deleted',
-      'Pci Labeled',
-      'Deleted Date',
-      'Is Labeled',
-      'Is LabeledExcel'
-    ];
+ 
 
-    const body = devicesData.map((device: any) => [
-      device.deviceId,
-      device.venueId,
-      device.venueName,
-      device.commonAssetName,
-      device.assetNumber,
-      device.manufacturer,
-      device.vendor,
-      device.modelNumber,
-      device.serialNumber,
-      device.deviceLocation,
-      device.terminalId,
-      device.profileId,
-      device.ipAddress,
-      device.slotNumber,
-      device.wasDeleted,
-      device.pciLabeled,
-      device.deletedDate,
-      device.isLabeled,
-      device.isLabeledExcel
-    ]);
-
-    const data = [header, ...body];
-    const ws = XLSX.utils.aoa_to_sheet(data);
-
-    // Make header row bold
-    const headerStyle = { font: { bold: true } };
-    for (let col = 0; col < header.length; col++) {
-      const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (!ws[cellRef].s) ws[cellRef].s = {};
-      Object.assign(ws[cellRef].s, headerStyle); // Apply bold style
-    }
-
-    // Set fixed width for columns
-    const colWidths = [ // Adjust column widths as needed
-      { wpx: 100 }, // Device Id
-      { wpx: 100 }, // Venue Id
-      { wpx: 150 }, // Venue Name
-      { wpx: 200 }, // Common AssetName
-      { wpx: 120 }, // Asset Number
-      { wpx: 150 }, // Manufacturer
-      { wpx: 150 }, // Vendor
-      { wpx: 150 }, // Model Number
-      { wpx: 150 }, // Serial Number
-      { wpx: 200 }, // Device Location
-      { wpx: 120 }, // Terminal Id
-      { wpx: 120 }, // Profile Id
-      { wpx: 150 }, // Ip Address
-      { wpx: 100 }, // Slot Number
-      { wpx: 100 }, // Was Deleted
-      { wpx: 100 }, // Pci Labeled
-      { wpx: 150 }, // Deleted Date
-      { wpx: 100 }, // Is Labeled
-      { wpx: 150 }, // Is LabeledExcel
-    ];
-    ws['!cols'] = colWidths;
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Devices');
-
-    const currentDate = new Date();
-    const timestamp = currentDate.toISOString().replace(/[-:T.]/g, '').slice(0, 14); // Get timestamp in format YYYYMMDDHHmmss
-    const fileName = `NQ_PCI_Devices_${timestamp}.xls`;
-
-    XLSX.writeFile(wb, fileName);
-  };
 
 const onClear=()=>{
   dispatch(clearDeviceFilterFormData())
@@ -134,14 +38,7 @@ const onClear=()=>{
 
   return (
     <>
-      <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
-        <Button onClick={addDevice} size="small" variant="outlined">
-          Add Device
-        </Button>
-        <Button onClick={handleExport} size="small" variant="outlined">
-          Export to Excel
-        </Button>
-      </Box>
+     
       <Box sx={{ display: "flex", flexDirection: isDesktop ? 'row' : 'column' }}>
         <Grid container spacing={2} mb={2} md={10} >
           <Grid item xs={12} md={2}>
