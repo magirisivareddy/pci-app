@@ -13,7 +13,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
 import { getInspections, setDeviceStatus, setInitialValues, setSaveReportStatus, setSelectedInspector, setSelectedInspectorType } from '@/redux/features/InspectionsSlice';
 import { setModalInspectOpen } from '@/redux/features/ModalSlice';
-import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+// import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import Modal from '@/components/common/modal/Modal';
 import Inspector from '../inspector/Inspector';
@@ -316,7 +317,7 @@ const InspectionsTable: React.FC<InspectionsTableProps> = ({ data, isLoading }) 
       onMouseLeave={handlePopoverClose}
       sx={{ marginLeft: "2px", fontSize: "0.8rem",fontWeight:"600" }}
     >
-      NOTES: <FormatListBulletedRoundedIcon color='primary' sx={{ width: "15px", height: '15px', position: 'relative', top: "4px" }} />
+      NOTES: <InfoOutlinedIcon color='primary' sx={{ width: "17px", height: '17px', position: 'relative', top: "4px" }} />
     </Typography>
 
     <CustomTable data={data} headers={inspectionsTableHeaders} isloading={isLoading} />

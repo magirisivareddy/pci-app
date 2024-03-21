@@ -11,13 +11,16 @@ import VenuesNotes from "./notes/VenuesNotes";
 import CustomTable from "../common/table/Table";
 import { fetchInspectors, fetchVenue, searchVenues } from "@/actions/api";
 import AddUpdateVenue from "./add-update-venue/AddUpdateVenue";
-import { clearVenueFilterFormData, getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspectionModal, setDeletVenueModal, setShowInspector, setVenueFilterFormData } from "@/redux/features/VenuesSlice";
+import { clearVenueFilterFormData, getVenues, selectedVenueRow, setAddOrEditVenueModal, setDeletInspectionModal, setDeletVenueModal, setShowInspector, setTotalDeviceModal, setVenueFilterFormData } from "@/redux/features/VenuesSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import InspectionDeleteModal from "./inspection-delete-modal/InspectionDeleteModal";
 import VenuesDeleteModal from "./venues-delete-modal/VenuesDeleteModal";
-import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Loading from "@/app/loading";
 import { getInspectors, getVenue } from "@/redux/features/CommonSlice";
+import TotalDeviceCell from "./TotalDeviceCell";
+import TotalDeviceModal from "./total-device-modal/TotalDeviceModal";
 
 type Dropdowns = {
     venueDropdown: any; // replace with the actual type
@@ -40,7 +43,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
 
 
     const { venuesData, status, venueInfo } = useAppSelector(state => state.Venues)
-    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal, formData } = venueInfo
+    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal, formData, totalDeviceModal,selectedVenueInspector } = venueInfo
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -106,6 +109,9 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
         setModalTyep("")
         dispatch(setAddOrEditVenueModal(false))
     }
+    const handleClose=()=>{
+        dispatch(setTotalDeviceModal(false))
+    }
     const handleCloseDelete = () => {
         dispatch(setDeletVenueModal(false))
     }
@@ -134,7 +140,9 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 />
             )
         },
-        { id: 'totalDevices', label: 'Total Devices', width: "70px" },
+        { id: 'totalDevices', label: 'Total Devices', width: "70px",  customRender: (data: any, row: any): ReactNode => (
+           <TotalDeviceCell row={row} />
+        )  },
         {
             id: 'Edit',
             label: 'Edit',
@@ -167,7 +175,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 onMouseLeave={handlePopoverClose}
                 sx={{ marginLeft: "2px", fontSize: "0.8rem",fontWeight:"600" }}
             >
-                NOTES: <FormatListBulletedRoundedIcon color='primary' sx={{ width: "15px", height: '15px', position: 'relative', top: "4px" }} />
+                NOTES: <InfoOutlinedIcon color='primary' sx={{ width: "17px", height: '17px', position: 'relative', top: "4px" }} />
             </Typography>
             <CustomTable data={venuesData} headers={myHeaders} isloading={status === "loading"} />
             <Modal
@@ -187,6 +195,15 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 handleClose={handleCloseAddorEdit}
                 contentComponent={(props) => <AddUpdateVenue modalType={modalType} setSelectedRow={setSelectedRow} selectedRow={selectedRow} />}
                 maxWidth='sm'
+                fullWidth={true}
+            />
+             <Modal
+                title={` Venue: ${selectedVenueInspector?.venue_name} `}
+                open={totalDeviceModal}
+                scroll={"body"}
+                handleClose={handleClose}
+                contentComponent={(props) => <TotalDeviceModal />}
+                maxWidth='md'
                 fullWidth={true}
             />
             <Modal

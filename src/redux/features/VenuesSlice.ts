@@ -16,6 +16,7 @@ interface CounterState {
         addUpdateVenueErrorMessage: any
         venuesDeletMessage: any
         formData: any
+        totalDeviceModal:boolean
 
     },
 
@@ -36,6 +37,7 @@ const initialState: CounterState = {
         addUpdateVenueMessage: null,
         addUpdateVenueErrorMessage: null,
         venuesDeletMessage: null,
+        totalDeviceModal:false,
         formData: {
             venueId: 'All',
             inspectorEmployeeNumber: 'All'
@@ -99,6 +101,9 @@ export const VenuesSlice = createSlice({
                 inspectorEmployeeNumber: 'All'
             };
         },
+        setTotalDeviceModal: (state, action: PayloadAction<boolean>) => {
+            state.venueInfo.totalDeviceModal = action.payload;
+        },
 
     },
     extraReducers: (builder) => {
@@ -120,7 +125,9 @@ export const VenuesSlice = createSlice({
 
 export const { selectedVenueRow, setAddOrEditVenueModal, setDeletVenueModal,
     setShowInspector, setDeletInspectionModal, setSelectedVenueInspector,
-    setAddUpdateVenueMessage, setAddUpdateVenueErrorMessage, setVenuesDeletMessage, setVenueFilterFormData,clearVenueFilterFormData } = VenuesSlice.actions
+    setAddUpdateVenueMessage, setAddUpdateVenueErrorMessage,
+     setVenuesDeletMessage, setVenueFilterFormData,
+     clearVenueFilterFormData, setTotalDeviceModal } = VenuesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectVenues = (state: RootState) => state.Venues

@@ -72,13 +72,13 @@ const Inspector = () => {
             </Box>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={3.3}>
-                    <TextInput defaultValue={inspectorData.inspector ?? ""} onChange={inspectorHandlechange} label={'Inspector'} name={'inspector'} id={'inspector'} />
+                    <TextInput defaultValue={inspectorData.inspector ?? ""} onChange={inspectorHandlechange} label={'Inspector'} name={'inspector'} id={'inspector'} disabled />
                 </Grid>
                 <Grid item xs={12} md={3.3}>
-                    <TextInput defaultValue={inspectorData.employee ?? ""} onChange={inspectorHandlechange} label={'Employee'} name={'employee'} id={'employee'} />
+                    <TextInput defaultValue={inspectorData.employee ?? ""} onChange={inspectorHandlechange} label={'Employee'} name={'employee'} id={'employee'} disabled />
                 </Grid>
                 <Grid item xs={12} md={3.3}>
-                    <TextInput defaultValue={selectedInspector.venue_name ?? inspectorData.venue} onChange={inspectorHandlechange} label={'Venue'} name={'venue'} id={'venue'} />
+                    <TextInput defaultValue={selectedInspector.venue_name ?? inspectorData.venue} onChange={inspectorHandlechange} label={'Venue'} name={'venue'} id={'venue'} disabled />
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <Typography variant='caption' sx={{

@@ -203,6 +203,10 @@ export async function getVenueSummaryReport(employeeNumber: string, venueId?: st
 export async function updatePciLabeled(deviceId: any, employeeNumber: any) {
     return fetchQueryparamsData(`Device/UpdatePciLabeled?deviceId=${deviceId}&employeeNumber=${employeeNumber}`, "PUT", null);
 }
+export async function loadVenueDevices(venueId: any) {
+    return fetchQueryparamsData(`Device/LoadVenueDevices?venueId=${venueId}`, "GET", null);
+}
+
 
 export async function getVenuePassFailSummaryReport(employeeNumber: string, venueName?: string, inspector?: string) {
     let url = `Report/GetVenuePassFailSummaryReport?employeeNumber=${employeeNumber}`;

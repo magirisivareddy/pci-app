@@ -28,7 +28,7 @@ const DeviceAddEditForm = () => {
     const dispatch = useAppDispatch()
     const { devicesInfo, deviceSelectedFormData } = useAppSelector((state) => state.devices);
     const filterDeviceForm = useAppSelector((state) => state.devices.formData);
-    console.log("filterDeviceForm", filterDeviceForm)
+
 
     const { venueDropdown } = useAppSelector(state => state.common)
     const { deviceModalType } = devicesInfo;
@@ -39,7 +39,7 @@ const DeviceAddEditForm = () => {
     const [assetStatus, setAssetStatus] = useState(false)
     const [formData, setFormData] = useState<FormData>({
         commonAssetName: deviceSelectedFormData?.commonAssetName ?? '',
-        venueId: deviceSelectedFormData?.venueId ?? 'All',
+        venueId: deviceSelectedFormData?.venueId ?? '',
         assetNumber: deviceSelectedFormData?.assetNumber ?? '',
         manufacturer: deviceSelectedFormData?.manufacturer ?? '',
         vendor: deviceSelectedFormData?.vendor ?? '',
@@ -68,7 +68,7 @@ const DeviceAddEditForm = () => {
         setAssetStatus(value)
         setFormData((prevData) => ({
             ...prevData,
-            assetNumber: value ? '0' : prevData.assetNumber, // Reset asset number if asset status is true
+            assetNumber: value ? '0' : deviceSelectedFormData?.assetNumber??"", // Reset asset number if asset status is true
         }));
         const assetName = "assetNumber";
         // Clear validation error when the checkbox is checked
@@ -114,7 +114,10 @@ const DeviceAddEditForm = () => {
             }
         });
         // Add additional validation for assetNumber
-        if (!assetStatus && !/^\d+$/.test(formData.assetNumber)) {
+        if (!assetStatus && formData.assetNumber === '') {
+            errors['assetNumber'] = 'This field is required';
+        } else if (!assetStatus && !/^\d+$/.test(formData.assetNumber)) {
+            // Check if assetNumber contains only numbers
             errors['assetNumber'] = 'Asset number must contain only numbers';
         }
         if (formData.ipAddress && !isValidIpAddress(formData.ipAddress)) {
