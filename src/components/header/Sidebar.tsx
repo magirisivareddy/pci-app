@@ -36,22 +36,20 @@ interface SidebarProps {
     onClose: () => void;
 }
 
-
-
 const drawerWidth = 240;
 const miniDrawerWidth = 73;
 
 const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
     const theme: Theme = useTheme();
     const path = usePathname()
-    const router = useRouter(); // Use the useRouter hook
+    const router = useRouter();
     const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iconColor = "#008c99";
     const hoverBackgroundColor = "#f1fafb";
     const activeBackgroundColor = "#9ddbe0";
+    const userType = "admin"; // Assume userType is fetched or determined from somewhere
     useEffect(() => {
-        // Retrieve the openSubMenus state from local storage on component mount.
         const storedOpenSubMenus = localStorage.getItem('openSubMenus');
 
         if (storedOpenSubMenus) {
@@ -60,41 +58,30 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
     }, []);
 
     useEffect(() => {
-        // Save the openSubMenus state to local storage whenever it changes.
         localStorage.setItem('openSubMenus', JSON.stringify(openSubMenus));
     }, [openSubMenus]);
-    const handleSubMenuClick = (index: string, item: MenuItem) => {
-        // Copy the current state to a new object to modify.
-        const newOpenSubMenusState = { ...openSubMenus };
 
-        // Determine if the current menu item is being opened or closed.
+    const handleSubMenuClick = (index: string, item: MenuItem) => {
+        const newOpenSubMenusState = { ...openSubMenus };
         const isCurrentlyOpen = !!newOpenSubMenusState[index];
 
-        // Close all submenus except the current one's ancestors.
         Object.keys(newOpenSubMenusState).forEach(key => {
-            // Keep ancestor menus open by checking if the current index starts with the key (indicating the key is an ancestor).
             if (!index.startsWith(key)) {
                 newOpenSubMenusState[key] = false;
             }
         });
 
-        // Toggle the current menu's state based on its previous state.
         newOpenSubMenusState[index] = !isCurrentlyOpen;
 
-        // Update the state to reflect these changes.
         setOpenSubMenus(newOpenSubMenusState);
        
-        // Navigate if the item has a path and it's either being opened or has no children.
-        // This prevents navigation from occurring on the closing of a menu or if the intent is to just open a submenu.
         if (item.path && (!item.children || !isCurrentlyOpen)) {
             handleNavigation(item.path);
             if (isMobile) {
                 onClose();
             }
         }
-      
     };
-
 
     const handleNavigation = (path?: string) => {
         if (path) router.push(path);
@@ -107,28 +94,31 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         children?: MenuItem[];
     }
 
-    const menuItems: MenuItem[] = [
+    let menuItems: MenuItem[] = [
         { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
-        { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
-        { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
-        { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
-        { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
-        { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin/' },
-        {
-            text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
-                { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
-                { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
-                { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
-                { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
-                { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report/' },
-                // { text: 'Device Log Report', icon: <StarBorder />, path: '/report/device-log-report' }
-            ]
-        },
-
-
-
     ];
-    ;
+
+    if (userType === "admin") {
+        menuItems = [
+            { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+            { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+            { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+            { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
+            { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+            { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin/' },
+            {
+                text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+                    { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+                    { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+                    { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+                    { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+                    { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report/' },
+                ]
+            },
+        ];
+    } else if (userType === "itinspector") {
+        menuItems.push({ text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' });
+    }
 
     const renderMenuItems = (items: MenuItem[], level = 0, parentIndex = ''): React.ReactNode => {
         return items.map((item, index) => {
@@ -147,7 +137,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                             },
                             backgroundColor: path === item.path ? activeBackgroundColor : "inherit",
                             color: path === item.path ? "#fff" : "inherit"
-
                         }}
                     >
                         <ListItemIcon sx={{ color: iconColor, paddingLeft: !open ? "5px" : "16px", }}>

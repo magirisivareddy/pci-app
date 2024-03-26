@@ -21,7 +21,7 @@ const Inspections = () => {
         FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
         ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
         InspectorNumber: "All",
-        ReportStatus: inspectionForm.reportStatus,
+        ReportStatus: "to be inspected",
         VenueId: "All",
         Is_it: "1",
         EmployeeNumber: "0004236",

@@ -8,7 +8,6 @@ const employeeNumber = "4236"
 const DeviceLocationCell = ({ row }: any) => {
     const dispatch = useAppDispatch()
     const deviceId = row.deviceId
-    console.log("row", row.pciLabeled)
     const defaultPciLabeled = row.pciLabeled === 1 ? true : false
     const [pciLabeled, setPciLabeled] = useState(defaultPciLabeled)
     const onChangeDeviceLocation = async (e: any) => {

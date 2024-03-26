@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, Typography, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { addUpdateDevice } from '@/actions/api';
-import { getDevices, setDeviceFilterFormData, setDeviceInfo } from '@/redux/features/DevicesSlice';
+import { addUpdateDevice, loadSlotNumbers } from '@/actions/api';
+import { getDevices, setDeviceFilterFormData, setDeviceInfo, setDeviceSelectedFormData } from '@/redux/features/DevicesSlice';
 import Loading from '@/app/loading';
 
 interface FormData {
@@ -20,6 +20,7 @@ interface FormData {
     terminalId: string;
     profileId: string;
     ipAddress: string;
+    slotNumber?: any
 
     [key: string]: string | boolean; // Index signature
 }
@@ -49,8 +50,10 @@ const DeviceAddEditForm = () => {
         terminalId: deviceSelectedFormData?.terminalId ?? '',
         profileId: deviceSelectedFormData?.profileId ?? '',
         ipAddress: deviceSelectedFormData?.ipAddress ?? '',
+        slotNumber: deviceSelectedFormData?.slotNumber ?? ''
 
     });
+    const [slot, setSlot] = useState([]);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
     const is_it = "1";
@@ -62,27 +65,93 @@ const DeviceAddEditForm = () => {
     // if (is_it === "1") {
     //     updatedVenueDropdown = [...updatedVenueDropdown, ...assignedVenue];
     // }
+    useEffect(() => {
+        getLoadSlot()
+        if (deviceSelectedFormData) {
+            if (deviceSelectedFormData?.venueId === 50) {
+
+                setFormData(prevData => ({
+                    ...prevData,
+                    slotNumber: "SPARE",
+                }));
+            }
+        }
+    }, [deviceSelectedFormData])
+    console.log("formData", formData)
+
+
+    const getLoadSlot = async () => {
+        try {
+            const deviceId = deviceSelectedFormData?.deviceId ? deviceSelectedFormData.deviceId : 0;
+            const res = await loadSlotNumbers(deviceId);
+            const filteredData = res.filter((s: any) => s.slot_number);
+            const newData = filteredData.map((s: any) => ({
+                label: s.slot_number,
+                value: s.slot_number
+            }));
+            setSlot(newData);
+
+
+        } catch (error) {
+            console.error('Error fetching slot numbers:', error);
+            // Handle error, e.g., setSlot([]);
+        }
+    }
 
     const onChangeAsset = (e: any) => {
         const value = e.target.checked;
         setAssetStatus(value)
         setFormData((prevData) => ({
             ...prevData,
-            assetNumber: value ? '0' : deviceSelectedFormData?.assetNumber??"", // Reset asset number if asset status is true
+            assetNumber: value ? '0' : deviceSelectedFormData?.assetNumber ?? "", // Reset asset number if asset status is true
         }));
         const assetName = "assetNumber";
-        // Clear validation error when the checkbox is checked
         clearValidationError(assetName);
     };
-    const onChange = (value: any, name: any) => {
-        setFormData((prevData) => ({
+    // useEffect(()=>{
+    //     if (formData.venueId !== "50" && formData.slotNumber ==="SPARE") {
+
+    //         setFormData(prevData => ({
+    //             ...prevData,
+    //             slotNumber: "",
+    //         }));
+    //     }
+
+    // },[formData.venueId])
+    const onChangeVenue = (value: any, name: any) => {
+        if (value === "50") {
+
+            setFormData(prevData => ({
+                ...prevData,
+                slotNumber: "SPARE",
+            }));
+        } else {
+
+            setFormData(prevData => ({
+                ...prevData,
+                slotNumber: "",
+            }));
+        }
+
+        setFormData(prevData => ({
             ...prevData,
             [name]: value,
         }));
+    };
+    const onChange = (value: any, name: any) => {
+        // Update form data
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value,
+            // Clear slotNumber if commonAssetName is not "POS System"
+            ...(name === "commonAssetName" && value !== "POS System" && { slotNumber: "" }),
+        }));
+
         // Clear validation error when the field is changed
         clearValidationError(name);
-        setErrorMessage("")
+        setErrorMessage("");
     };
+
 
     const clearValidationError = (name: string) => {
         setValidationErrors((prevErrors) => ({
@@ -99,7 +168,11 @@ const DeviceAddEditForm = () => {
         vendor: { isRequired: true },
         serialNumber: { isRequired: true },
         deviceLocation: { isRequired: true },
-        assetNumber: { isRequired: !assetStatus }
+        assetNumber: { isRequired: formData.commonAssetName !== "USB credit card swiper" },
+        profileId: { isRequired: formData.commonAssetName === "POS System" ? true : false },
+        ipAddress: { isRequired: formData.commonAssetName === "POS System" ? true : false },
+        terminalId: { isRequired: formData.commonAssetName === "POS System" ? true : false },
+
     };
     const isValidIpAddress = (ipAddress: string) => {
         // Regular expression to validate IP address format
@@ -114,9 +187,13 @@ const DeviceAddEditForm = () => {
             }
         });
         // Add additional validation for assetNumber
-        if (!assetStatus && formData.assetNumber === '') {
-            errors['assetNumber'] = 'This field is required';
-        } else if (!assetStatus && !/^\d+$/.test(formData.assetNumber)) {
+        // if (!assetStatus && formData.assetNumber === '') {
+        //     errors['assetNumber'] = 'This field is required';
+        // } else if (formData.assetNumber && !/^\d+$/.test(formData.assetNumber)) {
+        //     // Check if assetNumber contains only numbers
+        //     errors['assetNumber'] = 'Asset number must contain only numbers';
+        // }
+        if (formData.assetNumber && !/^\d+$/.test(formData.assetNumber)) {
             // Check if assetNumber contains only numbers
             errors['assetNumber'] = 'Asset number must contain only numbers';
         }
@@ -139,7 +216,7 @@ const DeviceAddEditForm = () => {
 
         try {
             setLoading(true);
-            let payLoad: any = { ...formData, employeeNumber: "4236" };
+            let payLoad: any = { ...formData, employeeNumber: 4236 };
             if (deviceSelectedFormData?.deviceId) {
                 // If deviceFormData exists and has deviceId property
                 payLoad = {
@@ -148,6 +225,11 @@ const DeviceAddEditForm = () => {
                 };
             }
             const res = await addUpdateDevice(payLoad);
+            if (res?.validationMessage) {
+                setErrorMessage(res?.validationMessage);
+                setLoading(false);
+                return
+            }
             setMessage(res.message);
             setLoading(false);
             setTimeout(() => {
@@ -158,9 +240,10 @@ const DeviceAddEditForm = () => {
                         deviceModalType: "",
                     })
                 );
+                dispatch(setDeviceSelectedFormData(null))
                 const obj = {
                     is_It: "1",
-                    employeeNumber: "789",
+                    employeeNumber: 4236,
                     venueId: filterDeviceForm.venueId.toString() ?? "All",
                     commonAssetName: filterDeviceForm.commonAssetName ?? "",
                     serialNumber: filterDeviceForm.serialNumber.toString() ?? "",
@@ -169,8 +252,6 @@ const DeviceAddEditForm = () => {
                     profileId: filterDeviceForm.profileId ?? "",
 
                 };
-
-
                 dispatch(getDevices(obj));
             }, 3000);
 
@@ -224,7 +305,7 @@ const DeviceAddEditForm = () => {
             <Grid item xs={12} md={4}>
                 <SelectInput
                     selectedOption={formData.venueId}
-                    onChange={onChange}
+                    onChange={onChangeVenue}
                     label={'Associated Venue'}
                     options={updatedVenueDropdown}
                     name={'venueId'}
@@ -256,7 +337,7 @@ const DeviceAddEditForm = () => {
                     placeholder={"22858"}
                     name={'assetNumber'}
                     id={'assetNumber'}
-                    isRequired={!assetStatus}
+                    isRequired={formData.commonAssetName !== "USB credit card swiper"}
                     disabled={assetStatus}
                 />
                 <FormControlLabel
@@ -395,7 +476,16 @@ const DeviceAddEditForm = () => {
                     label={'Terminal id'}
                     name={'terminalId'}
                     id={'terminalId'}
+                    isRequired={formData.commonAssetName === "POS System"}
                 />
+                {validationErrors?.terminalId && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.terminalId}.</Alert>}
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
@@ -404,7 +494,16 @@ const DeviceAddEditForm = () => {
                     label={'Profile id'}
                     name={'profileId'}
                     id={'profileId'}
+                    isRequired={formData.commonAssetName === "POS System"}
                 />
+                {validationErrors?.profileId && <Alert icon={false} sx={{
+                    background: 'unset',
+                    color: "#9c4040",
+                    padding: "0 10px",
+                    '& .mui-1pxa9xg-MuiAlert-message': {
+                        padding: '4px 0',
+                    },
+                }}  >{validationErrors?.profileId}.</Alert>}
             </Grid>
             <Grid item xs={12} md={4}>
                 <TextInput
@@ -413,6 +512,7 @@ const DeviceAddEditForm = () => {
                     label={'Ip Address'}
                     name={'ipAddress'}
                     id={'ipAddress'}
+                    isRequired={formData.commonAssetName === "POS System"}
                     placeholder={"192.168.123.132"}
                 />
                 {validationErrors?.ipAddress && <Alert icon={false} sx={{
@@ -424,8 +524,25 @@ const DeviceAddEditForm = () => {
                     },
                 }}  >{validationErrors?.ipAddress}.</Alert>}
             </Grid>
+            {formData.commonAssetName === "POS System" && <Grid item xs={12} md={4}>
+                <SelectInput
+                    selectedOption={formData.slotNumber}
+                    onChange={onChange}
+                    label={'Slot'}
+                    options={slot}
+                    name={'slotNumber'}
+                    id={'slotNumber'}
+                    size={'small'}
+
+                />
+            </Grid>}
+
             <Grid item xs={12} md={12}>
+                <Typography sx={{ marginBottom: "10px" }}>
+                    <b>SPARE DEVICES:</b> This is for devices that are temporarily not in use as they are usualy put into storage for until needed.
+                </Typography>
                 <Typography>
+
                     <b>RMA DEVICES:</b> This is for devices that are no longer in use and have been or going to be
                     returned to the vendor
                 </Typography>

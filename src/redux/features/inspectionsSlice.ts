@@ -47,7 +47,7 @@ const initialState: InspectorFormState = {
   saveReportStatus: false,
   selectedInspector: {},
   selectedInspectorType: null,
-  status: 'idle',
+  status: 'loading',
   inspectionsList: [], // Change 'any' to the actual type of your data
   error: null,
   deviceStatus: {

@@ -197,7 +197,7 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 maxWidth='sm'
                 fullWidth={true}
             />
-             <Modal
+             {/* <Modal
                 title={` Venue: ${selectedVenueInspector?.venue_name} `}
                 open={totalDeviceModal}
                 scroll={"body"}
@@ -205,7 +205,10 @@ const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
                 contentComponent={(props) => <TotalDeviceModal />}
                 maxWidth='md'
                 fullWidth={true}
-            />
+            /> */}
+            {totalDeviceModal&& <TotalDeviceModal handleClose={handleClose} />}
+
+            
             <Modal
                 title={`Delete Venue`}
                 open={isDeletVenueModal}

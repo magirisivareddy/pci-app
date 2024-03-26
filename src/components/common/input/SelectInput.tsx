@@ -45,6 +45,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ label, options, name, selecte
                     id={id}
                     value={selectedOption}
                     onChange={handleChange}
+                    
                     sx={{
                         '.MuiOutlinedInput-notchedOutline': {
                             border: 'none',

@@ -1,6 +1,6 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
-import { Alert, Button, Grid, Paper, TableBody, TableContainer, TableFooter, Typography } from '@mui/material';
+import { Alert, Box, Button, Grid, Paper, TableBody, TableContainer, TableFooter, Typography } from '@mui/material';
 import React, { useState } from 'react'
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
@@ -23,6 +23,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
     const [firstName, setFirstName] = useState("")
     const [lookupData, setLookup] = useState([])
     const [isloading, setLoading] = useState(false)
+    const [infoNote, setInfoNote] = useState(true)
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [showGrid, setShowGrid] = useState(false);
@@ -30,6 +31,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
     const [textErrorMessage, setTextErrorMessage] = useState("");
     const handleTableRowClick = async (row: any) => {
         setSelectedTableRow(row);
+
         const payload = {
             employeeNumber: row.employeeNumber.toString(),
             venueId: formData.venue.toString()
@@ -67,11 +69,12 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
         }
     }
     const fetchDataAndSetDate = async (firstname: any, lastname: any) => {
+        setInfoNote(false)
         try {
             setLoading(true);
             const data = await doLookup(firstname, lastname);
             setLookup(data)
-           
+
             setLoading(false);
         } finally {
             setShowGrid(true)
@@ -147,6 +150,19 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
                     <Button sx={{ marginTop: "20px" }} onClick={onSearch} variant='contained'>Search</Button>
                 </Grid>
             </Grid>
+            {infoNote && <Box sx={{
+                backgroundColor: "#f2f2f2",
+
+                textAign: "left",
+                padding: "16px 10px",
+                color: "rgba(0, 0, 0, 0.87)"
+            }}>
+                <Typography sx={{ paddingBottom: "5px" }} variant='body1'>To search, type a letter in first name or last name. </Typography>
+                <Typography sx={{ paddingBottom: "5px" }} variant='body1'>To search, click on search button. </Typography>
+                <Typography sx={{ paddingBottom: "5px" }} variant='body1'>To select, click on a the resulted row</Typography>
+            </Box>}
+
+
             {textErrorMessage && (
                 <Grid item xs={12} md={12}>
                     <Alert sx={{ marginTop: "10px" }} variant="filled" severity="error">

@@ -206,6 +206,9 @@ export async function updatePciLabeled(deviceId: any, employeeNumber: any) {
 export async function loadVenueDevices(venueId: any) {
     return fetchQueryparamsData(`Device/LoadVenueDevices?venueId=${venueId}`, "GET", null);
 }
+export async function loadSlotNumbers(deviceId: any) {
+    return fetchQueryparamsData(`Device/LoadSlotNumbers?deviceId=${deviceId}`, "GET", null);
+}
 
 
 export async function getVenuePassFailSummaryReport(employeeNumber: string, venueName?: string, inspector?: string) {

@@ -66,8 +66,8 @@ const Inspector = () => {
         <>
             {saveReportStatus && <Loading />}
             <Box sx={{ width: '100%' }}>
-                <Stack textAlign={"center"} mb={2} spacing={2}>
-                    <Typography color={"primary"} variant='h5' sx={{ fontWeight: "600" }} component={"h3"} >Inspector</Typography>
+                <Stack mb={2} spacing={2}>
+                    <Typography color={"primary"} textAlign={"center"}  variant='h5' sx={{ fontWeight: "600" }} component={"h3"} >Inspector</Typography>
                 </Stack>
             </Box>
             <Grid container spacing={2}>
@@ -93,8 +93,19 @@ const Inspector = () => {
                 </Grid>
             </Grid>
             <Box sx={{ width: '100%', mt: "1rem" }}>
-                <Stack textAlign={"center"} mb={2} spacing={2}>
-                    <Typography color={"primary"} variant='h5' sx={{ fontWeight: "600" }} component={"h3"} >Devices</Typography>
+
+                <Stack mb={2} spacing={2} sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "115px",
+                    '@media (max-width: 768px)': {
+                        flexDirection: "column" ,
+                        gap: "10px",
+                    }
+                }}>
+                    <span style={{marginTop: "16px"}}><b>Note:</b> Any device status marked as Fail, will auto generate a Helpdesk ticket.</span>
+
+                    <Typography color={"primary"} variant='h5' sx={{ fontWeight: "600" }} textAlign={"center"} component={"h3"} >Devices</Typography>
                 </Stack>
             </Box>
             <DevicesTable data={viewReport} isLoading={isLoading} />

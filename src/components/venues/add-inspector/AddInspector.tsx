@@ -1,6 +1,6 @@
 import TextInput from '@/components/common/input/Input';
 import SelectInput from '@/components/common/input/SelectInput';
-import { Alert, Button, Grid, Paper, TableContainer, TableFooter, Typography } from '@mui/material';
+import { Alert, Box, Button, Grid, Paper, TableContainer, TableFooter, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -28,6 +28,7 @@ const AddInspector = ({ onClose }: any) => {
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [textErrorMessage, setTextErrorMessage] = useState("");
+    const [infoNote, setInfoNote] = useState(true)
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
     const venueFormData = useAppSelector(state => state.Venues.venueInfo.formData);
 
@@ -76,6 +77,7 @@ const AddInspector = ({ onClose }: any) => {
     };
 
     const fetchDataAndSetDate = async (firstname: any, lastname: any) => {
+        setInfoNote(false)
         try {
             setLoading(true);
        
@@ -159,6 +161,17 @@ const AddInspector = ({ onClose }: any) => {
                     </Grid>
                 )}
             </Grid>
+            {infoNote && <Box sx={{
+                backgroundColor: "#f2f2f2",
+              
+                textAign: "left",
+                padding: "16px 10px",
+                color: "rgba(0, 0, 0, 0.87)"
+            }}>
+                <Typography sx={{paddingBottom:"5px"}} variant='body1'>To search, type a letter in first name or last name. </Typography>
+                <Typography sx={{paddingBottom:"5px"}}  variant='body1'>To search, click on search button. </Typography>
+                <Typography sx={{paddingBottom:"5px"}}  variant='body1'>To select, click on a the resulted row</Typography>
+            </Box>}
             <Grid container mt={2}>
                 {showGrid && <TableContainer component={Paper} sx={{ maxHeight: "55vh", overflow: 'auto', width: "100%", position: "relative" }}>
                     <Table>
