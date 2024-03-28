@@ -47,7 +47,7 @@ const AddInspector = ({ onClose }: any) => {
                 setErrorMessage(data.validationMessage);
                 setTimeout(() => {
                     setErrorMessage("");
-                }, 2000)
+                }, 3000)
                 return
             }
             setSuccessMessage(data.message);
@@ -65,12 +65,12 @@ const AddInspector = ({ onClose }: any) => {
                 };
 
                 dispatch(getVenues(obj));
-            }, 2000);
+            }, 3000);
         } catch (e: any) {
             setErrorMessage(e.message);
             setTimeout(() => {
                 setErrorMessage("");
-            }, 2000);
+            }, 3000);
         } finally {
             setLoading(false);
         }
@@ -144,7 +144,7 @@ const AddInspector = ({ onClose }: any) => {
                         label={'Inspector Type'}
                         options={[
                             { label: "Backup Inspector", value: "Backup Inspector" },
-                            { label: "Group Inspector", value: "Group Inspector" },
+                            // { label: "Group Inspector", value: "Group Inspector" },
                             { label: "Main Inspector", value: "Main Inspector" },
                         ]}
                         name={'inspectorType'}

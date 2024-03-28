@@ -1,17 +1,21 @@
+"use client";
 import React from 'react'
 import { Suspense } from 'react'
 import Venues from '@/components/venues/Venues'
-import { fetchInspectors, fetchVenue } from '@/actions/api';
+
 import Loading from '../loading';
+import isAuth from '@/components/is-auth/IsAuth';
 
 
-const VenuesPage = async() => {
-  const [venues, inspectors] = await Promise.all([fetchVenue(), fetchInspectors()]);
+
+const VenuesPage = () => {
+
   return (
     <Suspense fallback={<Loading/>}>
-    <Venues dropdowns={{venueDropdown: venues, inspectorsDropdown: inspectors}} />
+    <Venues  />
     </Suspense>
   )
 }
 
-export default VenuesPage
+
+export default isAuth(VenuesPage);

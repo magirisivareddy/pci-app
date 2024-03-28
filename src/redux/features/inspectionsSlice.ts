@@ -9,6 +9,7 @@ interface Row {
   notes?: string;
   reason?: string
   deviceId?: string
+  resolution?: string
 }
 
 interface InspectorFormState {
@@ -87,7 +88,7 @@ export const InspectionsSlice = createSlice({
       state.inspectorData[action.payload.name] = action.payload.value;
     },
     updateRow: (state, action: PayloadAction<Partial<Row>>) => {
-      const { deviceId, inspectedId, status, notes, reason } = action.payload;
+      const { deviceId, inspectedId, status, notes, reason, resolution } = action.payload;
       let deviceIndex
       if (state.selectedInspectorType === "Inspect") {
         deviceIndex = state.devices.findIndex(device => device.deviceId === deviceId);
@@ -104,6 +105,9 @@ export const InspectionsSlice = createSlice({
         }
         if (reason !== undefined) {
           state.devices[deviceIndex].reason = reason;
+        }
+        if (resolution !== undefined) {
+          state.devices[deviceIndex].resolution = resolution;
         }
       }
     },

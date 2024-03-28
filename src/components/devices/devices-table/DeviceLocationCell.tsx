@@ -31,7 +31,7 @@ const DeviceLocationCell = ({ row }: any) => {
             dispatch(getDevices(obj))
             setTimeout(() => {
                 dispatch(setDeviceLocationSuccessMessage(""))
-            }, 2000)
+            }, 3000)
 
         } catch (error: any) {
 
@@ -39,7 +39,7 @@ const DeviceLocationCell = ({ row }: any) => {
             setTimeout(() => {
                 setPciLabeled(defaultPciLabeled);
                 dispatch(setDeviceLocationSuccessMessage(""))
-            }, 2000)
+            }, 3000)
 
             dispatch(setDeviceLocationStatus(false))
         }

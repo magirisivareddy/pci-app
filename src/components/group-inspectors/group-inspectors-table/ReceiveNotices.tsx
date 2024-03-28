@@ -26,7 +26,7 @@ export const ReceiveNotices = ({ row }: any) => {
       dispatch(getGroupInspectors(obj));
       setTimeout(()=>{
         dispatch(setReceiveNoticeStatus(""))
-      },2000)
+      },3000)
       
     } catch (error:any) {
      

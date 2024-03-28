@@ -39,7 +39,7 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
                 setLoading(false);
                 setTimeout(() => {
                     setErrorMessage("");
-                }, 2000)
+                }, 3000)
                 return
             }
             setMessage(res.message);
@@ -55,7 +55,7 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
                 dispatch(setAddVenuToInspectorModal(false));
                 setMessage("");
                 dispatch(getGroupInspectors(payload));
-            }, 2000);
+            }, 3000);
         } catch (error: any) {
             setLoading(false);
             setErrorMessage(error.message ?? "Something went wrong");

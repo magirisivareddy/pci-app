@@ -22,23 +22,14 @@ import { getInspectors, getVenue } from "@/redux/features/CommonSlice";
 import TotalDeviceCell from "./TotalDeviceCell";
 import TotalDeviceModal from "./total-device-modal/TotalDeviceModal";
 
-type Dropdowns = {
-    venueDropdown: any; // replace with the actual type
-    inspectorsDropdown: any; // replace with the actual type
-}
 
-type VenuesProps = {
-    dropdowns: Dropdowns;
-}
 interface TableRowData {
     inspectorDetails: any;
     id: number;
     venue: string;
     totalDevices: number;
 }
-
-
-const Venues: React.FC<VenuesProps> = ({ dropdowns }) => {
+const Venues = () => {
     const dispatch = useAppDispatch()
 
 

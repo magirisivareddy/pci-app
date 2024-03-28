@@ -8,12 +8,13 @@ import { Avatar, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import EmailIcon from '@mui/icons-material/Email';
 
 const RoleListItem = ({ avatarBackgroundColor, avatarText, roleTitle, roleDescription }: any) => (
     <ListItem disablePadding>
         <ListItemButton>
             <ListItemIcon>
-                <Avatar
+                {roleTitle ? <Avatar
                     sx={{
                         width: 30,
                         height: 30,
@@ -22,14 +23,23 @@ const RoleListItem = ({ avatarBackgroundColor, avatarText, roleTitle, roleDescri
                     }}
                 >
                     {avatarText}
-                </Avatar>
+                </Avatar> :
+                    <EmailIcon sx={{
+                        width: "1rem",
+                        height: "1rem",
+
+                    }} color={'error'} />
+                }
+
             </ListItemIcon>
             <ListItemText
                 primary={
-                    <span><b>{roleTitle}: </b></span>
+
+                    roleTitle ?
+                        <span><b>{roleTitle}: </b></span> : ""
                 }
                 secondary={
-                    <Typography component="div" variant="body2" style={{ maxHeight: 100, width:"600px", overflowY: 'auto' }}>
+                    <Typography component="div" variant="body2" style={{ maxHeight: 100, width: "600px", overflowY: 'auto' }}>
                         {roleDescription}
                     </Typography>
                 }
@@ -64,6 +74,13 @@ const VenuesNotes = () => {
                     roleTitle="Group Inspector"
                     roleDescription="are assigned to two or more venues with the ability to add/remove Main and Backup Inspectors. Group Inspectors can only be added/removed by Admins. Assigning a Group Inspector does not apply in most circumstances."
                 />
+                <RoleListItem
+                    avatarBackgroundColor="error"
+                    avatarText=""
+                    roleTitle=""
+                    roleDescription="This indicates an inspector who does not have a company assigned email address. Without one, they will not have access to this app, and they won't be able to receive inspection notices."
+                />
+
             </List>
         </div>
     );

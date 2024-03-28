@@ -36,6 +36,8 @@ interface CustomTableProps {
   isloading?: boolean;
   isPagination?: boolean;
   isFixed?: any
+  rowsPerPageOptions?: any[];
+  isRefresh?:any
 }
 
 const CustomTable: React.FC<CustomTableProps> = ({
@@ -43,25 +45,34 @@ const CustomTable: React.FC<CustomTableProps> = ({
   headers,
   isloading,
   isPagination = true,
-  isFixed
+  isFixed,
+  isRefresh,
+  rowsPerPageOptions = [   15,
+    30,
+    60,
+    120,
+    { value: -1, label: "All" }], // Default rows per page options
 }) => {
   const theme = useTheme();
-  const dispatch = useAppDispatch();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(15);
+  const [rowsPerPage, setRowsPerPage] = React.useState(rowsPerPageOptions[0]);
 
   const colors = tokens(theme?.palette.mode);
+ 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-  // useEffect(() => {
-  //   setRowsPerPage(15);
-  //   setPage(0);
-  // }, [data]);
+  
+  useEffect(() => {
+    if(isRefresh){
+      setRowsPerPage(15);
+      setPage(0);
+    }
+   
+  }, [data]);
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("event.target.value", event.target.value)
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -69,12 +80,13 @@ const CustomTable: React.FC<CustomTableProps> = ({
     rowsPerPage === -1
       ? data
       : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  
   return (
     <>
       <TableContainer
         component={Paper}
         sx={{
-          maxHeight: isFixed?"":"65vh",
+          maxHeight: isFixed ? "" : "70vh",
           overflow: "auto",
           width: "100%",
           position: "relative",
@@ -151,21 +163,19 @@ const CustomTable: React.FC<CustomTableProps> = ({
             <TableFooter
               sx={{
                 background: "#9ddbe0",
-                position: isFixed?"":"sticky",
+                position: isFixed ? "" : "sticky",
                 bottom: 0,
                 zIndex: 100,
                 width: "100%",
+                // display: 'table-footer-group',
+                // '@media (max-width: 768px)': {
+                //   display: 'none' // Apply column direction for screens with max width 600px
+                // }
               }}
             >
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[
-                    15,
-                    30,
-                    60,
-                    120,
-                    { value: -1, label: "All" },
-                  ]}
+                  rowsPerPageOptions={rowsPerPageOptions}
                   count={data.length}
                   page={page}
                   onPageChange={handleChangePage}

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Avatar, Box, Button, Chip, Tooltip } from '@mui/material';
+import { Avatar, Box, Tooltip } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
+import EmailIcon from '@mui/icons-material/Email';
 
 import "./InspectorCell.css"
 import { useAppDispatch } from '@/redux/hooks';
@@ -10,49 +11,112 @@ import { setDeletInspectionModal, setSelectedVenueInspector } from '@/redux/feat
 interface Inspector {
     inspectorId?: number;
     inspector: string;
+    inspectorType: number; // Added inspectorType to interface
+    email: string; // Added email to interface
 }
 
 interface InspectorCellProps {
-    inspectorDetails: any;
+    inspectorDetails: Inspector[];
     onAdd: () => void;
-    // onDelete: (inspector: any) => void;
 }
 
 const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }) => {
-    const dispatch= useAppDispatch()
-    const hasMainInspector = inspectorDetails.some((inspector: any) => inspector.inspector !== "");
-    const onDelete = (inspector: any) => {
-        dispatch(setDeletInspectionModal(true))
-        dispatch(setSelectedVenueInspector(inspector))
-    }
+    const dispatch = useAppDispatch();
+
+    // Check if MI is present
+    const hasMainInspector = inspectorDetails.some((inspector: Inspector) => inspector.inspectorType === 1);
+
+    // Check if there are other inspectors (BI or GI)
+    const hasOtherInspectors = inspectorDetails.some((inspector: Inspector) => inspector.inspectorType !== 1);
+
+    // Function to handle inspector deletion
+    const onDelete = (inspector: Inspector) => {
+ 
+        dispatch(setDeletInspectionModal(true));
+        dispatch(setSelectedVenueInspector(inspector));
+    };
+
     return (
         <div className="inspector-cell-container">
             <div className="scroll-container">
                 {hasMainInspector ? (
-                    inspectorDetails.map((inspector: any, index: any) => (
+                    inspectorDetails.map((inspector: Inspector, index: number) => (
                         <Box key={inspector.inspectorId} sx={{ display: "flex", gap: "5px", textWrap: "nowrap" }}>
-                            {inspector.inspector ? (
-                                <Box sx={{ display: "flex", gap: "5px" }}>
-                                    <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() =>  onDelete(inspector)} color='warning' />
-                                    <Avatar
-                                        sx={{
-                                            width: 20,
-                                            height: 20,
-                                            fontSize: "12px",
-                                            backgroundColor: inspector.inspectorType === 1 ? "green" : (inspector.type === 2 ? "#bc48bc" : "#4c74b5"),
-                                        }}
-                                    >
-                                        {inspector.inspectorType === 1 ? "MI" : (inspector.type === 2 ? "GI" : "BI")}
-                                    </Avatar>
-                                    <span>{inspector.inspector}</span>
-                                </Box>
-                            ) : (
-                                <Box sx={{ color: "red", textAlign:"center" }}>Missing main inspector</Box>
-                            )}
+                            <Box sx={{ display: "flex", gap: "5px" }}>
+                                <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() => onDelete(inspector)} color='warning' />
+                                <Avatar
+                                    sx={{
+                                        width: 20,
+                                        height: 20,
+                                        fontSize: "12px",
+                                        backgroundColor: inspector.inspectorType === 1 ? "green" : (inspector.inspectorType === 2 ? "#bc48bc" : "#4c74b5"),
+                                    }}
+                                >
+                                    {inspector.inspectorType === 1 ? "MI" : (inspector.inspectorType === 2 ? "GI" : "BI")}
+                                </Avatar>
+                                <span>{inspector.inspector}</span>
+                                {inspector.email === "0" && (
+                                    <span>
+                                        <EmailIcon sx={{
+                                            width: "0.8rem",
+                                            height: "0.8rem",
+                                            marginTop: "3px",
+                                            marginRight: "8px"
+                                        }} color={'error'} />
+                                    </span>
+                                )}
+                            </Box>
                         </Box>
                     ))
                 ) : (
-                    <Box sx={{ color: "#9c4040", textAlign:"center", marginRight:"auto",marginLeft:"auto" }}>Missing main inspector</Box>
+                    hasOtherInspectors ? (
+                        <>
+                            <Avatar
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                    fontSize: "12px",
+                                    backgroundColor: "green",
+                                }}
+                            >MI</Avatar>
+                            <span style={{ textWrap: "nowrap", color: "red" }}> Missing main inspector</span>
+
+                            {
+                                inspectorDetails.map((inspector: Inspector, index: number) => (
+                                    <Box key={inspector.inspectorId} sx={{ display: "flex", gap: "5px", textWrap: "nowrap" }}>
+                                        <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() => onDelete(inspector)} color='warning' />
+                                        <Avatar
+                                            sx={{
+                                                width: 20,
+                                                height: 20,
+                                                fontSize: "12px",
+                                                backgroundColor: inspector.inspectorType === 1 ? "green" : (inspector.inspectorType === 2 ? "#bc48bc" : "#4c74b5"),
+                                            }}
+                                        >
+                                            {inspector.inspectorType === 2 ? "GI" : "BI"}
+                                        </Avatar>
+                                        <span>
+                                            {inspector.inspector}
+                                        </span>
+
+                                    </Box>
+                                ))
+                            }
+
+                        </>
+                    ) : (
+                        <Box sx={{ display: "flex", gap: "5px" }}>
+                            <Avatar
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                    fontSize: "12px",
+                                    backgroundColor: "green",
+                                }}
+
+                            >MI</Avatar>
+                            <span style={{ textWrap: "nowrap", color: "red" }}> Missing main inspector</span></Box>
+                    )
                 )}
             </div>
             <Box className='add-inspector-btn'>

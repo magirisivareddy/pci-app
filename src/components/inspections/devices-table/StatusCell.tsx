@@ -50,21 +50,25 @@ const StatusCell = ({ row }: any) => {
 
     return (
         <>
-            {defaultValue === "pass" ? <Typography color={"green"}> Pass</Typography> : <FormControl sx={{
-                display:"flex", alignItems:"center"
+            {selectedInspectorType === "Inspect" ? <FormControl sx={{
+                display: "flex", alignItems: "center"
             }}>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue={defaultValue}
                     name="status"
                     onChange={handleStatusChange}
-                   
+
                 >
                     <FormControlLabel value="pass" control={<Radio />} label="Pass" />
                     <FormControlLabel value="fail" control={<Radio />} label="Fail" />
                     <FormControlLabel value="Questionable" control={<Radio />} label="Questionable" />
                 </RadioGroup>
-            </FormControl>}
+            </FormControl> :
+
+                <Typography color={defaultValue === "pass" ? "green" : "error"}> {defaultValue === "pass"?"Pass":defaultValue === "fail"?"Fail":"Questionable"}</Typography>
+
+            }
 
         </>
 

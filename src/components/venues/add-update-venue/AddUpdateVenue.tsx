@@ -44,7 +44,7 @@ const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
                 setTimeout(() => {
 
                     dispatch(setAddUpdateVenueErrorMessage(""));
-                }, 2000)
+                }, 3000)
                 return;
             }
             dispatch(setAddUpdateVenueMessage(res.message));
@@ -63,13 +63,13 @@ const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
                     inspectorEmployeeNumber: formData.inspectorEmployeeNumber.toString() ?? "All"
                 };
                 dispatch(getVenues(obj));
-            }, 2000);
+            }, 3000);
         } catch (error: any) {
             setLoading(false);
             dispatch(setAddUpdateVenueErrorMessage(error.message ?? "Something went wrong"));
             setTimeout(() => {
                 dispatch(setAddUpdateVenueErrorMessage(""));
-            }, 2000)
+            }, 3000)
         }
     }
 

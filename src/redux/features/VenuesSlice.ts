@@ -76,7 +76,7 @@ export const VenuesSlice = createSlice({
         setDeletInspectionModal: (state, action: PayloadAction<boolean>) => {
             state.venueInfo.isDeletInspectionModal = action.payload;
         },
-        setSelectedVenueInspector: (state, action: PayloadAction<boolean>) => {
+        setSelectedVenueInspector: (state, action: PayloadAction<any>) => {
             state.venueInfo.selectedVenueInspector = action.payload;
         },
         setAddUpdateVenueMessage: (state, action: PayloadAction<any>) => {

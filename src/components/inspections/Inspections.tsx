@@ -51,7 +51,7 @@ const Inspections = () => {
             <InspectionsFilters
                 handelSubmit={handelSubmit}
             />
-            <InspectionsTable data={inspectionsList}   isLoading={status === "loading"} />
+            <InspectionsTable  />
         </>
     )
 }

@@ -44,7 +44,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
                 setErrorMessage(data.validationMessage);
                 setTimeout(() => {
                     setErrorMessage("");
-                }, 2000)
+                }, 3000)
                 return
             }
             setSuccessMessage(data.message)
@@ -58,7 +58,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
                 };
                 dispatch(getGroupInspectors(obj));
                 setSuccessMessage("")
-            }, 2000)
+            }, 3000)
         } catch (e: any) {
             setErrorMessage(e.message)
             setTimeout(() => {

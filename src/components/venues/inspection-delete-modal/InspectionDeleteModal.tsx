@@ -34,7 +34,7 @@ const InspectionDeleteModal = () => {
                 }
 
                 dispatch(getVenues(obj))
-            }, 2000)
+            }, 3000)
 
         } catch (error: any) {
             setLoading(false)
