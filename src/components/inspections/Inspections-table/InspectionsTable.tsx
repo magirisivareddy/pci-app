@@ -7,7 +7,7 @@ import Alert, { AlertProps } from '@mui/material/Alert';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Popover from '@mui/material/Popover';
 
-import { Button, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ErrorIcon from '@mui/icons-material/Error';
 import { format } from 'date-fns';
@@ -24,6 +24,7 @@ import HelpdeskTicketForm from '../helpdesk-ticket/HelpdeskTicketForm';
 import { insertOrUpdateReport } from '@/actions/api';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Loading from '@/app/loading';
+import CustomModal from '../confirmation-pop-up/ConfirmationPopUp';
 
 
 type Header = {
@@ -51,13 +52,16 @@ const InspectionsTable = () => {
   const { devices, selectedInspector, saveReportStatus, deviceStatus, inspectionFilterData, selectedInspectorType } = useAppSelector(state => state.Inspections)
   const inspectionForm = inspectionFilterData.inspectionForm
   const selectedDateRange = inspectionFilterData.selectedDateRange
-
+  const currentDate = new Date();
+  const currentDayOfWeek = currentDate.getDay();
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
+  const [isSaturday, setIsSaturday] = useState(false)
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const handleModalClose = () => {
     setHelpDeskModal(false)
+    setIsSaturday(false)
   }
   const onHelpDeskModal = () => {
     setHelpDeskModal(true)
@@ -69,6 +73,48 @@ const InspectionsTable = () => {
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
+  const checkDateInRange = () => {
+    const date = new Date();
+    const startDate = selectedDateRange[0];
+    const endDate = selectedDateRange[1];
+    // Check if selectedDateRange is defined and contains valid dates
+    if (startDate && endDate) {
+      try {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        return date >= startDateObj && date <= endDateObj;
+      } catch (error) {
+        console.error("Error parsing dates:", error);
+        return false;
+      }
+    } else {
+      console.error("Invalid selectedDateRange:", selectedDateRange);
+      return false;
+    }
+  }
+  // const checkDateInRange = () => {
+  //   const currentDate = new Date();
+  //   const startDate = selectedDateRange[0];
+
+  //   // Check if selectedDateRange is defined and contains a valid start date
+  //   if (startDate) {
+  //     try {
+  //       const startOfWeek = new Date(startDate);
+  //       startOfWeek.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for comparison
+
+  //       // Check if the start date of the week is not in the future
+  //       return startOfWeek <= currentDate;
+  //     } catch (error) {
+  //       console.error("Error parsing date:", error);
+  //       return false;
+  //     }
+  //   } else {
+  //     console.error("Invalid selectedDateRange:", selectedDateRange);
+  //     return false;
+  //   }
+  // }
+
+
 
   const openPopOver = Boolean(anchorEl);
   const handleCloseAlert = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -103,7 +149,8 @@ const InspectionsTable = () => {
     return validStatuses.includes(status);
   };
 
-  const handleSave = async () => {
+  const submitReport = async () => {
+    setIsSaturday(false)
     const obj = {
       inspectorENumber: selectedInspector?.inspector_enumber,
       reportId: selectedInspector.reportId,
@@ -115,43 +162,6 @@ const InspectionsTable = () => {
       ...obj,
       devices,
     };
-
-    // Check status field validation
-    const invalidStatusDevice = devices.find(device => !isValidStatus(device.status));
-
-    if (invalidStatusDevice) {
-      setOpen(true);
-      dispatch(setDeviceStatus({
-        open: true,
-        message: "Please select a status!",
-        severity: "error",
-      }));
-      return;
-    }
-
-    // Check notes field validation based on status
-    const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 2) && !device.notes);
-    if (deviceWithEmptyNotes) {
-      setOpen(true);
-      dispatch(setDeviceStatus({
-        open: true,
-        message: "Notes cannot be empty for devices with 'Failed' or 'Questionable' status!",
-        severity: "error",
-      }));
-      return;
-    }
-
-    const deviceWithInvalidReason = devices.find(device => (device.status === -1 || device.status === 2) && device.reason === "Not Applicable");
-
-    if (deviceWithInvalidReason) {
-      setOpen(true);
-      dispatch(setDeviceStatus({
-        open: true,
-        message: "Reason cannot be 'Not Applicable' for devices with 'Failed' or 'Questionable' status!",
-        severity: "error",
-      }));
-      return;
-    }
     try {
       dispatch(setSaveReportStatus(true));
       const res = await insertOrUpdateReport(payload);
@@ -188,11 +198,53 @@ const InspectionsTable = () => {
         severity: "error",
       }));
     }
+
+  }
+
+  const handleSave = async () => {
+    // Check status field validation
+    const invalidStatusDevice = devices.find(device => !isValidStatus(device.status));
+
+    if (invalidStatusDevice) {
+      setOpen(true);
+      dispatch(setDeviceStatus({
+        open: true,
+        message: "Please select a status!",
+        severity: "error",
+      }));
+      return;
+    }
+
+    // Check notes field validation based on status
+    const deviceWithEmptyNotes = devices.find(device => (device.status === -1 || device.status === 2) && !device.notes);
+    if (deviceWithEmptyNotes) {
+      setOpen(true);
+      dispatch(setDeviceStatus({
+        open: true,
+        message: "Notes cannot be empty for devices with 'Failed' or 'Questionable' status!",
+        severity: "error",
+      }));
+      return;
+    }
+
+    const deviceWithInvalidReason = devices.find(device => (device.status === -1 || device.status === 2) && device.reason === "Not Applicable");
+
+    if (deviceWithInvalidReason) {
+      setOpen(true);
+      dispatch(setDeviceStatus({
+        open: true,
+        message: "Reason cannot be 'Not Applicable' for devices with 'Failed' or 'Questionable' status!",
+        severity: "error",
+      }));
+      return;
+    }
+    // Check if current day is Saturday (6 corresponds to Saturday, Sunday is 0)
+    if (currentDayOfWeek === 6) {
+      setIsSaturday(true)
+      return;
+    }
+    submitReport()
   };
-
-
-
-
   const inspectionsTableHeaders: Header[] = [
     {
       id: 'status',
@@ -301,9 +353,12 @@ const InspectionsTable = () => {
             title = "View";
           }
         }
-
+        // const isDisabled = title === "Inspect" && !checkDateInRange();
         return (
-          <Button size="small" variant="outlined" onClick={() => handleInspectClick(row, title)}>
+          <Button size="small"
+            variant="outlined"
+            disabled={!checkDateInRange()}
+            onClick={() => handleInspectClick(row, title)}>
             {title}
           </Button>
         );
@@ -320,9 +375,10 @@ const InspectionsTable = () => {
       isDisabled = true
     }
   }
-  console.log("inspectionsList", inspectionsList)
-  return (<>
 
+
+
+  return (<>
     <Typography
       variant='caption'
       aria-owns={open ? 'mouse-over-popover' : undefined}
@@ -351,8 +407,6 @@ const InspectionsTable = () => {
           showCloseIcon={true}
           handleClose={handleClose}
           contentComponent={Inspector}
-
-
           handleCancel={handleClose}
           handleSubscribe={handleSave}
           buttonType="submit"
@@ -363,6 +417,10 @@ const InspectionsTable = () => {
 
         />
       </form> : null}
+    <CustomModal
+      open={isSaturday}
+      submitReport={submitReport}
+    />
     <Modal
       title={'Helpdesk Ticket'}
       open={isHelpDeskModal}
@@ -370,8 +428,6 @@ const InspectionsTable = () => {
       handleClose={handleModalClose}
       contentComponent={(props) => <HelpdeskTicketForm handleModalClose={handleModalClose} />}
       fullWidth={true}
-
-
       maxWidth={"md"}
     />
     <Snackbar anchorOrigin={{ horizontal: "center", vertical: 'bottom', }} sx={{ width: "80%", bottom: "20px" }} open={deviceStatus.open} autoHideDuration={6000} onClose={handleCloseAlert}>

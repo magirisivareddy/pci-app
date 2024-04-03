@@ -16,7 +16,7 @@ const Inspections = () => {
     const dispatch = useAppDispatch()
     const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections?.inspectionFilterData)
     const { inspectionsList, status } = useAppSelector(state => state.Inspections)
-    const {  isloading } = useAppSelector(state => state.common)
+    const { isloading } = useAppSelector(state => state.common)
     const initialPayload = {
         FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
         ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
@@ -51,7 +51,7 @@ const Inspections = () => {
             <InspectionsFilters
                 handelSubmit={handelSubmit}
             />
-            <InspectionsTable  />
+            <InspectionsTable />
         </>
     )
 }

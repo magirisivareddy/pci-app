@@ -84,7 +84,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           options={[
             { label: "Inspected", value: "inspected" },
             { label: "Missed Inspection", value: "missed" },
-            { label: "Inspected: Not Resolved", value: "unresolved" },
+
             { label: "To Be Inspected", value: "to be inspected" }
           ]}
           name={'reportStatus'}
