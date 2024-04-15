@@ -347,7 +347,7 @@ const InspectionsTable = () => {
         if (row.reportId === 0) {
           title = "Inspect";
         } else if (row.questionable !== 0 || row.failed !== 0) {
-          title = "Edit";
+          title = "View";
 
           if (row.dateDifference && row.dateDifference <= 0) {
             title = "View";
@@ -370,7 +370,7 @@ const InspectionsTable = () => {
   if (selectedInspector.reportId === 0) {
     isDisabled = false
   } else if (selectedInspector.questionable !== 0 || selectedInspector.failed !== 0) {
-    isDisabled = false
+    isDisabled = true
     if (selectedInspector.dateDifference && selectedInspector.dateDifference <= 0) {
       isDisabled = true
     }

@@ -26,7 +26,7 @@ const DeviceLocationCell = ({ row }: any) => {
                 "assetNumber": "",
                 "terminalId": "",
                 "profileId": "",
-                "employeeNumber": "789"
+                "employeeNumber": "3752"
             }
             dispatch(getDevices(obj))
             setTimeout(() => {

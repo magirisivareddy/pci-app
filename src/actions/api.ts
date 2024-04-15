@@ -180,22 +180,34 @@ export async function deleteVenue(employeeNumber: any, venueId: any) {
 export async function deleteVenueInspector(inspectorId: any) {
     return fetchQueryparamsData(`Inspector/DeleteVenueInspector?inspectorId=${inspectorId}`, "DELETE", null);
 }
+export async function deleteDevice(deviceId:any,employeeNumber: any) {
+    return fetchQueryparamsData(`Device/DeleteDevice?deviceId=${deviceId}&employeeNumber=${employeeNumber}`, "DELETE", null);
+}
+
+
 export async function getVenueInspectorReport(employeeNumber: any) {
     return fetchQueryparamsData(`Report/GetVenueInspectorReport?employeeNumber=${employeeNumber}`, "GET", null);
 }
 export async function getVenueStatusReport(employeeNumber: string, venueId?: string, deviceLocation?: string) {
     let url = `Report/GetVenueSummaryReport?employeeNumber=${employeeNumber}`;
 
-    if (venueId || deviceLocation) {
-        url += `&venueId=${venueId}&deviceLocation=${deviceLocation}`;
+    if (venueId ) {
+        url += `&venueId=${venueId}`;
+    }
+    if(deviceLocation){
+        url += `&location=${deviceLocation}`;
     }
 
     return fetchQueryparamsData(url, "GET", null);
 }
+//https://esc-api.ktea.com/ktea-inspections/dev/api/Report/GetVenuePassFailSummaryReport?employeeNumber=3752
 export async function getVenueSummaryReport(employeeNumber: string, venueId?: string, inspectorId?: string) {
-    let url = `Report/GetVenueSummaryReport?employeeNumber=${employeeNumber}`;
-    if (venueId || inspectorId) {
-        url += `&venueId=${venueId || ''}&inspectorId=${inspectorId || ''}`;
+    let url = `Report/GetVenuePassFailSummaryReport?employeeNumber=${employeeNumber}`;
+    if (venueId) {
+        url += `&venueId=${venueId}`;
+    }
+    if ( inspectorId) {
+        url += `&inspectorId=${inspectorId}`;
     }
     return fetchQueryparamsData(url, "GET", null);
 }
@@ -210,12 +222,15 @@ export async function loadSlotNumbers(deviceId: any) {
     return fetchQueryparamsData(`Device/LoadSlotNumbers?deviceId=${deviceId}`, "GET", null);
 }
 
-
+//https://esc-api.ktea.com/ktea-inspections/dev/api/Report/GetVenueDevicesFailSummaryReport?employeeNumber=3752
 export async function getVenuePassFailSummaryReport(employeeNumber: string, venueName?: string, inspector?: string) {
-    let url = `Report/GetVenuePassFailSummaryReport?employeeNumber=${employeeNumber}`;
+    let url = `Report/GetVenueDevicesFailSummaryReport?employeeNumber=${employeeNumber}`;
 
-    if (venueName || inspector) {
-        url += `&venueName=${venueName || ''}&inspector=${inspector || ''}`;
+    if (venueName) {
+        url += `&venueId=${venueName}`;
+    }
+    if ( inspector) {
+        url += `&inspectorId=${inspector}`;
     }
 
     return fetchQueryparamsData(url, "GET", null);

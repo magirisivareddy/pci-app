@@ -11,6 +11,7 @@ interface CounterState {
         deviceLocationStatus: boolean
         deviceLocationSuccessMessage: any
         deviceLocationErrorMessage: any
+        deleteDeviceModal:any
 
     },
     formData: any
@@ -31,6 +32,7 @@ const initialState: CounterState = {
         deviceLocationStatus: false,
         deviceLocationSuccessMessage: "",
         deviceLocationErrorMessage: "",
+        deleteDeviceModal:false
 
     },
     formData: {
@@ -83,6 +85,9 @@ export const devicesSlice = createSlice({
         setDeviceLocationErrorMessage: (state, actions) => {
             state.devicesInfo.deviceLocationErrorMessage = actions.payload
         },
+        setDeleteDeviceModal: (state, actions) => {
+            state.devicesInfo.deleteDeviceModal = actions.payload
+        },
         setDeviceFilterFormData: (state, action) => {
             const { value, name } = action.payload;
             state.formData = {
@@ -121,7 +126,7 @@ export const devicesSlice = createSlice({
 export const { setDeviceInfo, setDeviceSelectedFormData,
     setDeviceHistoryInfo, setDeviceLocationStatus,
     setDeviceLocationSuccessMessage, setDeviceLocationErrorMessage,
-    clearDeviceFilterFormData, setDeviceFilterFormData } = devicesSlice.actions
+    clearDeviceFilterFormData, setDeviceFilterFormData,setDeleteDeviceModal } = devicesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectDevices = (state: RootState) => state.devices.devicesInfo

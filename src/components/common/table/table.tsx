@@ -144,7 +144,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                       key={header.id}
                       sx={{
                         maxWidth: header.width ?? "15px",
-                        wordBreak: "break-all",
+                        wordBreak: "break-word",
                         '@media (max-width: 768px)': {
                           maxWidth: '100%', // Adjusted for desktop view
                         }

@@ -13,6 +13,7 @@ import { Alert, Box, Button } from '@mui/material'
 import Loading from '@/app/loading'
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice'
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
+import DeviceDeleteModal from './device-delete-modal/DeviceDeleteModal'
 
 interface FormData {
   commonAssetName: string;
@@ -25,7 +26,7 @@ interface FormData {
 const Devices = ({ venueDropdown }: any) => {
   const dispatch = useAppDispatch();
   const { devicesInfo, deviceHistory, deviceSelectedFormData, formData, devicesData } = useAppSelector(state => state.devices)
-  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage } = devicesInfo
+  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage,deleteDeviceModal } = devicesInfo
   const { isDeviceHistoryModal } = deviceHistory
   useEffect(() => {
     dispatch(clearDeviceFilterFormData())
@@ -37,7 +38,7 @@ const Devices = ({ venueDropdown }: any) => {
       "assetNumber": "",
       "terminalId": "",
       "profileId": "",
-      "employeeNumber": "789"
+      "employeeNumber": "3752"
     }
     dispatch(getVenue())
     dispatch(getInspectors())
@@ -45,7 +46,7 @@ const Devices = ({ venueDropdown }: any) => {
   }, []);
   const handelSearchDevices = () => {
     const obj: any = {
-      ...formData, employeeNumber: "789", is_It: "1"
+      ...formData, employeeNumber: "3752", is_It: "1"
     }
     Object.keys(obj).forEach(key => {
       obj[key] = String(obj[key]);
@@ -203,6 +204,16 @@ const Devices = ({ venueDropdown }: any) => {
         contentComponent={DeviceHistory}
         handleClose={handleClose}
       />
+           <Modal
+                title={`Delete Device`}
+                open={deleteDeviceModal}
+                scroll={"body"}
+                handleClose={handleClose}
+                contentComponent={DeviceDeleteModal}
+                maxWidth='sm'
+                fullWidth={true}
+
+            />
     </>
   )
 }

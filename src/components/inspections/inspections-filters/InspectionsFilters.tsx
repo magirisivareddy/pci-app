@@ -4,8 +4,9 @@ import RangeDatePicker from '@/components/common/datepicker/DatePicker';
 import { Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setInspectionFilterFormData, setIntialFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
+import { getInspections, setInspectionFilterFormData, setIntialFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
 import { getDefaultWeekRange } from '@/utils/helpers';
+import { format } from 'date-fns';
 
 interface InspectionsFiltersProps {
   handelSubmit: () => void;
@@ -35,6 +36,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
     dispatch(setSelectedDateRange(dateRange));
   };
+
   const handleClear = () => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
@@ -43,6 +45,18 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
     }))
     const date = getDefaultWeekRange()
     dispatch(setSelectedDateRange(date))
+    const initialPayload = {
+      FromDate: date[0] ? format(date[0], 'yyyy/MM/dd') : null,
+      ToDate: date[1] ? format(date[1], 'yyyy/MM/dd') : null,
+      InspectorNumber: "All",
+      ReportStatus: "to be inspected",
+      VenueId: "All",
+      Is_it: "1",
+      EmployeeNumber: "0004236",
+      AdminLevel: "1"
+    }
+
+    dispatch(getInspections(initialPayload))
 
   }
   const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
@@ -83,7 +97,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           label={'Report Status'}
           options={[
             { label: "Inspected", value: "inspected" },
-            { label: "Missed Inspection", value: "missed" },
+            // { label: "Missed Inspection", value: "missed" },
 
             { label: "To Be Inspected", value: "to be inspected" }
           ]}

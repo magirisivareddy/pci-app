@@ -12,15 +12,15 @@ const ReasonsCell = ({ row }: any) => {
     const { devices, selectedInspectorType } = useAppSelector(state => state.Inspections)
     const theme = createTheme(); // Use createTheme to get access to breakpoints
     const xs = theme.breakpoints.down('xs');
-console.log("devices",devices)
+    console.log("devices", devices)
     let device;
     if (selectedInspectorType === "Inspect") {
         device = devices.find(device => device.deviceId === row.deviceId);
     } else {
         device = devices.find(device => device.inspectedId === row.inspectedId);
     }
-    const value =  device?.reason ?? "Not Applicable"
- 
+    const value = device?.reason ?? "Not Applicable"
+
     const handleChange = (event: any) => {
 
         if (selectedInspectorType === "Inspect") {
@@ -40,7 +40,8 @@ console.log("devices",devices)
                     onChange={handleChange}
                     size='small'
                     displayEmpty
-                    disabled={device?.status === 1}
+                    disabled={device?.status === 1 || selectedInspectorType === "View"}
+
                     inputProps={{ 'aria-label': 'Without label' }}
                 >
                     <MenuItem value={"Not Applicable"}>Not Applicable</MenuItem>

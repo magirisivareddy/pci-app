@@ -1,39 +1,42 @@
-import { deleteVenue, deleteVenueInspector } from '@/actions/api'
+import { deleteDevice, deleteVenue, deleteVenueInspector } from '@/actions/api'
 import Loading from '@/app/loading'
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice'
+import { getDevices, setDeleteDeviceModal } from '@/redux/features/DevicesSlice'
 import { getVenues, setDeletInspectionModal } from '@/redux/features/VenuesSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Box, Button, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-const InspectionDeleteModal = () => {
+const DeviceDeleteModal = () => {
     const dispatch = useAppDispatch()
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
-    const { selectedVenueInspector, formData } = useAppSelector(state => state.Venues.venueInfo)
-
+    const { deviceSelectedFormData , formData} = useAppSelector(state => state.devices)
+console.log("formData",formData)
     const onDeleteVenue = async () => {
-        const inspectorId = selectedVenueInspector?.inspectorId.toString()
+        const  employeeNumber= "3752";
         try {
             setLoading(true)
-            const res = await deleteVenueInspector(inspectorId)
+            const res = await deleteDevice(deviceSelectedFormData?.deviceId,employeeNumber)
             setMessage(res.message)
       
             setLoading(false)
             setTimeout(() => {
                 setMessage("")
-                dispatch(setDeletInspectionModal(false))
+                dispatch(setDeleteDeviceModal(false))
                 const obj = {
-                    employeeNumber: "0004236",
-                    is_it: "1",
-                    adminLevel: "1",
-                    inspectorType: "1",
-                    venueId: formData.venueId.toString() ?? "All",
-                    inspectorEmployeeNumber: formData.inspectorEmployeeNumber.toString() ?? "All"
-                }
-
-                dispatch(getVenues(obj))
+                    "is_It": "1",
+                    "venueId": "All",
+                    "commonAssetName": formData?.commonAssetName??"",
+                    "serialNumber": formData?.serialNumber??"",
+                    "assetNumber":formData?.assetNumber?? "",
+                    "terminalId":formData?.terminalId?? "",
+                    "profileId": formData?.profileId??"",
+                    "employeeNumber": "3752"
+                  }
+                  dispatch(getDevices(obj))
+             
             }, 3000)
 
         } catch (error: any) {
@@ -42,14 +45,14 @@ const InspectionDeleteModal = () => {
         }
     }
     const onClose = () => {
-        dispatch(setDeletInspectionModal(false))
+        dispatch(setDeleteDeviceModal(false))
     }
     return (
         <div>
               {isloading && <Loading/>}
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                 <Typography variant="body1">
-                    Are you sure you want to delete this inspector?
+                    Are you sure you want to delete this device?
                 </Typography>
                 <Box display="flex" gap={2} mt={2} justifyContent="center">
                     <Button variant="outlined" onClick={onDeleteVenue}>Yes</Button>
@@ -68,4 +71,4 @@ const InspectionDeleteModal = () => {
 }
 
 
-export default InspectionDeleteModal
+export default DeviceDeleteModal

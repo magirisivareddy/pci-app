@@ -112,7 +112,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                     { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
                     { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
                     { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
-                    { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report/' },
+                    { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
+
+                    
+                    // { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report/' },
                 ]
             },
         ];

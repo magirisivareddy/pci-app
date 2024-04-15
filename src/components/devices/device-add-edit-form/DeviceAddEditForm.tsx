@@ -21,6 +21,8 @@ interface FormData {
     profileId: string;
     ipAddress: string;
     slotNumber?: any
+    operatingSystem?: any
+    amountOfMemory?: any
 
     [key: string]: string | boolean; // Index signature
 }
@@ -50,7 +52,9 @@ const DeviceAddEditForm = () => {
         terminalId: deviceSelectedFormData?.terminalId ?? '',
         profileId: deviceSelectedFormData?.profileId ?? '',
         ipAddress: deviceSelectedFormData?.ipAddress ?? '',
-        slotNumber: deviceSelectedFormData?.slotNumber ?? ''
+        slotNumber: deviceSelectedFormData?.slotNumber ?? '',
+        operatingSystem: deviceSelectedFormData?.operatingSystem ?? '',
+        amountOfMemory: deviceSelectedFormData?.amountOfMemory ?? ''
 
     });
     const [slot, setSlot] = useState([]);
@@ -138,19 +142,43 @@ const DeviceAddEditForm = () => {
             [name]: value,
         }));
     };
-    const onChange = (value: any, name: any) => {
-        // Update form data
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value,
-            // Clear slotNumber if commonAssetName is not "POS System"
-            ...(name === "commonAssetName" && value !== "POS System" && { slotNumber: "" }),
-        }));
+    // const onChange = (value: any, name: any) => {
+    //     // Update form data
+    //     setFormData(prevData => ({
+    //         ...prevData,
+    //         [name]: value,
+    //         // Clear slotNumber if commonAssetName is not "POS System"
+    //         ...(name === "commonAssetName" && value !== "POS System" && { slotNumber: "" }),
+    //     }));
 
+    //     // Clear validation error when the field is changed
+    //     clearValidationError(name);
+    //     setErrorMessage("");
+    // };
+    const onChange = (value: any, name: any) => {
+        // If commonAssetName is not "POS System", clear specified fields
+        if (name === "commonAssetName" && value !== "POS System") {
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: value,
+                slotNumber: "",
+                operatingSystem: "",
+                amountOfMemory: ""
+            }));
+        } else {
+            // Update form data without clearing fields
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
+    
         // Clear validation error when the field is changed
         clearValidationError(name);
         setErrorMessage("");
     };
+    
+
 
 
     const clearValidationError = (name: string) => {
@@ -172,6 +200,8 @@ const DeviceAddEditForm = () => {
         profileId: { isRequired: formData.commonAssetName === "POS System" ? true : false },
         ipAddress: { isRequired: formData.commonAssetName === "POS System" ? true : false },
         terminalId: { isRequired: formData.commonAssetName === "POS System" ? true : false },
+        operatingSystem: { isRequired: formData.commonAssetName === "POS System" ? true : false },
+        amountOfMemory: { isRequired: formData.commonAssetName === "POS System" ? true : false },
 
     };
     const isValidIpAddress = (ipAddress: string) => {
@@ -216,7 +246,7 @@ const DeviceAddEditForm = () => {
 
         try {
             setLoading(true);
-            let payLoad: any = { ...formData, employeeNumber: 4236 };
+            let payLoad: any = { ...formData, employeeNumber: "3752" };
             if (deviceSelectedFormData?.deviceId) {
                 // If deviceFormData exists and has deviceId property
                 payLoad = {
@@ -243,7 +273,7 @@ const DeviceAddEditForm = () => {
                 dispatch(setDeviceSelectedFormData(null))
                 const obj = {
                     is_It: "1",
-                    employeeNumber: 4236,
+                    employeeNumber: "3752",
                     venueId: filterDeviceForm.venueId.toString() ?? "All",
                     commonAssetName: filterDeviceForm.commonAssetName ?? "",
                     serialNumber: filterDeviceForm.serialNumber.toString() ?? "",
@@ -524,7 +554,7 @@ const DeviceAddEditForm = () => {
                     },
                 }}  >{validationErrors?.ipAddress}.</Alert>}
             </Grid>
-            {formData.commonAssetName === "POS System" && <Grid item xs={12} md={4}>
+            {formData.commonAssetName === "POS System" && <><Grid item xs={12} md={4}>
                 <SelectInput
                     selectedOption={formData.slotNumber}
                     onChange={onChange}
@@ -535,8 +565,47 @@ const DeviceAddEditForm = () => {
                     size={'small'}
 
                 />
-            </Grid>}
-
+            </Grid>
+                <Grid item xs={12} md={4}>
+                    <TextInput
+                        defaultValue={formData.operatingSystem ?? ""}
+                        onChange={onChange}
+                        label={'Operating System'}
+                        name={'operatingSystem'}
+                        placeholder={"Operating System"}
+                        id={'operatingSystem'}
+                        isRequired={formData.commonAssetName === "POS System"}
+                    />
+                    {validationErrors?.operatingSystem && <Alert icon={false} sx={{
+                        background: 'unset',
+                        color: "#9c4040",
+                        padding: "0 10px",
+                        '& .mui-1pxa9xg-MuiAlert-message': {
+                            padding: '4px 0',
+                        },
+                    }}  >{validationErrors?.operatingSystem}.</Alert>}
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <TextInput
+                        defaultValue={formData.amountOfMemory ?? ""}
+                        onChange={onChange}
+                        label={'Amount of Memory'}
+                        name={'amountOfMemory'}
+                        placeholder={"Amount of Memory"}
+                        id={'amountOfMemory'}
+                        isRequired={formData.commonAssetName === "POS System"}
+                    />
+                    {validationErrors?.amountOfMemory && <Alert icon={false} sx={{
+                        background: 'unset',
+                        color: "#9c4040",
+                        padding: "0 10px",
+                        '& .mui-1pxa9xg-MuiAlert-message': {
+                            padding: '4px 0',
+                        },
+                    }}  >{validationErrors?.amountOfMemory}.</Alert>}
+                </Grid>
+            </>
+            }
             <Grid item xs={12} md={12}>
                 <Typography sx={{ marginBottom: "10px" }}>
                     <b>SPARE DEVICES:</b> This is for devices that are temporarily not in use as they are usualy put into storage for until needed.

@@ -3,7 +3,8 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from '@/redux/hooks';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
-import { setDeviceSelectedFormData, setDeviceHistoryInfo, setDeviceInfo } from '@/redux/features/DevicesSlice';
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
+import { setDeviceSelectedFormData, setDeviceHistoryInfo, setDeviceInfo, setDeleteDeviceModal } from '@/redux/features/DevicesSlice';
 
 const DeviceActions = ({ row }: any) => {
     const dispatch = useAppDispatch();
@@ -12,13 +13,17 @@ const DeviceActions = ({ row }: any) => {
             isDeviceModal: true,
             deviceModalType: "Edit"
         }))
-      
+
         dispatch(setDeviceSelectedFormData(row))
     }
-    const onHistory=()=>{
+    const onHistory = () => {
         dispatch(setDeviceHistoryInfo(true))
         dispatch(setDeviceSelectedFormData(row))
 
+    }
+    const onDelete = () => {
+        dispatch(setDeviceSelectedFormData(row))
+        dispatch(setDeleteDeviceModal(true))
     }
     return (
         <Box display={'flex'} gap={'5px'}>
@@ -27,9 +32,14 @@ const DeviceActions = ({ row }: any) => {
                     <EditIcon color='primary' fontSize='small' />
                 </IconButton>
             </Tooltip>
-            <Tooltip color='primary' title="History">
-                <IconButton onClick={onHistory} sx={{ padding: 0 }}>
+            <Tooltip color='primary' title="delete device">
+                {/* <IconButton
+                    // onClick={onHistory}
+                    sx={{ padding: 0 }}>
                     <ManageHistoryIcon color='primary' fontSize='small' />
+                </IconButton> */}
+                <IconButton onClick={onDelete} sx={{ padding: 0 }}>
+                    <RemoveCircleRoundedIcon color='warning' fontSize='small' />
                 </IconButton>
             </Tooltip>
         </Box>

@@ -65,11 +65,11 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
-    const employeeNumber = "5860"
+    const employeeNumber = "3752"
     getVenueInspectorList(employeeNumber)
   }, [])
   const handelSubmit = () => {
-    const employeeNumber = "5860"
+    const employeeNumber = "3752"
     let venueId = formData.venueId
     let inspectorId = formData.inspectorId
     if (formData.venueId === "All") {

@@ -7,7 +7,7 @@ const nextConfig = {
   swcMinify: true,
   trailingSlash:true,
   env: {
-    PCI_API_URL: 'https://esc-api.ktea.com/pci/dev/api/',
+    PCI_API_URL: 'https://esc-api.ktea.com/ktea-inspections/dev/api/',
   },
   async rewrites() {
     return [
