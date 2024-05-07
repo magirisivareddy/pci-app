@@ -9,6 +9,7 @@ interface CommonState {
     venueDropdown: any; // Change 'any' to the actual type of your data
     error: string | null;
     inspectorDropdown:any
+    userInfo:any
 }
 
 // Define the initial state using that type
@@ -16,7 +17,12 @@ const initialState: CommonState = {
     isloading: 'idle',
     venueDropdown: [],
     error: null,
-    inspectorDropdown:[]
+    inspectorDropdown:[],
+    userInfo: {
+        userName: "siva",
+        role: "Admin",
+   
+      }
 }
 
 export const getVenue = createAsyncThunk('devices/getVenue', async () => {
@@ -42,7 +48,9 @@ export const commonSlice = createSlice({
     // `createSlice` will infer the state type from the `initialState` argument
     initialState,
     reducers: {
-      
+      setUserInfo: (state, actions) => {
+        state.userInfo = actions.payload
+    },
     },
     extraReducers: (builder) => {
         builder
@@ -73,7 +81,7 @@ export const commonSlice = createSlice({
     },
 })
 
-export const { } = commonSlice.actions
+export const {setUserInfo } = commonSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCommon = (state: RootState) => state.common

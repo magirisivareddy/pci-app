@@ -18,6 +18,7 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
   const dispatch = useAppDispatch()
   const {formData}=useAppSelector(state=>state.groupInspector.groupInspectorsInfo)
   
+  
   const onChange = (value: any, name: any) => {
     dispatch(setGroupInspectorsFilterFormData({ value, name }))
 

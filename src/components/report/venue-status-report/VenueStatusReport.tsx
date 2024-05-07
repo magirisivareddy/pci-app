@@ -21,20 +21,23 @@ const VenueStatusReport = () => {
         { id: 'deviceId', label: 'Device Id' },
         { id: 'deviceName', label: 'Device Name' },
         { id: 'deviceLocation', label: 'Device Location' },
-        { id: 'deviceType', label: 'Device Type' },
         { id: 'notes', label: 'Notes' },
         {
-            id: 'deviceStatus', label: 'Device Status', customRender: (value: any, row: any): JSX.Element => (
+            id: 'deviceStatus',
+            label: 'Device Status',
+            customRender: (value: any, row: any): JSX.Element => (
                 <span>
-
                     {row.deviceStatus === 1 ? (
-                        "PASS"
+                        <span style={{color: "green"}}>PASS</span>
+                    ) : row.deviceStatus === 2 ? (
+                        <span style={{color: "#ff9800"}}> QUESTIONABLE</span>
                     ) : (
-                        "FAIL"
+                        <span style={{color: "#d32f2f"}}>FAIL</span>
                     )}
                 </span>
             )
         },
+        
         {
             id: 'inspectionActualDate', label: 'Inspection Actual Date', customRender: (value: any, row: any): JSX.Element => (
                 <span>

@@ -1,5 +1,5 @@
 async function fetchData(apiEndpoint: string, method = 'GET', payload = null) {
-    console.log("process.env.NEXT_PUBLIC_API_SECRET_KEY", process.env.NEXT_PUBLIC_API_SECRET_KEY)
+ 
     try {
         const options = {
             method,
@@ -101,6 +101,10 @@ export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "PO
 export async function fetchInspections(payload: any) {
     return fetchQueryparamsData('Search/SearchInspections', 'POST', payload);
 }
+export async function fetchInitialInspections(payload: any) {
+    return fetchQueryparamsData('Search/SearchInspections', 'POST', payload);
+}
+
 
 export async function fetchviewReport(payload: any) {
     // return fetchData('viewReport', 'POST', payload);
@@ -110,6 +114,11 @@ export async function insertOrUpdateReport(payload: any) {
     // return fetchData('InsertOrUpdateReport', 'POST', payload);
     return fetchQueryparamsData('report/InsertOrUpdateReport', 'POST', payload);
 }
+export async function getUserInfo(payload: any) {
+    // return fetchData('InsertOrUpdateReport', 'POST', payload);
+    return fetchQueryparamsData('report/getUserInfo', 'POST', payload);
+}
+
 
 export async function searchDevices(payload: any) {
     // return fetchData('SearchDevices', 'POST', payload);

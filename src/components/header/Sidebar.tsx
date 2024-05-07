@@ -1,6 +1,4 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     Collapse,
     Drawer,
@@ -29,6 +27,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
+import { useAppSelector } from '@/redux/hooks';
 
 interface SidebarProps {
     open: boolean;
@@ -39,16 +38,19 @@ interface SidebarProps {
 const drawerWidth = 240;
 const miniDrawerWidth = 73;
 
-const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) => {
     const theme: Theme = useTheme();
-    const path = usePathname()
+    const path = usePathname();
     const router = useRouter();
+    const { userInfo } = useAppSelector(state => state.common);
     const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iconColor = "#008c99";
     const hoverBackgroundColor = "#f1fafb";
     const activeBackgroundColor = "#9ddbe0";
-    const userType = "admin"; // Assume userType is fetched or determined from somewhere
+
+    console.log("userInfo", userInfo);
+
     useEffect(() => {
         const storedOpenSubMenus = localStorage.getItem('openSubMenus');
 
@@ -74,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         newOpenSubMenusState[index] = !isCurrentlyOpen;
 
         setOpenSubMenus(newOpenSubMenusState);
-       
+
         if (item.path && (!item.children || !isCurrentlyOpen)) {
             handleNavigation(item.path);
             if (isMobile) {
@@ -86,7 +88,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
     const handleNavigation = (path?: string) => {
         if (path) router.push(path);
     };
+    const handleEffect = useCallback(() => {
+        if (userInfo?.role === "IT") {
+            console.log("calll");
+            router.push('/venues/');
+        }
+    }, [userInfo, router]);
 
+    useEffect(handleEffect, [userInfo]);
     interface MenuItem {
         text: string;
         icon: React.ReactNode;
@@ -94,13 +103,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         children?: MenuItem[];
     }
 
-    let menuItems: MenuItem[] = [
-        { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
-    ];
+    let menuItems: MenuItem[] = [];
 
-    if (userType === "admin") {
+    if (userInfo?.role === "Admin") {
         menuItems = [
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+      
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
             { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
             { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
@@ -113,14 +121,55 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                     { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
                     { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
                     { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
-
-                    
-                    // { text: 'Log Report', icon: <StarBorder />, path: '/report/log-report/' },
                 ]
             },
         ];
-    } else if (userType === "itinspector") {
-        menuItems.push({ text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' });
+    } else if (userInfo?.role === "Inspector") {
+        menuItems.push(
+            { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+            { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+            { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+            { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+            {
+                text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+                    { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+                    { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+                    { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+                    { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+                    { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
+                ]
+            },
+        );
+
+    } else if (userInfo?.role === "IT") {
+        menuItems.push(
+            { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+            { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+        );
+    } else if (userInfo?.role === "Auditor") {
+        menuItems.push(
+            { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+            { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+            { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+        );
+    }
+    else if (userInfo?.role === "Group Inspector") {
+        menuItems.push(
+            { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+            { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+            { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+            { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
+            { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+            {
+                text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+                    { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+                    { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+                    { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+                    { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+                    { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
+                ]
+            },
+        );
     }
 
     const renderMenuItems = (items: MenuItem[], level = 0, parentIndex = ''): React.ReactNode => {
@@ -189,6 +238,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             </List>
         </Drawer>
     );
-};
+});
 
 export default Sidebar;

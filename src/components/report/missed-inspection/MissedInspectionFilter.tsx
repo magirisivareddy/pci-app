@@ -41,21 +41,11 @@ const MissedInspectionFilter: React.FC<InspectionsFiltersProps> = ({
         dispatch(setIntialFilterFormData({
             venue: 'All',
             inspector: 'All',
-            reportStatus: 'to be inspected',
+            
         }))
         const date = getDefaultWeekRange()
         dispatch(setSelectedDateRange(date))
-        const initialPayload = {
-            FromDate: date[0] ? format(date[0], 'yyyy/MM/dd') : null,
-            ToDate: date[1] ? format(date[1], 'yyyy/MM/dd') : null,
-            InspectorNumber: "All",
-            ReportStatus: "to be inspected",
-            VenueId: "All",
-            Is_it: "1",
-            EmployeeNumber: "0004236",
-            AdminLevel: "1"
-        }
-        dispatch(getInspections(initialPayload))
+      
 
     }
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];

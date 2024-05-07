@@ -10,3 +10,18 @@ export function getDefaultWeekRange(): DateRange {
     return [startOfWeek, endOfWeek];
 }
 
+export function handlePreviousWeek(startDate: Date | null): DateRange {
+    const newEndDate = new Date(startDate || new Date());
+    const newStartDate = new Date(newEndDate);
+  
+    // Calculate the days to Monday and Sunday
+    const daysToMonday = (newStartDate.getDay() + 7) % 7; // Calculate days from current day to Monday
+    const daysToSunday = (newEndDate.getDay() + 7) % 6; // Calculate days from current day to Sunday
+  
+    // Calculate the start and end dates for the previous week
+    newStartDate.setDate(newStartDate.getDate() - daysToMonday - 6); // Set to Monday of the previous week
+    newEndDate.setDate(newEndDate.getDate() - daysToSunday); // Set to Sunday of the previous week
+  
+    return [newStartDate, newEndDate];
+  }
+  

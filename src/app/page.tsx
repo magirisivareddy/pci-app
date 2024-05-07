@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import Inspections from "@/components/inspections/Inspections";
 export default function Home() {
+
   return (
     <main >
       {/* <CustomBreadcrumbs /> */}

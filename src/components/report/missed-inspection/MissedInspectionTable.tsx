@@ -3,6 +3,7 @@ import React from 'react'
 import { Tooltip } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CustomTable from '@/components/common/table/Table';
+import { useAppSelector } from '@/redux/hooks';
 type Header = {
     id: string;
     label: string;
@@ -12,7 +13,8 @@ type Header = {
   };
 
 
-const MissedInspectionTable = ({data}:any) => {
+const MissedInspectionTable = () => {
+  const { inspectionsList } = useAppSelector(state => state.Inspections)
     const missedInspectionsTableHeaders: Header[] = [
         {
           id: 'status',
@@ -68,7 +70,7 @@ const MissedInspectionTable = ({data}:any) => {
       
       ];
   return (
-    <CustomTable data={data} headers={missedInspectionsTableHeaders}/>
+    <CustomTable data={inspectionsList} headers={missedInspectionsTableHeaders}/>
   )
 }
 

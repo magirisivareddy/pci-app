@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
-import { Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Dialog, IconButton, DialogTitle, DialogContent } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Dialog, IconButton, DialogTitle, DialogContent, Typography } from '@mui/material';
 import ReactToPrint from 'react-to-print';
 import { useAppSelector } from '@/redux/hooks';
 import { loadVenueDevices } from '@/actions/api';
 import { TableRowsLoader } from '@/components/common/table/TableRowsLoader';
+import BookOnlineOutlinedIcon from '@mui/icons-material/BookOnlineOutlined';
+import Modal from '@/components/common/modal/Modal';
+import HelpdeskTicketForm from '@/components/inspections/helpdesk-ticket/HelpdeskTicketForm';
 
 type Header = {
     id: string;
@@ -17,6 +20,7 @@ type Header = {
 const TotalDeviceModal = ({ open, handleClose }: any) => {
     const [isLoading, setLoading] = useState(true);
     const [devicesData, setDevicesData] = useState([]);
+    const [isHelpDeskModal, setHelpDeskModal] = useState(false)
     const { selectedVenueInspector } = useAppSelector(state => state.Venues.venueInfo);
 
     const componentRef = useRef(null);
@@ -30,7 +34,12 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
             setLoading(false);
         }
     };
-
+    const onHelpDeskModal = () => {
+        setHelpDeskModal(true)
+    }
+    const handleModalClose = () => {
+        setHelpDeskModal(false)
+    }
     useEffect(() => {
         getTotalDevice();
     }, []);
@@ -105,8 +114,46 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
 
                 <DialogTitle color={"primary"} id="scroll-dialog-title">
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <span><b>{`Venue: ${selectedVenueInspector?.venue_name}`}</b></span>
-                        <span style={{ marginRight: "30px" }} > <ReactToPrint trigger={() => <PrintOutlinedIcon sx={{cursor:"pointer"}} color='primary' />} content={() => componentRef.current} /></span>
+                        <Typography sx={{
+                            '@media screen and (max-width: 500px)': { // Adjust the max-width as needed
+                                fontSize: ".54rem",
+                            }
+                        }}><b>{`Venue: ${selectedVenueInspector?.venue_name}`}</b></Typography>
+                        <IconButton edge="end"
+                            color="inherit"
+                            aria-label="menu"
+                            onClick={onHelpDeskModal}
+                            sx={{
+                                marginLeft: "521px",
+                                marginTop: "-5px",
+                                '@media screen and (max-width: 768px)': { // Adjust the max-width as needed
+                                    marginLeft: "0",
+                                }
+                            }}
+                            size='small'>
+                            <BookOnlineOutlinedIcon sx={{
+
+                                width: '23px',
+                                height: "23px",
+                                '@media screen and (max-width: 500px)': { // Adjust the max-width as needed
+                                    width: "16px",
+                                    height: "16px",
+                                    marginLeft: "0",
+                                    marginTop: "-opx",
+                                }
+                            }} /> <Typography sx={{
+                                '@media screen and (max-width: 500px)': { // Adjust the max-width as needed
+                                    fontSize: ".54rem",
+                                    marginLeft: "0",
+                                    marginTop: "-opx",
+                                }
+                            }}>RAISE A TICKET</Typography>
+                        </IconButton>
+                        <Typography sx={{ marginRight: "30px" }} > <ReactToPrint trigger={() => <PrintOutlinedIcon sx={{
+                            cursor: "pointer", '@media screen and (max-width: 500px)': {
+                                width: ".9rem", height: "0.9rem", marginTop: "3px"
+                            }
+                        }} color='primary' />} content={() => componentRef.current} /></Typography>
                     </Box>
                 </DialogTitle>
 
@@ -119,17 +166,17 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
                                     <TableRow>
                                         {devicesHeader.map(header => (
                                             <TableCell key={header.id}
-                                            
-                                            sx={{
-                                                // minWidth: 100,
-                                                width: header.width ?? "auto",
-                                                background: "#9ddbe0",
-                                                color: "rgba(0, 0, 0, 0.7)",
-                                                fontWeight: "600",
-                                                position: "sticky",
-                                                top: 0,
-                                                zIndex: 100,
-                                              }}
+
+                                                sx={{
+                                                    // minWidth: 100,
+                                                    width: header.width ?? "auto",
+                                                    background: "#9ddbe0",
+                                                    color: "rgba(0, 0, 0, 0.7)",
+                                                    fontWeight: "600",
+                                                    position: "sticky",
+                                                    top: 0,
+                                                    zIndex: 100,
+                                                }}
                                             >
                                                 {header.label}
                                             </TableCell>
@@ -164,6 +211,15 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
                 </DialogContent>
 
             </Dialog>
+            <Modal
+                title={'Helpdesk Ticket'}
+                open={isHelpDeskModal}
+                scroll={'paper'}
+                handleClose={handleModalClose}
+                contentComponent={(props) => <HelpdeskTicketForm handleModalClose={handleModalClose} />}
+                fullWidth={true}
+                maxWidth={"md"}
+            />
         </>
     );
 };

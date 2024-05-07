@@ -5,11 +5,13 @@ import { Box, CssBaseline, Toolbar, useMediaQuery, useTheme } from '@mui/materia
 import Header from './Header';
 import Sidebar from './Sidebar';
 import MsalRootProvider from '@/msalProvider';
+import { useMsal } from '@azure/msal-react';
 
 export default function Layout({ children }: any) {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const [open, setOpen] = useState(isDesktop);
+  
     useEffect(() => {
         setOpen(isDesktop);
     }, [isDesktop]);
@@ -18,7 +20,7 @@ export default function Layout({ children }: any) {
     };
 
     return (
-        //<MsalRootProvider>
+        <MsalRootProvider>
         <Box sx={{ display: isDesktop ? 'flex' : 'block' }}>
             <CssBaseline />
             <Header onMenuClick={handleDrawerToggle} open={open} />
@@ -35,6 +37,6 @@ export default function Layout({ children }: any) {
                 {children}
             </Box>
         </Box>
-        //  </MsalRootProvider>
+          </MsalRootProvider>
     );
 }

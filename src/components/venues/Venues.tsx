@@ -34,11 +34,13 @@ const Venues = () => {
 
 
     const { venuesData, status, venueInfo } = useAppSelector(state => state.Venues)
-    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal, formData, totalDeviceModal,selectedVenueInspector } = venueInfo
+    const { userInfo } = useAppSelector(state => state.common)
+    const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal, formData, totalDeviceModal, selectedVenueInspector } = venueInfo
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
+    const isViewList = ["Inspector", "Group Inspector"]
     useEffect(() => {
         dispatch(clearVenueFilterFormData())
     }, [])
@@ -100,7 +102,7 @@ const Venues = () => {
         setModalTyep("")
         dispatch(setAddOrEditVenueModal(false))
     }
-    const handleClose=()=>{
+    const handleClose = () => {
         dispatch(setTotalDeviceModal(false))
     }
     const handleCloseDelete = () => {
@@ -131,9 +133,11 @@ const Venues = () => {
                 />
             )
         },
-        { id: 'totalDevices', label: 'Total Devices', width: "70px",  customRender: (data: any, row: any): ReactNode => (
-           <TotalDeviceCell row={row} />
-        )  },
+        {
+            id: 'totalDevices', label: 'Total Devices', width: "70px", customRender: (data: any, row: any): ReactNode => (
+                <TotalDeviceCell row={row} />
+            )
+        },
         {
             id: 'Edit',
             label: 'Edit',
@@ -155,7 +159,8 @@ const Venues = () => {
         <>
 
             <Box display="flex" justifyContent="flex-end" pr={2}>
-                <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button>
+                {!isViewList.includes(userInfo.role) ? <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button> : ""}
+
             </Box>
             <VenuesFilters handleClear={handleClear} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />
             <Typography
@@ -164,7 +169,7 @@ const Venues = () => {
                 aria-haspopup="true"
                 onMouseEnter={handlePopoverOpen}
                 onMouseLeave={handlePopoverClose}
-                sx={{ marginLeft: "2px", fontSize: "0.8rem",fontWeight:"600" }}
+                sx={{ marginLeft: "2px", fontSize: "0.8rem", fontWeight: "600" }}
             >
                 NOTES: <InfoOutlinedIcon color='primary' sx={{ width: "17px", height: '17px', position: 'relative', top: "4px" }} />
             </Typography>
@@ -188,7 +193,7 @@ const Venues = () => {
                 maxWidth='sm'
                 fullWidth={true}
             />
-             {/* <Modal
+            {/* <Modal
                 title={` Venue: ${selectedVenueInspector?.venue_name} `}
                 open={totalDeviceModal}
                 scroll={"body"}
@@ -197,9 +202,9 @@ const Venues = () => {
                 maxWidth='md'
                 fullWidth={true}
             /> */}
-            {totalDeviceModal&& <TotalDeviceModal handleClose={handleClose} />}
+            {totalDeviceModal && <TotalDeviceModal handleClose={handleClose} />}
 
-            
+
             <Modal
                 title={`Delete Venue`}
                 open={isDeletVenueModal}

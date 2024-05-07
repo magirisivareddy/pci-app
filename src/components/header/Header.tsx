@@ -6,8 +6,13 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HelpdeskTicketForm from '../inspections/helpdesk-ticket/HelpdeskTicketForm';
 import Modal from '../common/modal/Modal';
-import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
+
 import BookOnlineOutlinedIcon from '@mui/icons-material/BookOnlineOutlined';
+import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
+
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { useMsal } from '@azure/msal-react';
 
 const Header = ({ onMenuClick }: any) => {
   const theme = useTheme();
@@ -15,6 +20,17 @@ const Header = ({ onMenuClick }: any) => {
   const [notificationCount, setNotificationCount] = useState<number>(4);
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [notificationPopoverAnchor, setNotificationPopoverAnchor] = useState<null | HTMLElement>(null);
+  const { instance, accounts } = useMsal();
+  const imageUrl= false
+  const name:any = accounts[0]?.name??"";
+  const namesArray = name.split(" ");
+console.log("accounts",accounts)
+  // Extract the first letter of the first name
+  const firstNameFirstLetter = namesArray[0].charAt(0);
+
+  // Extract the first letter of the last name
+  const lastNameFirstLetter = namesArray[namesArray.length - 1].charAt(0);
+  const iltials = `${firstNameFirstLetter}${lastNameFirstLetter}`
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -38,6 +54,11 @@ const Header = ({ onMenuClick }: any) => {
   const handleModalClose = () => {
     setHelpDeskModal(false)
   }
+  const handleLogout = () => {
+    instance.logoutRedirect({
+      onRedirectNavigate: (_url) => true,
+    });
+  };
   const dummyNotifications = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -54,13 +75,39 @@ const Header = ({ onMenuClick }: any) => {
             aria-label="open drawer"
             onClick={onMenuClick}
             edge="start"
-            sx={{ mr: 2 }}
+            sx={{
+              mr: 2, '@media screen and (max-width: 400px)': { // Adjust the max-width as needed
+                gap: "2px"
+
+              }
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h3" sx={{ fontWeight: 600 }} noWrap>
-            NQ INSPECTION
-          </Typography>
+          <Box sx={{
+            display: "flex",
+            gap: "5px",
+            '@media screen and (max-width: 400px)': { // Adjust the max-width as needed
+              gap: "2px",
+            }
+          }}>
+            <CreditScoreOutlinedIcon sx={{
+              width: "26px", height: "26px", marginTop: "2px", '@media screen and (max-width: 500px)': { // Adjust the max-width as needed
+                width: "18px",
+                height: "18px",
+                marginTop: 0
+              }
+            }} />
+            <Typography variant="h3" sx={{
+              fontWeight: 600, whiteSpace: 'nowrap', '@media screen and (max-width: 500px)': { // Adjust the max-width as needed
+                fontSize: "14px"
+              }
+            }}>
+              NQ INSPECTION
+            </Typography>
+          </Box>
+
+
           <Box sx={{ display: "flex", flexGrow: 1, gap: "1rem", justifyContent: "right" }} >
             {/* Notification icon and popover */}
             {/* <IconButton
@@ -98,7 +145,7 @@ const Header = ({ onMenuClick }: any) => {
                       key={index}
                       onClick={() => {
                         // Handle click action for the notification item
-                        console.log(`Notification ${index + 1} clicked`);
+                      
                       }}
                       sx={{
                         width: '100%',
@@ -124,8 +171,16 @@ const Header = ({ onMenuClick }: any) => {
               <BookOnlineOutlinedIcon sx={{
 
                 width: '23px',
-                height: "23px"
-              }} /> <Typography>RAISE A TICKET</Typography>
+                height: "23px",
+                '@media screen and (max-width: 400px)': { // Adjust the max-width as needed
+                  width: "16px",
+                  height: "16px"
+                }
+              }} /> <Typography sx={{
+                '@media screen and (max-width: 400px)': { // Adjust the max-width as needed
+                  fontSize: ".54rem"
+                }
+              }}>RAISE A TICKET</Typography>
             </IconButton>
             <IconButton
               edge="end"
@@ -133,8 +188,17 @@ const Header = ({ onMenuClick }: any) => {
               aria-label="menu"
               onClick={handleMenu}
               size='small'
+              // onError={() => setAvatarError(true)}
             >
-              <Avatar sizes='small' sx={{ width: "35px", height: "35px" }} />
+              {!imageUrl ? (
+                <div style={{ backgroundColor: '#fff', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', textTransform:"uppercase", fontSize:"1rem", color: "#004f56" }}>
+                    {iltials}
+                  </Typography>
+                </div>
+              ) : (
+                <Avatar sizes='small' sx={{ width: "35px", height: "35px" }} />
+              )}
             </IconButton>
           </Box>
           {/* Menu items */}
@@ -144,8 +208,19 @@ const Header = ({ onMenuClick }: any) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} onClick={handleClose}>
-              <LogoutIcon sx={{
+             <MenuItem  sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <AccountCircleOutlinedIcon  sx={{
+                color: '#008c99'
+              }} /> {accounts[0]?.name}
+            </MenuItem>
+            <MenuItem  sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <EmailOutlinedIcon  sx={{
+                color: '#008c99'
+              }} /> {accounts[0]?.username}
+            </MenuItem>
+            
+            <MenuItem onClick={handleLogout} sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <LogoutIcon  sx={{
                 color: '#008c99'
               }} /> Logout
             </MenuItem>

@@ -49,6 +49,7 @@ const InspectionsTable = () => {
   const dispatch = useAppDispatch();
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
   const { inspectionsList, status } = useAppSelector(state => state.Inspections)
+
   const { devices, selectedInspector, saveReportStatus, deviceStatus, inspectionFilterData, selectedInspectorType } = useAppSelector(state => state.Inspections)
   const inspectionForm = inspectionFilterData.inspectionForm
   const selectedDateRange = inspectionFilterData.selectedDateRange
@@ -227,7 +228,11 @@ const InspectionsTable = () => {
       return;
     }
 
-    const deviceWithInvalidReason = devices.find(device => (device.status === -1 || device.status === 2) && device.reason === "Not Applicable");
+    // const deviceWithInvalidReason = devices.find(device => (device.status === -1 || device.status === 2) && device.reason === "Not Applicable");
+    const deviceWithInvalidReason = devices.find(device => (
+      (device.status === -1 || device.status === 2) &&
+      (device.reason === "Not Applicable" || device.reason === null || device.reason === "")
+    ));
 
     if (deviceWithInvalidReason) {
       setOpen(true);
@@ -353,11 +358,19 @@ const InspectionsTable = () => {
             title = "View";
           }
         }
+      
         // const isDisabled = title === "Inspect" && !checkDateInRange();
+        const isDisabled = (
+          (title === "Inspect" && !checkDateInRange()) ||
+          (row.venue_name !== "SPARE DEVICES" &&
+            row.venue_name !== "ARCHIVED DEVICES" &&
+            row.venue_name !== "IT STORAGE" &&
+            (row.inspector_enumber === 0))
+        )
         return (
           <Button size="small"
             variant="outlined"
-            disabled={!checkDateInRange()}
+            disabled={isDisabled}
             onClick={() => handleInspectClick(row, title)}>
             {title}
           </Button>

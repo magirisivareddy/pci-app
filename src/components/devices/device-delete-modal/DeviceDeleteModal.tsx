@@ -13,7 +13,7 @@ const DeviceDeleteModal = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
     const { deviceSelectedFormData , formData} = useAppSelector(state => state.devices)
-console.log("formData",formData)
+
     const onDeleteVenue = async () => {
         const  employeeNumber= "3752";
         try {

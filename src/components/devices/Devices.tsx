@@ -25,8 +25,10 @@ interface FormData {
 }
 const Devices = ({ venueDropdown }: any) => {
   const dispatch = useAppDispatch();
+  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
+  const isViewList = ["Inspector", "Group Inspector"]
   const { devicesInfo, deviceHistory, deviceSelectedFormData, formData, devicesData } = useAppSelector(state => state.devices)
-  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage,deleteDeviceModal } = devicesInfo
+  const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage, deleteDeviceModal } = devicesInfo
   const { isDeviceHistoryModal } = deviceHistory
   useEffect(() => {
     dispatch(clearDeviceFilterFormData())
@@ -158,7 +160,7 @@ const Devices = ({ venueDropdown }: any) => {
 
     const currentDate = new Date();
     const timestamp = currentDate.toISOString().replace(/[-:T.]/g, '').slice(0, 14); // Get timestamp in format YYYYMMDDHHmmss
-    const fileName = `NQ_PCI_Devices_${timestamp}.xls`;
+    const fileName = `NQ_Devices_${timestamp}.xls`;
 
     XLSX.writeFile(wb, fileName);
   };
@@ -166,9 +168,10 @@ const Devices = ({ venueDropdown }: any) => {
     <>
       {deviceLocationStatus && <Loading />}
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
-        <Button onClick={addDevice} size="small" variant="outlined">
+        {!isViewList.includes(userInfo.role) ? <Button onClick={addDevice} size="small" variant="outlined">
           Add Device
-        </Button>
+        </Button> : null}
+
         <Button onClick={handleExport} size="small" variant="outlined">
           Export to Excel
         </Button>
@@ -204,16 +207,16 @@ const Devices = ({ venueDropdown }: any) => {
         contentComponent={DeviceHistory}
         handleClose={handleClose}
       />
-           <Modal
-                title={`Delete Device`}
-                open={deleteDeviceModal}
-                scroll={"body"}
-                handleClose={handleClose}
-                contentComponent={DeviceDeleteModal}
-                maxWidth='sm'
-                fullWidth={true}
+      <Modal
+        title={`Delete Device`}
+        open={deleteDeviceModal}
+        scroll={"body"}
+        handleClose={handleClose}
+        contentComponent={DeviceDeleteModal}
+        maxWidth='sm'
+        fullWidth={true}
 
-            />
+      />
     </>
   )
 }

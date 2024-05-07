@@ -5,7 +5,7 @@ import "./customDatePicker.css";
 import { IconButton, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { getDefaultWeekRange } from '@/utils/helpers';
+import { getDefaultWeekRange,handlePreviousWeek } from '@/utils/helpers';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setSelectedDateRange } from '@/redux/features/InspectionsSlice';
 
@@ -18,6 +18,7 @@ interface RangeDatePickerProps {
 
 const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onDateRangeChange }) => {
   const dispatch = useAppDispatch()
+  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
   const { selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   // const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange || getDefaultWeekRange());
   const [startDate, endDate] = selectedDateRange;
@@ -36,19 +37,9 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
     dispatch(setSelectedDateRange(dates));
     // setDateRange(dates);
   };
-  const handlePreviousWeek = () => {
-    const newEndDate = new Date(startDate || new Date());
-    const newStartDate = new Date(newEndDate);
-
-    // Calculate the days to Monday and Sunday
-    const daysToMonday = (newStartDate.getDay() + 7) % 7; // Calculate days from current day to Monday
-    const daysToSunday = (newEndDate.getDay() + 7) % 6; // Calculate days from current day to Sunday
-
-    // Calculate the start and end dates for the previous week
-    newStartDate.setDate(newStartDate.getDate() - daysToMonday - 6); // Set to Monday of the previous week
-    newEndDate.setDate(newEndDate.getDate() - daysToSunday); // Set to Sunday of the previous week
-    // setDateRange([newStartDate, newEndDate]);
-    dispatch(setSelectedDateRange([newStartDate, newEndDate]));
+  const handlePrevious = () => {
+    const previousWeekRange = handlePreviousWeek(startDate);
+    dispatch(setSelectedDateRange(previousWeekRange));
   };
 
   const handleNextWeek = () => {
@@ -75,7 +66,7 @@ const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onD
     <div className={"container"}>
       <div className={"previousWeek"}>
         <Tooltip color='primary' title="Previous Week">
-          <IconButton onClick={handlePreviousWeek} aria-label="Previous Week">
+          <IconButton onClick={handlePrevious} aria-label="Previous Week">
             <ChevronLeftIcon />
           </IconButton>
         </Tooltip>

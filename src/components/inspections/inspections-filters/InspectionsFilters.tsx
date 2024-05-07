@@ -5,7 +5,7 @@ import { Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getInspections, setInspectionFilterFormData, setIntialFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
-import { getDefaultWeekRange } from '@/utils/helpers';
+import { getDefaultWeekRange, handlePreviousWeek } from '@/utils/helpers';
 import { format } from 'date-fns';
 
 interface InspectionsFiltersProps {
@@ -16,13 +16,14 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   handelSubmit,
 }) => {
   const dispatch = useAppDispatch()
+  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
   const { inspectionForm, selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
   useEffect(() => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
       inspector: 'All',
-      reportStatus: 'to be inspected',
+      reportStatus: userInfo.role ==="Auditor"?"inspected":"to be inspected",
     }))
     const date = getDefaultWeekRange()
     dispatch(setSelectedDateRange(date))
@@ -36,18 +37,26 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   const handleDateRangeChange = (dateRange: [Date | null, Date | null]) => {
     dispatch(setSelectedDateRange(dateRange));
   };
-
+  const reportStatusList = []
+  if (userInfo?.role === "Auditor") {
+    reportStatusList.push({ label: "Inspected", value: "inspected" },)
+  } else {
+    reportStatusList.push({ label: "Inspected", value: "inspected" }, { label: "To Be Inspected", value: "to be inspected" })
+  }
   const handleClear = () => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
       inspector: 'All',
       reportStatus: 'to be inspected',
     }))
-    const date = getDefaultWeekRange()
-    dispatch(setSelectedDateRange(date))
+    const [startDate, endDate] = selectedDateRange;
+    const previousWeekRange = handlePreviousWeek(startDate);
+    dispatch(setSelectedDateRange(previousWeekRange));
+    // const date = getDefaultWeekRange()
+    // dispatch(setSelectedDateRange(date))
     const initialPayload = {
-      FromDate: date[0] ? format(date[0], 'yyyy/MM/dd') : null,
-      ToDate: date[1] ? format(date[1], 'yyyy/MM/dd') : null,
+      FromDate: previousWeekRange[0] ? format(previousWeekRange[0], 'yyyy/MM/dd') : null,
+      ToDate: previousWeekRange[1] ? format(previousWeekRange[1], 'yyyy/MM/dd') : null,
       InspectorNumber: "All",
       ReportStatus: "to be inspected",
       VenueId: "All",
@@ -95,12 +104,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           selectedOption={inspectionForm.reportStatus}
           onChange={onChange}
           label={'Report Status'}
-          options={[
-            { label: "Inspected", value: "inspected" },
-            // { label: "Missed Inspection", value: "missed" },
-
-            { label: "To Be Inspected", value: "to be inspected" }
-          ]}
+          options={reportStatusList}
           name={'reportStatus'}
           id={'reportStatus'} size={'small'}
         />

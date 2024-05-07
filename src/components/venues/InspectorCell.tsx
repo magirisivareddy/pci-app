@@ -5,7 +5,7 @@ import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import EmailIcon from '@mui/icons-material/Email';
 
 import "./InspectorCell.css"
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setDeletInspectionModal, setSelectedVenueInspector } from '@/redux/features/VenuesSlice';
 
 interface Inspector {
@@ -22,6 +22,8 @@ interface InspectorCellProps {
 
 const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }) => {
     const dispatch = useAppDispatch();
+    const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
+    const isViewList = ["Inspector"]
 
     // Check if MI is present
     const hasMainInspector = inspectorDetails.some((inspector: Inspector) => inspector.inspectorType === 1);
@@ -120,9 +122,10 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                 )}
             </div>
             <Box className='add-inspector-btn'>
+            {!isViewList.includes(userInfo.role) ?
                 <Tooltip color='primary' title="Add Inspector...">
                     <AddCircleOutlineIcon sx={{ cursor: "pointer" }} color='primary' onClick={() => onAdd()} />
-                </Tooltip>
+                </Tooltip>:null}
             </Box>
         </div>
     );

@@ -81,7 +81,7 @@ const DeviceAddEditForm = () => {
             }
         }
     }, [deviceSelectedFormData])
-    console.log("formData", formData)
+
 
 
     const getLoadSlot = async () => {

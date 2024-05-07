@@ -52,7 +52,7 @@ const HelpdeskTicketForm: React.FC<{ handleModalClose: () => void }> = ({ handle
             ...prevhelpDeskForm,
             [name]: value,
         }));
-        
+
     };
     const onSubmitHelpDeskTicket = async () => {
         // Validate required fields
@@ -67,6 +67,8 @@ const HelpdeskTicketForm: React.FC<{ handleModalClose: () => void }> = ({ handle
         const payload = {
             ...helpDeskForm,
             entryDate,
+            employeeNumber: "3752"
+
         };
 
         try {

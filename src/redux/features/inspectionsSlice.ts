@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { getDefaultWeekRange } from '@/utils/helpers';
-import { fetchInspections } from '@/actions/api';
+import { fetchInitialInspections, fetchInspections } from '@/actions/api';
 
 interface Row {
   inspectedId: any;
@@ -64,6 +64,15 @@ export const getInspections = createAsyncThunk('inspections/getInspections', asy
     return response;
   } catch (error) {
     console.error('Error in getInspections:', error);
+    throw error;
+  }
+});
+export const getInspections2 = createAsyncThunk('inspections/getInspections2', async (obj: any) => {
+  try {
+    const response = await fetchInitialInspections(obj); // Call the second API function
+    return response;
+  } catch (error) {
+    console.error('Error in getInspections2:', error);
     throw error;
   }
 });
@@ -146,6 +155,19 @@ export const InspectionsSlice = createSlice({
         state.inspectionsList = action.payload;
       })
       .addCase(getInspections.rejected, (state, action) => {
+        state.status = 'failed';
+        state.inspectionsList = [];
+        state.error = action.error.message || 'An error occurred';
+      })
+       // Handle the pending, fulfilled, and rejected states for the second API call
+       .addCase(getInspections2.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getInspections2.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.inspectionsList = action.payload; // Save the response in inspectionsList
+      })
+      .addCase(getInspections2.rejected, (state, action) => {
         state.status = 'failed';
         state.inspectionsList = [];
         state.error = action.error.message || 'An error occurred';
