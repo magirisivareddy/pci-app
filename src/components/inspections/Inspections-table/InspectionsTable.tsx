@@ -47,6 +47,7 @@ interface TableRowData {
 }
 const InspectionsTable = () => {
   const dispatch = useAppDispatch();
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const isInspect = useAppSelector(state => state.modal.value.isInspectModalOpen)
   const { inspectionsList, status } = useAppSelector(state => state.Inspections)
 
@@ -186,7 +187,7 @@ const InspectionsTable = () => {
           InspectorNumber: inspectionForm.inspector.toString() ?? "All",
           VenueId: inspectionForm.venue.toString() ?? "All",
           Is_it: "1",
-          EmployeeNumber: "0004236",
+          EmployeeNumber: employeeInfo?.employeeNumber,
           AdminLevel: "1"
         }
         dispatch(getInspections(initialPayload))

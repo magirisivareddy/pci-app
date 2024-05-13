@@ -10,8 +10,9 @@ import AddGroupInspector from '../add-group-inspector/AddGroupInspector';
 
 const GroupInspectorsFilter = ({ handelSubmit, onChange }: any) => {
     const dispatch = useAppDispatch()
-    const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
-    const isViewList = ["Inspector", "Group Inspector"]
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
+ 
+    const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const { inspectorDropdown, venueDropdown } = useAppSelector(state => state.common)
@@ -35,7 +36,7 @@ const GroupInspectorsFilter = ({ handelSubmit, onChange }: any) => {
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
     const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
     return (<>
-        {!isViewList.includes(userInfo.role) ? <Box display="flex" justifyContent="flex-end" pr={2}>
+        {!isViewList.includes(employeeInfo?.role) ? <Box display="flex" justifyContent="flex-end" pr={2}>
             <Button onClick={onAddGroupInspector} size="small" variant="outlined">Add Group Inspector</Button>
         </Box> : null}
 

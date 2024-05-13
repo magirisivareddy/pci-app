@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
 export default function isAuth(Component: any) {
   return function IsAuth(props: any) {
+    const { employeeInfo } = useAppSelector(state => state.common)
+    const path = useParams
+    console.log("path",path)
+
     const auth = true;
     useEffect(() => {
       if (!auth) {

@@ -16,14 +16,14 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   handelSubmit,
 }) => {
   const dispatch = useAppDispatch()
-  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
+  const {employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const { inspectionForm, selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
   useEffect(() => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
       inspector: 'All',
-      reportStatus: userInfo.role ==="Auditor"?"inspected":"to be inspected",
+      reportStatus: employeeInfo?.role ==="Auditor"?"inspected":"to be inspected",
     }))
     const date = getDefaultWeekRange()
     dispatch(setSelectedDateRange(date))
@@ -38,7 +38,7 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
     dispatch(setSelectedDateRange(dateRange));
   };
   const reportStatusList = []
-  if (userInfo?.role === "Auditor") {
+  if (employeeInfo?.role === "Auditor") {
     reportStatusList.push({ label: "Inspected", value: "inspected" },)
   } else {
     reportStatusList.push({ label: "Inspected", value: "inspected" }, { label: "To Be Inspected", value: "to be inspected" })

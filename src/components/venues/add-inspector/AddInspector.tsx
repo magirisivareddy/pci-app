@@ -17,6 +17,7 @@ interface FormData {
 }
 const AddInspector = ({ onClose }: any) => {
     const dispatch = useAppDispatch();
+    const { employeeInfo } = useAppSelector(state => state.common)
     const [formData, setFormData] = useState<FormData>({
         inspectorType: "Backup Inspector"
     });
@@ -56,7 +57,7 @@ const AddInspector = ({ onClose }: any) => {
                 onClose()
                 setSuccessMessage("");
                 const obj = {
-                    employeeNumber: "0004236",
+                    employeeNumber:  employeeInfo?.employeeNumber,
                     is_it: "1",
                     adminLevel: "1",
                     inspectorType: "1",

@@ -1,74 +1,3 @@
-async function fetchData(apiEndpoint: string, method = 'GET', payload = null) {
- 
-    try {
-        const options = {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Cache-Control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': `${process.env.NEXT_PUBLIC_API_SECRET_KEY}`
-            },
-            body: payload ? JSON.stringify(payload) : undefined,
-        };
-
-        const res = await fetch(`/api/${apiEndpoint}`, options);
-
-        if (!res.ok) {
-            throw new Error(`Error fetching data from ${apiEndpoint}`);
-        }
-
-        const data = await res.json();
-        return data;
-    } catch (error) {
-        console.error(`Error fetching data from ${apiEndpoint}:`, error);
-        throw error; // Re-throw the error to let the calling code handle it
-    }
-}
-// async function fetchData(apiEndpoint: string, method = 'GET', payload = null, queryParams = null) {
-//     try {
-//         // Build the URL with query parameters
-//         const url = `/api/${apiEndpoint}${queryParams ? `?${new URLSearchParams(queryParams)}` : ''}`;
-
-//         const options = {
-//             method,
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: method !== 'GET' ? JSON.stringify(payload) : undefined, // Only include body for non-GET requests
-//         };
-
-//         const res = await fetch(url, options);
-
-//         if (!res.ok) {
-//             throw new Error(`Error fetching data from ${apiEndpoint}`);
-//         }
-
-//         // For DELETE request, no need to parse response body
-//         if (method === 'DELETE') {
-//             return null;
-//         }
-
-//         const data = await res.json();
-//         return data;
-//     } catch (error) {
-//         console.error(`Error fetching data from ${apiEndpoint}:`, error);
-//         throw error; // Re-throw the error to let the calling code handle it
-//     }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const fetchQueryparamsData = async (endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE", payload: any) => {
     const url = `${process.env.PCI_API_URL}${endpoint}`
@@ -107,55 +36,41 @@ export async function fetchInitialInspections(payload: any) {
 
 
 export async function fetchviewReport(payload: any) {
-    // return fetchData('viewReport', 'POST', payload);
     return fetchQueryparamsData('Report/ViewReport', 'POST', payload);
 }
 export async function insertOrUpdateReport(payload: any) {
-    // return fetchData('InsertOrUpdateReport', 'POST', payload);
     return fetchQueryparamsData('report/InsertOrUpdateReport', 'POST', payload);
 }
-export async function getUserInfo(payload: any) {
-    // return fetchData('InsertOrUpdateReport', 'POST', payload);
-    return fetchQueryparamsData('report/getUserInfo', 'POST', payload);
-}
+
 
 
 export async function searchDevices(payload: any) {
-    // return fetchData('SearchDevices', 'POST', payload);
     return fetchQueryparamsData('search/SearchDevices', 'POST', payload);
 }
 
-export async function searchAdmins(payload: any) {    // api integration done need payload
-    // return fetchData('searchAdmins', 'POST', payload);
+export async function searchAdmins(payload: any) {   
     return fetchQueryparamsData('search/SearchAdmins', 'POST', payload);
 }
-export async function searchGroupInspectors(payload: any) {  // api integration done need payload
-    // return fetchData('searchGroupInspectors', 'POST', payload);
+export async function searchGroupInspectors(payload: any) {
     return fetchQueryparamsData('search/SearchGroupInspectors', 'POST', payload);
 }
-export async function searchVenues(payload: any) {  // api integration done need payload
-    // return fetchData('SearchVenues', 'POST', payload);
+export async function searchVenues(payload: any) { 
     return fetchQueryparamsData('search/SearchVenues', 'POST', payload);
 }
-export async function addUpdateDevice(payload: any) {  // api integration done need payload
-    // return fetchData('AddUpdateDevice', 'POST', payload);
+export async function addUpdateDevice(payload: any) {
     return fetchQueryparamsData('device/AddUpdateDevice', 'POST', payload);
 }
 
 export async function addUpdateVenue(payload: any) {
-    // return fetchData('AddUpdateVenue', 'POST', payload);
     return fetchQueryparamsData('venue/AddUpdateVenue', 'POST', payload);
 }
 export async function addVenueToGroupInspector(payload: any) {
-    // return fetchData('AddVenueToGroupInspector', 'POST', payload);
     return fetchQueryparamsData('Inspector/AddVenueToGroupInspector', 'POST', payload);
 }
 export async function changeAdminLevel(payload: any) {
-    // return fetchData('Admin/ChangeAdminLevel', 'POST', payload);
     return fetchQueryparamsData('Admin/ChangeAdminLevel', 'POST', payload);
 }
 export async function addGroupInspector(payload: any) {
-    // return fetchData('Inspector/AddGroupInspector', 'POST', payload);
     return fetchQueryparamsData('Inspector/AddGroupInspector', 'POST', payload);
 }
 export async function addVenueInspector(payload: any) {
@@ -197,6 +112,11 @@ export async function deleteDevice(deviceId:any,employeeNumber: any) {
 export async function getVenueInspectorReport(employeeNumber: any) {
     return fetchQueryparamsData(`Report/GetVenueInspectorReport?employeeNumber=${employeeNumber}`, "GET", null);
 }
+
+export async function fetchEmployeeRole(email: any) {
+    return fetchQueryparamsData(`Common/GetEmployeeRole?email=${email}`, "GET", null);
+}
+
 export async function getVenueStatusReport(employeeNumber: string, venueId?: string, deviceLocation?: string) {
     let url = `Report/GetVenueSummaryReport?employeeNumber=${employeeNumber}`;
 
@@ -209,7 +129,7 @@ export async function getVenueStatusReport(employeeNumber: string, venueId?: str
 
     return fetchQueryparamsData(url, "GET", null);
 }
-//https://esc-api.ktea.com/ktea-inspections/dev/api/Report/GetVenuePassFailSummaryReport?employeeNumber=3752
+
 export async function getVenueSummaryReport(employeeNumber: string, venueId?: string, inspectorId?: string) {
     let url = `Report/GetVenuePassFailSummaryReport?employeeNumber=${employeeNumber}`;
     if (venueId) {
@@ -231,7 +151,6 @@ export async function loadSlotNumbers(deviceId: any) {
     return fetchQueryparamsData(`Device/LoadSlotNumbers?deviceId=${deviceId}`, "GET", null);
 }
 
-//https://esc-api.ktea.com/ktea-inspections/dev/api/Report/GetVenueDevicesFailSummaryReport?employeeNumber=3752
 export async function getVenuePassFailSummaryReport(employeeNumber: string, venueName?: string, inspector?: string) {
     let url = `Report/GetVenueDevicesFailSummaryReport?employeeNumber=${employeeNumber}`;
 

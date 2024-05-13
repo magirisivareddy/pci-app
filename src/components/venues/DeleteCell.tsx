@@ -8,12 +8,12 @@ interface DeleteCellProps {
 }
 
 const DeleteCell: React.FC<DeleteCellProps> = ({ onDelete }) => {
-  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const isViewList = ["Inspector", "Group Inspector"]
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
+  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
   return (
 
-    <IconButton disabled={isViewList.includes(userInfo.role)} onClick={onDelete} sx={{ padding: 0 }}>
-      <RemoveCircleRoundedIcon sx={{ color: isViewList.includes(userInfo.role) ? '#c8cfcf' : '#ed6c02' }} fontSize='small' />
+    <IconButton disabled={isViewList.includes(employeeInfo?.role)} onClick={onDelete} sx={{ padding: 0 }}>
+      <RemoveCircleRoundedIcon sx={{ color: isViewList.includes(employeeInfo?.role) ? '#c8cfcf' : '#ed6c02' }} fontSize='small' />
     </IconButton>
 
   );

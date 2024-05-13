@@ -34,13 +34,13 @@ const Venues = () => {
 
 
     const { venuesData, status, venueInfo } = useAppSelector(state => state.Venues)
-    const { userInfo } = useAppSelector(state => state.common)
+    const { employeeInfo } = useAppSelector(state => state.common)
     const { isAddOrEditVenueModal, isDeletVenueModal, showInspector, isDeletInspectionModal, formData, totalDeviceModal, selectedVenueInspector } = venueInfo
     const [modalType, setModalTyep] = useState("")
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
-    const isViewList = ["Inspector", "Group Inspector"]
+    const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector"]
     useEffect(() => {
         dispatch(clearVenueFilterFormData())
     }, [])
@@ -55,7 +55,7 @@ const Venues = () => {
     }
     const handelSubmit = () => {
         const obj: any = {
-            ...formData, employeeNumber: "0004236", is_it: "1", adminLevel: "1", inspectorType: "1"
+            ...formData, employeeNumber:  employeeInfo?.employeeNumber, is_it: "1", adminLevel: "1", inspectorType: "1"
         }
         Object.keys(obj).forEach(key => {
             obj[key] = String(obj[key]);
@@ -69,16 +69,18 @@ const Venues = () => {
     }, [])
     useEffect(() => {
         const obj = {
-            "employeeNumber": "0004236",
+            "employeeNumber": employeeInfo?.employeeNumber,
             "is_it": "1",
             "adminLevel": "1",
             "inspectorType": "1",
             "venueId": "All",
             "inspectorEmployeeNumber": "All"
         }
+        if (employeeInfo) {
+            dispatch(getVenues(obj))
+        }
 
-        dispatch(getVenues(obj))
-    }, []);
+    }, [employeeInfo]);
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
@@ -159,7 +161,7 @@ const Venues = () => {
         <>
 
             <Box display="flex" justifyContent="flex-end" pr={2}>
-                {!isViewList.includes(userInfo.role) ? <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button> : ""}
+                {!isViewList.includes(employeeInfo?.role) ? <Button onClick={onAddVenue} size="small" variant="outlined">Add Venue</Button> : ""}
 
             </Box>
             <VenuesFilters handleClear={handleClear} formData={formData} handelSubmit={handelSubmit} onChange={onChange} />

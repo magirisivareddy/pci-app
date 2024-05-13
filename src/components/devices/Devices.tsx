@@ -25,8 +25,8 @@ interface FormData {
 }
 const Devices = ({ venueDropdown }: any) => {
   const dispatch = useAppDispatch();
-  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const isViewList = ["Inspector", "Group Inspector"]
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
+  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
   const { devicesInfo, deviceHistory, deviceSelectedFormData, formData, devicesData } = useAppSelector(state => state.devices)
   const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage, deleteDeviceModal } = devicesInfo
   const { isDeviceHistoryModal } = deviceHistory
@@ -168,7 +168,7 @@ const Devices = ({ venueDropdown }: any) => {
     <>
       {deviceLocationStatus && <Loading />}
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
-        {!isViewList.includes(userInfo.role) ? <Button onClick={addDevice} size="small" variant="outlined">
+        {!isViewList.includes(employeeInfo?.role) ? <Button onClick={addDevice} size="small" variant="outlined">
           Add Device
         </Button> : null}
 

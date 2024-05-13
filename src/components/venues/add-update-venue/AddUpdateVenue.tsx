@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 
 const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector(state => state.common)
     const [venue_name, setVenueName] = useState("");
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
             const obj = {
                 venueId: (selectedRow?.venue_id ?? 0).toString(),
                 venueName: venue_name,
-                employeeNumber: "789"
+                employeeNumber: employeeInfo?.employeeNumber,
             };
             const res = await addUpdateVenue(obj);
             setVenueName(venue_name)
@@ -55,7 +56,7 @@ const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
                 dispatch(setAddOrEditVenueModal(false));
                 dispatch(setAddUpdateVenueMessage(null));
                 const obj = {
-                    employeeNumber: "0004236",
+                    employeeNumber: employeeInfo?.employeeNumber,
                     is_it: "1",
                     adminLevel: "1",
                     inspectorType: "1",

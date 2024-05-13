@@ -8,12 +8,12 @@ import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
 
 const VenuesDeleteModal = () => {
     const dispatch =useAppDispatch()
-  
+    const { employeeInfo } = useAppSelector(state => state.common)
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
     const { selectedVenueRow } = useAppSelector(state => state.Venues.venueInfo);
     const isDevices = selectedVenueRow.totalDevices !== 0;
-    const employeeNumber = "0004236";
+    const employeeNumber = employeeInfo?.employeeNumber;
     const venue_id =selectedVenueRow.venue_id.toString()
     const {venuesDeletMessage}=useAppSelector(state=>state.Venues.venueInfo)
 
@@ -30,7 +30,7 @@ const VenuesDeleteModal = () => {
                 dispatch(setDeletVenueModal(false))
                 dispatch(setVenuesDeletMessage(""))
                 const obj = {
-                    "employeeNumber": "0004236",
+                    "employeeNumber":employeeNumber,
                     "is_it": "1",
                     "adminLevel": "1",
                     "inspectorType": "1",

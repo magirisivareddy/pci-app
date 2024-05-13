@@ -11,11 +11,14 @@ import BookOnlineOutlinedIcon from '@mui/icons-material/BookOnlineOutlined';
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
 
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { useMsal } from '@azure/msal-react';
+import { useAppSelector } from '@/redux/hooks';
 
 const Header = ({ onMenuClick }: any) => {
   const theme = useTheme();
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationCount, setNotificationCount] = useState<number>(4);
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
@@ -218,6 +221,12 @@ console.log("accounts",accounts)
                 color: '#008c99'
               }} /> {accounts[0]?.username}
             </MenuItem>
+            <MenuItem  sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <ManageAccountsOutlinedIcon  sx={{
+                color: '#008c99'
+              }} /> {employeeInfo?.role}
+            </MenuItem>
+            
             
             <MenuItem onClick={handleLogout} sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
               <LogoutIcon  sx={{

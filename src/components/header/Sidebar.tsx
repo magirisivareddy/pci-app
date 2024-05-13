@@ -42,14 +42,15 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
     const theme: Theme = useTheme();
     const path = usePathname();
     const router = useRouter();
-    const { userInfo } = useAppSelector(state => state.common);
+    const { employeeInfo } = useAppSelector(state => state.common);
     const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iconColor = "#008c99";
     const hoverBackgroundColor = "#f1fafb";
     const activeBackgroundColor = "#9ddbe0";
+    const inspetorList =["BackupInspector","Inspector","MainInspector"]
 
-    console.log("userInfo", userInfo);
+  
 
     useEffect(() => {
         const storedOpenSubMenus = localStorage.getItem('openSubMenus');
@@ -89,13 +90,13 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
         if (path) router.push(path);
     };
     const handleEffect = useCallback(() => {
-        if (userInfo?.role === "IT") {
+        if (employeeInfo?.role === "IT") {
             console.log("calll");
             router.push('/venues/');
         }
-    }, [userInfo, router]);
+    }, [employeeInfo, router]);
 
-    useEffect(handleEffect, [userInfo]);
+    useEffect(handleEffect, [employeeInfo]);
     interface MenuItem {
         text: string;
         icon: React.ReactNode;
@@ -105,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
 
     let menuItems: MenuItem[] = [];
 
-    if (userInfo?.role === "Admin") {
+    if (employeeInfo?.role === "Admin") {
         menuItems = [
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
       
@@ -124,7 +125,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
                 ]
             },
         ];
-    } else if (userInfo?.role === "Inspector") {
+    } else if (inspetorList.includes(employeeInfo?.role)) {
         menuItems.push(
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
@@ -141,19 +142,19 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
             },
         );
 
-    } else if (userInfo?.role === "IT") {
+    } else if (employeeInfo?.role === "IT") {
         menuItems.push(
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
             { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
         );
-    } else if (userInfo?.role === "Auditor") {
+    } else if (employeeInfo?.role === "Auditor") {
         menuItems.push(
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
             { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
         );
     }
-    else if (userInfo?.role === "Group Inspector") {
+    else if (employeeInfo?.role === "GroupInspector") {
         menuItems.push(
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
@@ -239,5 +240,5 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
         </Drawer>
     );
 });
-
+Sidebar.displayName = 'Sidebar';
 export default Sidebar;

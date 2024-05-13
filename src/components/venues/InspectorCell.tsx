@@ -22,8 +22,8 @@ interface InspectorCellProps {
 
 const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }) => {
     const dispatch = useAppDispatch();
-    const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
-    const isViewList = ["Inspector"]
+    const {  employeeInfo} = useAppSelector((state: { common: any; }) => state.common)
+    const isViewList = ["Inspector","BackupInspector","MainInspector"]
 
     // Check if MI is present
     const hasMainInspector = inspectorDetails.some((inspector: Inspector) => inspector.inspectorType === 1);
@@ -122,7 +122,7 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                 )}
             </div>
             <Box className='add-inspector-btn'>
-            {!isViewList.includes(userInfo.role) ?
+            {!isViewList.includes(employeeInfo?.role) ?
                 <Tooltip color='primary' title="Add Inspector...">
                     <AddCircleOutlineIcon sx={{ cursor: "pointer" }} color='primary' onClick={() => onAdd()} />
                 </Tooltip>:null}

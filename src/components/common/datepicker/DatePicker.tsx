@@ -18,7 +18,6 @@ interface RangeDatePickerProps {
 
 const RangeDatePicker: React.FC<RangeDatePickerProps> = ({ defaultDateRange, onDateRangeChange }) => {
   const dispatch = useAppDispatch()
-  const { userInfo } = useAppSelector((state: { common: any; }) => state.common)
   const { selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   // const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange || getDefaultWeekRange());
   const [startDate, endDate] = selectedDateRange;
