@@ -3,7 +3,7 @@ import { getVenueSummaryReport } from '@/actions/api';
 import CustomTable from '@/components/common/table/Table';
 import VenuesFilters from '@/components/report/failed-devices-report/FailedDevicesFilter';
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Box, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx';
@@ -21,6 +21,7 @@ type VenuesProps = {
 }
 const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   const dispatch = useAppDispatch()
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const [venueSummaryData, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -71,11 +72,11 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
-    const employeeNumber = "3752"
+    const employeeNumber = employeeInfo?.employeeNumber;
     getVenueInspectorList(employeeNumber)
   }, [])
   const handelSubmit = () => {
-    const employeeNumber = "3752"
+    const employeeNumber = employeeInfo?.employeeNumber;
     let venueId = formData.venueId
     let inspectorId = formData.inspectorId
     if (formData.venueId === "All") {

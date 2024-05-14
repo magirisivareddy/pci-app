@@ -26,29 +26,33 @@ interface FormData {
 const Devices = ({ venueDropdown }: any) => {
   const dispatch = useAppDispatch();
   const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
+  const roles = employeeInfo?.role?.split(",");
+  const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector"]
   const { devicesInfo, deviceHistory, deviceSelectedFormData, formData, devicesData } = useAppSelector(state => state.devices)
   const { deviceModalType, isDeviceModal, deviceLocationErrorMessage, deviceLocationStatus, deviceLocationSuccessMessage, deleteDeviceModal } = devicesInfo
   const { isDeviceHistoryModal } = deviceHistory
   useEffect(() => {
     dispatch(clearDeviceFilterFormData())
     const obj = {
-      "is_It": "1",
+      is_It: roles.includes("IT") ? '1' : "0",
       "venueId": "All",
       "commonAssetName": "",
       "serialNumber": "",
       "assetNumber": "",
       "terminalId": "",
       "profileId": "",
-      "employeeNumber": "3752"
+      "employeeNumber": employeeInfo?.employeeNumber
     }
     dispatch(getVenue())
     dispatch(getInspectors())
-    dispatch(getDevices(obj))
-  }, []);
+    if (employeeInfo) {
+      dispatch(getDevices(obj))
+    }
+
+  }, [employeeInfo]);
   const handelSearchDevices = () => {
     const obj: any = {
-      ...formData, employeeNumber: "3752", is_It: "1"
+      ...formData, employeeNumber: employeeInfo?.employeeNumber, is_It: roles.includes("IT") ? '1' : "0",
     }
     Object.keys(obj).forEach(key => {
       obj[key] = String(obj[key]);
@@ -168,9 +172,12 @@ const Devices = ({ venueDropdown }: any) => {
     <>
       {deviceLocationStatus && <Loading />}
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
-        {!isViewList.includes(employeeInfo?.role) ? <Button onClick={addDevice} size="small" variant="outlined">
-          Add Device
-        </Button> : null}
+        {!roles.some((role: string) => role === "Inspector" || role === "GroupInspector" || role === "BackupInspector" || role === "MainInspector") ? (
+          <Button onClick={addDevice} size="small" variant="outlined">
+            Add Device
+          </Button>
+        ) : null}
+
 
         <Button onClick={handleExport} size="small" variant="outlined">
           Export to Excel

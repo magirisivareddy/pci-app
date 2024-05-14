@@ -9,13 +9,14 @@ import React, { useState } from 'react'
 
 const DeviceDeleteModal = () => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
     const { deviceSelectedFormData , formData} = useAppSelector(state => state.devices)
 
     const onDeleteVenue = async () => {
-        const  employeeNumber= "3752";
+        const  employeeNumber= employeeInfo?.employeeNumber;
         try {
             setLoading(true)
             const res = await deleteDevice(deviceSelectedFormData?.deviceId,employeeNumber)
@@ -33,7 +34,7 @@ const DeviceDeleteModal = () => {
                     "assetNumber":formData?.assetNumber?? "",
                     "terminalId":formData?.terminalId?? "",
                     "profileId": formData?.profileId??"",
-                    "employeeNumber": "3752"
+                    "employeeNumber": employeeNumber
                   }
                   dispatch(getDevices(obj))
              

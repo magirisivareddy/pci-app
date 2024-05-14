@@ -11,6 +11,7 @@ export const DeleteAdmiin = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [isloading, setLoading] = useState(false)
     const { selectedAdminRow } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const onDelete = async () => {
         try {
             setLoading(true)
@@ -26,7 +27,7 @@ export const DeleteAdmiin = () => {
                 "lastName": "",
                 "firstName": "",
                 "badgeNumber": "",
-                "employeeNumber": "",
+                "employeeNumber": employeeInfo?.employeeNumber,
                 "is_It": "2"
             }
             dispatch(getAdminList(obj))

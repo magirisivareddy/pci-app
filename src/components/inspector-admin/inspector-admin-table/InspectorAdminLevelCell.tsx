@@ -1,6 +1,6 @@
 import { changeAdminLevel } from '@/actions/api'
 import { getAdminList, setAdminLevelStatus, setAdminLevelStatusLoader } from '@/redux/features/InspectorAdminSlice'
-import { useAppDispatch } from '@/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Box, MenuItem, Select } from '@mui/material'
 import React, { useState } from 'react'
 
@@ -13,6 +13,7 @@ interface AdminListPayload {
 }
 const InspectorAdminLevelCell = ({ row }: any) => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const [adminLevel, setAdminLevel] = useState("")
     const handleChange = async (e: any) => {
         setAdminLevel(e.target.value)
@@ -33,7 +34,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
                 lastName: "",
                 firstName: "",
                 badgeNumber: "",
-                employeeNumber: "",
+                employeeNumber: employeeInfo?.employeeNumber,
                 is_It: "2"
             };
 

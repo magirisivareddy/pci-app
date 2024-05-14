@@ -12,6 +12,7 @@ import { format } from 'date-fns'
 
 const MissedInspection = () => {
   const dispatch = useAppDispatch()
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const { selectedDateRange , inspectionForm} = useAppSelector(state => state.Inspections?.inspectionFilterData)
   const { inspectionsList } = useAppSelector(state => state.Inspections)
  
@@ -23,7 +24,7 @@ const MissedInspection = () => {
     ReportStatus: "missed",
     VenueId: "All",
     Is_it: "1",
-    EmployeeNumber: "10164",
+    EmployeeNumber: employeeInfo?.employeeNumber,
     AdminLevel: "1"
 }
   useEffect(() => {
@@ -39,7 +40,7 @@ const MissedInspection = () => {
       ReportStatus: "missed",
       VenueId: inspectionForm.venue.toString(),
       Is_it: "1",
-      EmployeeNumber: "10164",
+      EmployeeNumber: employeeInfo?.employeeNumber,
       AdminLevel: "1"
   }
   dispatch(getInspections(obj))

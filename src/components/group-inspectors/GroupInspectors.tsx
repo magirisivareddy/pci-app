@@ -16,9 +16,10 @@ type VenuesProps = {
 
 const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
   const dispatch = useAppDispatch()
-  const {formData}=useAppSelector(state=>state.groupInspector.groupInspectorsInfo)
-  
-  
+  const { formData } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
+
+
   const onChange = (value: any, name: any) => {
     dispatch(setGroupInspectorsFilterFormData({ value, name }))
 
@@ -30,17 +31,17 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
     const obj = {
       venueId: 'All',
       inspectorEmployeeNumber: 'All',
-      is_It: '1'
+      is_It: employeeInfo.role === "IT" ? '1' : "0"
     };
-  
+
     dispatch(getGroupInspectors(obj));
-    
+
   }, []);
   const handelSubmit = (event: any) => {
     const obj: any = {
       venueId: formData.venue,
       inspectorEmployeeNumber: formData.inspector,
-      is_It: '1'
+      is_It: employeeInfo.role === "IT" ? '1' : "0"
     }
     Object.keys(obj).forEach(key => {
       obj[key] = String(obj[key]);
@@ -52,7 +53,7 @@ const GroupInspectors: React.FC<VenuesProps> = ({ dropdowns }) => {
       <GroupInspectorsFilter
         handelSubmit={handelSubmit}
         onChange={onChange}
-       
+
 
       />
       <GroupInspectorsTable

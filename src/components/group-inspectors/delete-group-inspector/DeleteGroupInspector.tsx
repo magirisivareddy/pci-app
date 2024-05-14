@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 
 const DeleteGroupInspector = () => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isLoading, setLoading] = useState(false)
@@ -20,7 +21,7 @@ const DeleteGroupInspector = () => {
             const payload = {
                 venueId: 'All',
                 inspectorEmployeeNumber: 'All',
-                is_It: '1'
+                is_It: employeeInfo.role === "IT" ? '1' : "0"
             }
             setLoading(false)
             setTimeout(() => {

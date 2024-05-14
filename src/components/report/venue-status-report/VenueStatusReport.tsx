@@ -4,7 +4,7 @@ import CustomTable from '@/components/common/table/Table';
 import VenueStatusFilter from './VenueStatusFilter';
 import { getVenueStatusReport, getVenueSummaryReport } from '@/actions/api';
 import { format } from 'date-fns';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getVenue } from '@/redux/features/CommonSlice';
 
 // Define the FormData interface
@@ -16,6 +16,7 @@ interface FormData {
 // Define the VenueStatusReport functional component
 const VenueStatusReport = () => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const headers = [
         { id: 'venueName', label: 'Venue Name' },
         { id: 'deviceId', label: 'Device Id' },
@@ -85,7 +86,7 @@ const VenueStatusReport = () => {
     };
 
     // Use the employeeNumber constant
-    const employeeNumber = "3752";
+    const employeeNumber = employeeInfo?.employeeNumber;
     useEffect(() => {
         dispatch(getVenue())
     }, [])

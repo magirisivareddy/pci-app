@@ -9,16 +9,16 @@ interface EditableCellProps {
 
 const EditableCell: React.FC<EditableCellProps> = ({ onEdit }) => {
   const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
+  const isViewList = ["Inspector", "GroupInspector","BackupInspector","Audit"]
 
   return (
     <IconButton
-      disabled={isViewList.includes(employeeInfo?.role)}
+      disabled={isViewList.includes(employeeInfo.role)}
       onClick={onEdit}
- 
+      // className={!isViewList.includes(userInfo.role) ? "sx-custom-button" : ""}
       sx={{ padding: 0 }}>
 
-      <EditIcon sx={{color:isViewList.includes(employeeInfo?.role) ? '#c8cfcf' : '#008c99'}} fontSize='small' />
+      <EditIcon sx={{color:isViewList.includes(employeeInfo.role) ? '#c8cfcf' : '#008c99'}} fontSize='small' />
     </IconButton>
   );
 };

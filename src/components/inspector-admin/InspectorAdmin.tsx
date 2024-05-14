@@ -9,7 +9,7 @@ import { Alert } from '@mui/material'
 const InspectorAdmin = () => {
   const dispatch = useAppDispatch()
   const { adminLevelStatus, formData } = useAppSelector(state => state.inspectorAdmin.inspectorAdminInfo)
- 
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const onChange = (value: any, name: any) => {
     dispatch(setInspectorAdminFilterFormData({ value, name }))
   }
@@ -20,7 +20,7 @@ const InspectorAdmin = () => {
       "lastName": "",
       "firstName": "",
       "badgeNumber": "",
-      "employeeNumber": "",
+      "employeeNumber": employeeInfo?.employeeNumber,
       "is_It": "2"
     }
     dispatch(getAdminList(obj))

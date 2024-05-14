@@ -1,18 +1,19 @@
 import { updatePciLabeled } from '@/actions/api'
 import { getDevices, setDeviceLocationErrorMessage, setDeviceLocationStatus, setDeviceLocationSuccessMessage } from '@/redux/features/DevicesSlice'
-import { useAppDispatch } from '@/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Checkbox, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-const employeeNumber = "4236"
+
 const DeviceLocationCell = ({ row }: any) => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const deviceId = row.deviceId
     const defaultPciLabeled = row.pciLabeled === 1 ? true : false
     const [pciLabeled, setPciLabeled] = useState(defaultPciLabeled)
+    const employeeNumber = employeeInfo?.employeeNumber;
     const onChangeDeviceLocation = async (e: any) => {
         setPciLabeled(e.target.checked);
-
         dispatch(setDeviceLocationStatus(true))
         try {
             const res = await updatePciLabeled(deviceId, employeeNumber)
@@ -26,7 +27,7 @@ const DeviceLocationCell = ({ row }: any) => {
                 "assetNumber": "",
                 "terminalId": "",
                 "profileId": "",
-                "employeeNumber": "3752"
+                "employeeNumber": employeeNumber
             }
             dispatch(getDevices(obj))
             setTimeout(() => {

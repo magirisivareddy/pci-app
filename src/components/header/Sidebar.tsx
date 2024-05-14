@@ -34,6 +34,7 @@ interface SidebarProps {
     variant: "permanent" | "persistent" | "temporary";
     onClose: () => void;
 }
+type Role = "Admin" | "GroupInspector" | "MainInspector" | "BackupInspector" | "IT" | "Audit";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 73;
@@ -42,19 +43,26 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
     const theme: Theme = useTheme();
     const path = usePathname();
     const router = useRouter();
-    const { employeeInfo } = useAppSelector(state => state.common);
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common);
+
     const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iconColor = "#008c99";
     const hoverBackgroundColor = "#f1fafb";
     const activeBackgroundColor = "#9ddbe0";
     const inspetorList =["BackupInspector","Inspector","MainInspector"]
-
-  
-
+    // const roles: Role[] = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
+    // const rolePriority: Record<Role, number> = {
+    //     Admin: 1,
+    //     GroupInspector: 2,
+    //     MainInspector: 3,
+    //     BackupInspector: 4,
+    //     IT: 5,
+    //     Audit: 6
+    // };
+    // const sortedRoles = roles?.sort((a, b) => rolePriority[a] - rolePriority[b]);
     useEffect(() => {
         const storedOpenSubMenus = localStorage.getItem('openSubMenus');
-
         if (storedOpenSubMenus) {
             setOpenSubMenus(JSON.parse(storedOpenSubMenus));
         }
@@ -104,12 +112,94 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
         children?: MenuItem[];
     }
 
+
+
+
+
+    // Initialize menuItems array
+    // let menuItems: MenuItem[] = [];
+    // if (sortedRoles) {
+    //     // Iterate through the roles and apply conditions accordingly
+    //     for (const role of sortedRoles) {
+    //         if (role === "Admin") {
+    //             menuItems = [
+    //                 { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+    //                 { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+    //                 { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+    //                 { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
+    //                 { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+    //                 { text: 'Inspector Admin', icon: <PersonAddAltOutlinedIcon />, path: '/inspector-admin/' },
+    //                 {
+    //                     text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+    //                         { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+    //                         { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+    //                         { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+    //                         { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+    //                         { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
+    //                     ]
+    //                 },
+    //             ];
+    //             // Once "Admin" role is found, break out of the loop
+    //             break;
+    //         }
+    //         // Add conditions for other roles here
+    //         else if (role === "GroupInspector") {
+    //             menuItems.push(
+    //                 { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+    //                 { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+    //                 { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+    //                 { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
+    //                 { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+    //                 {
+    //                     text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+    //                         { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+    //                         { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+    //                         { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+    //                         { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+    //                         { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
+    //                     ]
+    //                 },
+    //             );
+    //         }
+    //         else if (role === "BackupInspector" || role === "MainInspector") {
+    //             menuItems.push(
+    //                 { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+    //                 { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+    //                 { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
+    //                 { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+    //                 {
+    //                     text: 'Report', icon: <AssessmentOutlinedIcon />, children: [
+    //                         { text: 'Venue Status Report', icon: <StarBorder />, path: '/report/venue-status-report/' },
+    //                         { text: 'Venue Summary', icon: <StarBorder />, path: '/report/venue-summary/' },
+    //                         { text: 'Failed Devices Report', icon: <StarBorder />, path: '/report/failed-devices-report/' },
+    //                         { text: 'Venue Personnel', icon: <StarBorder />, path: '/report/venue-personnel/' },
+    //                         { text: 'Missed Inspection', icon: <StarBorder />, path: '/report/missed-inspection/' },
+    //                     ]
+    //                 },
+    //             );
+    //         }
+    //         else if (role === "IT") {
+    //             menuItems.push(
+    //                 { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+    //                 { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },);
+    //         }
+    //         else if (role === "Audit") {
+    //             menuItems.push(
+    //                 { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
+    //                 { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
+    //                 { text: 'Information', icon: <InfoOutlinedIcon />, path: '/information/' },
+    //             );
+    //         }
+    //     }
+    // }
+
+
     let menuItems: MenuItem[] = [];
 
     if (employeeInfo?.role === "Admin") {
         menuItems = [
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
-      
+
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
             { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
             { text: 'Group Inspectors', icon: <Diversity1OutlinedIcon />, path: '/groupinspectors/' },
@@ -147,7 +237,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
             { text: 'Devices', icon: <DeviceHubOutlinedIcon />, path: '/devices/' },
         );
-    } else if (employeeInfo?.role === "Auditor") {
+    } else if (employeeInfo?.role === "Audit") {
         menuItems.push(
             { text: 'Inspections', icon: <ManageSearchOutlinedIcon />, path: '/' },
             { text: 'Venues', icon: <PinDropOutlinedIcon />, path: '/venues/' },
@@ -172,6 +262,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ open, variant, onClose }) 
             },
         );
     }
+
+
+
 
     const renderMenuItems = (items: MenuItem[], level = 0, parentIndex = ''): React.ReactNode => {
         return items.map((item, index) => {

@@ -29,6 +29,7 @@ interface FormData {
 
 const DeviceAddEditForm = () => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const { devicesInfo, deviceSelectedFormData } = useAppSelector((state) => state.devices);
     const filterDeviceForm = useAppSelector((state) => state.devices.formData);
 
@@ -246,7 +247,7 @@ const DeviceAddEditForm = () => {
 
         try {
             setLoading(true);
-            let payLoad: any = { ...formData, employeeNumber: "3752" };
+            let payLoad: any = { ...formData, employeeNumber: employeeInfo?.employeeNumber };
             if (deviceSelectedFormData?.deviceId) {
                 // If deviceFormData exists and has deviceId property
                 payLoad = {
@@ -273,7 +274,7 @@ const DeviceAddEditForm = () => {
                 dispatch(setDeviceSelectedFormData(null))
                 const obj = {
                     is_It: "1",
-                    employeeNumber: "3752",
+                    employeeNumber: employeeInfo?.employeeNumber,
                     venueId: filterDeviceForm.venueId.toString() ?? "All",
                     commonAssetName: filterDeviceForm.commonAssetName ?? "",
                     serialNumber: filterDeviceForm.serialNumber.toString() ?? "",

@@ -12,8 +12,8 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
     const [message, setMessage] = useState("")
     const [isLoading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
-    
-    const { selectedGroupInspector , formData} = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
+    const { selectedGroupInspector, formData } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
 
     const onChange = (val: any) => {
         setErrorMessage("")
@@ -47,7 +47,7 @@ const AddVenueToGroupInspector = ({ venues, }: any) => {
             const payload = {
                 venueId: formData.venue.toString(),
                 inspectorEmployeeNumber: formData.inspector.toString(),
-                is_It: '1'
+                is_It: employeeInfo.role === "IT" ? '1' : "0"
             };
 
             setLoading(false);

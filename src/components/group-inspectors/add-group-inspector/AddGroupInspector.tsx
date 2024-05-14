@@ -9,13 +9,14 @@ import EmailIcon from '@mui/icons-material/Email';
 import { addGroupInspector, doLookup } from '@/actions/api';
 import Loading from '@/app/loading';
 import { getGroupInspectors } from '@/redux/features/GroupInspectorsSlice';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 interface FormData {
     venue: any;
 }
 const AddGroupInspector = ({ venues, onClose }: any) => {
     const dispatch = useAppDispatch()
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const [formData, setFormData] = useState<FormData>({
         venue: "101"
     });
@@ -54,7 +55,7 @@ const AddGroupInspector = ({ venues, onClose }: any) => {
                 const obj = {
                     venueId: 'All',
                     inspectorEmployeeNumber: 'All',
-                    is_It: '1'
+                    is_It: employeeInfo.role === "IT" ? '1' : "0"
                 };
                 dispatch(getGroupInspectors(obj));
                 setSuccessMessage("")

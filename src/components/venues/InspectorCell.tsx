@@ -23,7 +23,7 @@ interface InspectorCellProps {
 const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }) => {
     const dispatch = useAppDispatch();
     const {  employeeInfo} = useAppSelector((state: { common: any; }) => state.common)
-    const isViewList = ["Inspector","BackupInspector","MainInspector"]
+    const isViewList = ["BackupInspector","MainInspector","Audit"]
 
     // Check if MI is present
     const hasMainInspector = inspectorDetails.some((inspector: Inspector) => inspector.inspectorType === 1);

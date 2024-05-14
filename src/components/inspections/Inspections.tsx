@@ -17,31 +17,57 @@ const Inspections = () => {
     const dispatch = useAppDispatch()
     const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections?.inspectionFilterData)
-    const { inspectionsList, status } = useAppSelector(state => state.Inspections)
     const { isloading } = useAppSelector(state => state.common)
     const [startDate, endDate] = selectedDateRange;
     let dateRange = selectedDateRange
+    // const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
     const previousWeekRange: any = handlePreviousWeek(startDate);
+
     const initialPayload = {
-        FromDate: employeeInfo?.role === "Auditor" ? previousWeekRange && format(previousWeekRange[0], 'yyyy/MM/dd') : previousWeekRange[0] ? format(dateRange[0], 'yyyy/MM/dd') : null,
-        ToDate: employeeInfo?.role === "Auditor" ? previousWeekRange && format(previousWeekRange[1], 'yyyy/MM/dd') : previousWeekRange[1] ? format(dateRange[1], 'yyyy/MM/dd') : null,
+        FromDate: format(dateRange[0], 'yyyy/MM/dd'),
+        ToDate: format(dateRange[1], 'yyyy/MM/dd'),
         InspectorNumber: "All",
-        ReportStatus: employeeInfo?.role === "Auditor" ? "inspected" : "to be inspected",
+        ReportStatus: "to be inspected",
         VenueId: "All",
         Is_it: "1",
         EmployeeNumber: employeeInfo?.employeeNumber,
         AdminLevel: "1"
     }
     useEffect(() => {
-        if (employeeInfo?.role === "Auditor") {
+        if (employeeInfo?.role === "Audit") {
             const previousWeekRange = handlePreviousWeek(startDate);
             dateRange = previousWeekRange
             dispatch(setSelectedDateRange(dateRange));
         }
     }, [employeeInfo]);
     useEffect(() => {
-        dispatch(getInspections(initialPayload))
+        if (employeeInfo?.role === "Audit") {
+            const auditPayload = {
+                FromDate: format(previousWeekRange[0], 'yyyy/MM/dd'),
+                ToDate: format(previousWeekRange[1], 'yyyy/MM/dd'),
+                InspectorNumber: "All",
+                ReportStatus: "inspected",
+                VenueId: "All",
+                Is_it: "1",
+                EmployeeNumber: employeeInfo?.employeeNumber,
+                AdminLevel: "1"
+            };
+            dispatch(getInspections(auditPayload));
+        }
     }, [employeeInfo]);
+    useEffect(() => {
+        if (employeeInfo?.role && employeeInfo.role !== "Audit") {
+            dispatch(getInspections(initialPayload));
+        }
+    }, [employeeInfo]);
+
+
+    useEffect(() => {
+        dispatch(getVenue());
+        dispatch(getInspectors());
+    }, []); // Empty dependency array to ensure it runs only once
+
+
     useEffect(() => {
         dispatch(getVenue())
         dispatch(getInspectors())

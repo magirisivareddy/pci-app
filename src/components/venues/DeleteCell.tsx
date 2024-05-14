@@ -9,7 +9,8 @@ interface DeleteCellProps {
 
 const DeleteCell: React.FC<DeleteCellProps> = ({ onDelete }) => {
   const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
+  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector","Audit"]
+  const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
   return (
 
     <IconButton disabled={isViewList.includes(employeeInfo?.role)} onClick={onDelete} sx={{ padding: 0 }}>

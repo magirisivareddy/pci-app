@@ -16,14 +16,15 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   handelSubmit,
 }) => {
   const dispatch = useAppDispatch()
-  const {employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const { inspectionForm, selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
+  const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
   useEffect(() => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
       inspector: 'All',
-      reportStatus: employeeInfo?.role ==="Auditor"?"inspected":"to be inspected",
+      reportStatus: roles?.includes("Audit") ? "inspected" : "to be inspected",
     }))
     const date = getDefaultWeekRange()
     dispatch(setSelectedDateRange(date))
@@ -38,34 +39,34 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
     dispatch(setSelectedDateRange(dateRange));
   };
   const reportStatusList = []
-  if (employeeInfo?.role === "Auditor") {
+  if (roles?.includes("Audit")) {
     reportStatusList.push({ label: "Inspected", value: "inspected" },)
   } else {
     reportStatusList.push({ label: "Inspected", value: "inspected" }, { label: "To Be Inspected", value: "to be inspected" })
   }
+
   const handleClear = () => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
       inspector: 'All',
       reportStatus: 'to be inspected',
     }))
-    const [startDate, endDate] = selectedDateRange;
-    const previousWeekRange = handlePreviousWeek(startDate);
-    dispatch(setSelectedDateRange(previousWeekRange));
-    // const date = getDefaultWeekRange()
-    // dispatch(setSelectedDateRange(date))
+    const date = getDefaultWeekRange()
+    dispatch(setSelectedDateRange(date))
     const initialPayload = {
-      FromDate: previousWeekRange[0] ? format(previousWeekRange[0], 'yyyy/MM/dd') : null,
-      ToDate: previousWeekRange[1] ? format(previousWeekRange[1], 'yyyy/MM/dd') : null,
+      FromDate: date[0] ? format(date[0], 'yyyy/MM/dd') : null,
+      ToDate: date[1] ? format(date[1], 'yyyy/MM/dd') : null,
       InspectorNumber: "All",
       ReportStatus: "to be inspected",
       VenueId: "All",
       Is_it: "1",
-      EmployeeNumber: "0004236",
+      EmployeeNumber: employeeInfo?.employeeNumber,
       AdminLevel: "1"
     }
+    if (!roles?.includes("Audit")) {
+      dispatch(getInspections(initialPayload))
+    }
 
-    dispatch(getInspections(initialPayload))
 
   }
   const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
@@ -101,12 +102,13 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
       </Grid>
       <Grid item xs={12} md={2}>
         <SelectInput
-          selectedOption={inspectionForm.reportStatus}
+          selectedOption={roles?.includes("Audit") ? "inspected" : inspectionForm.reportStatus}
           onChange={onChange}
           label={'Report Status'}
           options={reportStatusList}
           name={'reportStatus'}
-          id={'reportStatus'} size={'small'}
+          id={'reportStatus'}
+          size={'small'}
         />
       </Grid>
       <Grid item xs={12} md={2.2} gap={2}>

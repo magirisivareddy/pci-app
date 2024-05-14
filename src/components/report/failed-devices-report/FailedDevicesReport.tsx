@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { getVenuePassFailSummaryReport } from '@/actions/api';
 import { useDispatch } from 'react-redux';
 import { getVenue, getInspectors } from '@/redux/features/CommonSlice';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Box, Button } from '@mui/material';
 import * as XLSX from 'xlsx';
 
@@ -36,13 +36,13 @@ const FailedDevicesReport = () => {
     {
       id: 'deviceStatus', label: 'Device Status', customRender: (value: any, row: any): JSX.Element => (
         <span>
-          {row.deviceStatus === -1 ?  <span style={{ color: "#d32f2f" }}> FAIL</span> : ""}
+          {row.deviceStatus === -1 ? <span style={{ color: "#d32f2f" }}> FAIL</span> : ""}
         </span>
       )
     },
     { id: 'reason', label: 'Reason' },
     { id: 'notes', label: 'Notes' },
- 
+
     { id: 'inspector', label: 'Inspector' },
     {
       id: 'inspectionActualDate', label: 'Inspection Actual Date', customRender: (value: any, row: any): JSX.Element => (
@@ -57,9 +57,10 @@ const FailedDevicesReport = () => {
     inspectorId: 'All'
   });
   const dispatch = useAppDispatch()
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const [failedDevicesReportData, setData] = useState([])
   const [isLoading, setLoading] = useState(true)
-  const employeeNumber = "3752"
+  const employeeNumber = employeeInfo?.employeeNumber
   const onClear = () => {
     setFormData({
       venueId: 'All',
@@ -81,12 +82,14 @@ const FailedDevicesReport = () => {
   }
 
   useEffect(() => {
+    if (employeeNumber) {
+      getVenueInspectorList()
+    }
+  }, [employeeNumber])
+  useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
-    getVenueInspectorList()
   }, [])
-
-
   const onChange = (value: any, name: any) => {
     setFormData((prevData) => ({
       ...prevData,

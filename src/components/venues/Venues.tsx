@@ -40,7 +40,7 @@ const Venues = () => {
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
-    const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector"]
+    const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector", "Audit"]
     useEffect(() => {
         dispatch(clearVenueFilterFormData())
     }, [])
@@ -55,7 +55,7 @@ const Venues = () => {
     }
     const handelSubmit = () => {
         const obj: any = {
-            ...formData, employeeNumber:  employeeInfo?.employeeNumber, is_it: "1", adminLevel: "1", inspectorType: "1"
+            ...formData, employeeNumber: employeeInfo?.employeeNumber, is_it: "1", adminLevel: "1", inspectorType: "1"
         }
         Object.keys(obj).forEach(key => {
             obj[key] = String(obj[key]);

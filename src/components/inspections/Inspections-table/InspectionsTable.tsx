@@ -116,6 +116,8 @@ const InspectionsTable = () => {
   //   }
   // }
 
+  console.log("inspectionsList",inspectionsList)
+
 
 
   const openPopOver = Boolean(anchorEl);
