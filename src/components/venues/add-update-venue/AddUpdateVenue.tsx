@@ -57,7 +57,7 @@ const AddUpdateVenue = ({ selectedRow, modalType, setSelectedRow }: any) => {
                 dispatch(setAddUpdateVenueMessage(null));
                 const obj = {
                     employeeNumber: employeeInfo?.employeeNumber,
-                    is_it: "1",
+                    is_it:  employeeInfo?.role === "IT"?"1":"0",
                     adminLevel: "1",
                     inspectorType: "1",
                     venueId: formData.venueId.toString() ?? "All",

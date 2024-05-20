@@ -21,14 +21,14 @@ const InspectorAdmin = () => {
       "firstName": "",
       "badgeNumber": "",
       "employeeNumber": employeeInfo?.employeeNumber,
-      "is_It": "2"
+      "is_It": employeeInfo?.role === "IT" ? "1" : "0",
     }
     dispatch(getAdminList(obj))
 
   }, []);
   const handelSearch = () => {
     const obj = {
-      ...formData, is_It: "2"
+      ...formData, is_It: employeeInfo?.role === "IT" ? "1" : "0",
     }
     dispatch(getAdminList(obj))
   }

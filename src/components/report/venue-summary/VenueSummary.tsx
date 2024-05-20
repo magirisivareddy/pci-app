@@ -24,10 +24,17 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const [venueSummaryData, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
+  const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector"]
   const [formData, setFormData] = useState<FormData>({
     venueId: 'All',
     inspectorId: 'All'
   });
+  useEffect(() => {
+    setFormData({
+      venueId: 'All',
+      inspectorId: isViewList.includes(employeeInfo?.role) ? employeeInfo.employeeNumber : 'All'
+    })
+  }, [employeeInfo])
   const onChange = (value: any, name: any) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -38,19 +45,19 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
     { id: 'venueName', label: 'Venue Name' },
     { id: 'deviceName', label: 'Device Name' },
     {
-      id: 'deviceStatus', label: 'Device Status', 
+      id: 'deviceStatus', label: 'Device Status',
       customRender: (value: any, row: any): JSX.Element => (
         <span>
-   
-            {row.deviceStatus === 1 ? (
-                <span style={{color: "green"}}>PASS</span>
-            ) : row.deviceStatus === 2 ? (
-                <span style={{color: "#ff9800"}}> QUESTIONABLE</span>
-            ) : (
-                <span style={{color: "#d32f2f"}}>FAIL</span>
-            )}
+
+          {row.deviceStatus === 1 ? (
+            <span style={{ color: "green" }}>PASS</span>
+          ) : row.deviceStatus === 2 ? (
+            <span style={{ color: "#ff9800" }}> QUESTIONABLE</span>
+          ) : (
+            <span style={{ color: "#d32f2f" }}>FAIL</span>
+          )}
         </span>
-    )
+      )
     },
     { id: 'notes', label: 'Notes' },
     { id: 'inspector', label: 'Inspector' },
@@ -72,13 +79,19 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
-    const employeeNumber = employeeInfo?.employeeNumber;
-    getVenueInspectorList(employeeNumber)
   }, [])
+  useEffect(() => {
+    let inspectorId = isViewList.includes(employeeInfo?.role) ? employeeInfo.employeeNumber : ''
+    const employeeNumber = employeeInfo?.employeeNumber;
+    if (employeeNumber) {
+      const venueId = ""
+      getVenueInspectorList(employeeNumber, venueId, inspectorId)
+    }
+  }, [employeeInfo])
   const handelSubmit = () => {
     const employeeNumber = employeeInfo?.employeeNumber;
     let venueId = formData.venueId
-    let inspectorId = formData.inspectorId
+    let inspectorId = isViewList.includes(employeeInfo?.role) ? employeeInfo.employeeNumber : 'All'
     if (formData.venueId === "All") {
       venueId = ""
     }
@@ -155,7 +168,7 @@ const VenueSummary: React.FC<VenuesProps> = ({ dropdowns }) => {
   const onClear = () => {
     setFormData({
       venueId: 'All',
-      inspectorId: 'All'
+      inspectorId: isViewList.includes(employeeInfo?.role) ? employeeInfo.employeeNumber : 'All'
     })
   }
   return (

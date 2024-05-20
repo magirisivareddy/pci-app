@@ -16,7 +16,7 @@ const VenuesDeleteModal = () => {
     const employeeNumber = employeeInfo?.employeeNumber;
     const venue_id =selectedVenueRow.venue_id.toString()
     const {venuesDeletMessage}=useAppSelector(state=>state.Venues.venueInfo)
-
+    const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
     const onDeleteVenue = async () => {
 
         try {
@@ -31,11 +31,11 @@ const VenuesDeleteModal = () => {
                 dispatch(setVenuesDeletMessage(""))
                 const obj = {
                     "employeeNumber":employeeNumber,
-                    "is_it": "1",
+                    "is_it": employeeInfo?.role === "IT"?"1":"0",
                     "adminLevel": "1",
                     "inspectorType": "1",
                     "venueId": "All",
-                    "inspectorEmployeeNumber": "All"
+                    "inspectorEmployeeNumber": roles?.includes("Admin") || roles?.includes("Audit") || roles?.includes("IT") ? "All" : employeeInfo?.employeeNumber?.toString(),
                 }
         
                 dispatch(getVenues(obj))

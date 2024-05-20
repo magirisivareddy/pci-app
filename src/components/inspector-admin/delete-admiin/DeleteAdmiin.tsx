@@ -28,7 +28,7 @@ export const DeleteAdmiin = () => {
                 "firstName": "",
                 "badgeNumber": "",
                 "employeeNumber": employeeInfo?.employeeNumber,
-                "is_It": "2"
+                "is_It": employeeInfo?.role === "IT" ? "1" : "0",
             }
             dispatch(getAdminList(obj))
         } catch (error: any) {

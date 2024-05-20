@@ -13,39 +13,42 @@ import { format } from 'date-fns'
 const MissedInspection = () => {
   const dispatch = useAppDispatch()
   const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const { selectedDateRange , inspectionForm} = useAppSelector(state => state.Inspections?.inspectionFilterData)
+  const { selectedDateRange, inspectionForm } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   const { inspectionsList } = useAppSelector(state => state.Inspections)
- 
- 
-  const initialPayload = {
-    FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
-    ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
-    InspectorNumber: "All",
-    ReportStatus: "missed",
-    VenueId: "All",
-    Is_it: "1",
-    EmployeeNumber: employeeInfo?.employeeNumber,
-    AdminLevel: "1"
-}
   useEffect(() => {
     dispatch(getVenue())
     dispatch(getInspectors())
-    dispatch(getInspections(initialPayload))
+
   }, []);
+  useEffect(() => {
+    if (employeeInfo) {
+      const initialPayload = {
+        FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
+        ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
+        InspectorNumber: employeeInfo?.role === "Admin" ? inspectionForm.inspector.toString() : employeeInfo?.employeeNumber?.toString(),
+        ReportStatus: "missed",
+        VenueId: "All",
+        Is_it: employeeInfo?.role === "IT" ? "1" : "0",
+        EmployeeNumber: employeeInfo?.employeeNumber,
+        AdminLevel: "1"
+      }
+      dispatch(getInspections(initialPayload))
+    }
+  }, [employeeInfo])
   const handelSubmit = () => {
     const obj = {
       FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
       ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
-      InspectorNumber: inspectionForm.inspector.toString(),
+      InspectorNumber: employeeInfo?.role === "Admin" ? inspectionForm.inspector.toString() : employeeInfo?.employeeNumber?.toString(),
       ReportStatus: "missed",
       VenueId: inspectionForm.venue.toString(),
-      Is_it: "1",
+      Is_it: employeeInfo?.role === "IT" ? "1" : "0",
       EmployeeNumber: employeeInfo?.employeeNumber,
       AdminLevel: "1"
+    }
+    dispatch(getInspections(obj))
   }
-  dispatch(getInspections(obj))
-   }
-   
+
 
 
   const handleExport = () => {
@@ -132,7 +135,7 @@ const MissedInspection = () => {
 
     XLSX.writeFile(wb, fileName);
   };
- 
+
   return (
     <>
       <Box display="flex" mb={2} gap={1} justifyContent="flex-end" pr={2}>
@@ -142,7 +145,7 @@ const MissedInspection = () => {
       </Box>
       <MissedInspectionFilter
         handelSubmit={handelSubmit} />
-      <MissedInspectionTable  />
+      <MissedInspectionTable />
     </>
   )
 }

@@ -95,11 +95,8 @@ export const VenuesSlice = createSlice({
                 [name]: value,
             };
         },
-        clearVenueFilterFormData: (state) => {
-            state.venueInfo.formData = {
-                venueId: 'All',
-                inspectorEmployeeNumber: 'All'
-            };
+        clearVenueFilterFormData: (state, action: PayloadAction<any>) => {
+            state.venueInfo.formData = action.payload;
         },
         setTotalDeviceModal: (state, action: PayloadAction<boolean>) => {
             state.venueInfo.totalDeviceModal = action.payload;

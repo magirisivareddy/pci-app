@@ -9,8 +9,9 @@ import { useAppSelector } from '@/redux/hooks';
 
 
 
-const VenuesFilters = ({ handelSubmit, formData, onChange,handleClear }: any) => {
-    const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
+const VenuesFilters = ({ handelSubmit, formData, onChange, handleClear }: any) => {
+    const { venueDropdown, inspectorDropdown, employeeInfo } = useAppSelector(state => state.common)
+    const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown ?? []];
@@ -35,7 +36,9 @@ const VenuesFilters = ({ handelSubmit, formData, onChange,handleClear }: any) =>
                     label={'Inspector'}
                     options={updatedInspectorsDropdown}
                     name={'inspectorEmployeeNumber'}
-                    id={'inspectorEmployeeNumber'} size={'small'} />
+                    id={'inspectorEmployeeNumber'} size={'small'}
+                    disabled={!roles?.includes("Admin") && !roles?.includes("Audit") && !roles?.includes("IT")}
+                    />
             </Grid>
             <Grid item xs={12} md={2}>
                 <Button onClick={handleClear} sx={{ marginTop: "22px", marginRight: "3px", width: isDesktop ? "auto" : "100%", padding: "6px 16px " }} variant='outlined'>Clear</Button>

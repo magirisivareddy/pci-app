@@ -1,7 +1,7 @@
 import { deleteDevice, deleteVenue, deleteVenueInspector } from '@/actions/api'
 import Loading from '@/app/loading'
 import { getInspectors, getVenue } from '@/redux/features/CommonSlice'
-import { getDevices, setDeleteDeviceModal } from '@/redux/features/DevicesSlice'
+import { clearDeviceFilterFormData, getDevices, setDeleteDeviceModal } from '@/redux/features/DevicesSlice'
 import { getVenues, setDeletInspectionModal } from '@/redux/features/VenuesSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Alert, Box, Button, Typography } from '@mui/material'
@@ -21,7 +21,7 @@ const DeviceDeleteModal = () => {
             setLoading(true)
             const res = await deleteDevice(deviceSelectedFormData?.deviceId,employeeNumber)
             setMessage(res.message)
-      
+            dispatch(clearDeviceFilterFormData())
             setLoading(false)
             setTimeout(() => {
                 setMessage("")

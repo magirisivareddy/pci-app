@@ -1,11 +1,12 @@
 import { receiveNoticesGroupInspector } from '@/actions/api';
 import { getGroupInspectors, setReceiveNoticeLoading, setReceiveNoticeStatus, setReceiveNoticeStatusError } from '@/redux/features/GroupInspectorsSlice';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Checkbox } from '@mui/material'
 import React, { useState } from 'react'
 
 export const ReceiveNotices = ({ row }: any) => {
   const dispatch = useAppDispatch()
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
   const defaultNoticeValue = row.recieveNotes === 1;
   const [notices, setNotices] = useState(defaultNoticeValue);
   const onChangeNotice = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,21 +22,21 @@ export const ReceiveNotices = ({ row }: any) => {
       const obj = {
         venueId: 'All',
         inspectorEmployeeNumber: 'All',
-        is_It: '1'
+        is_It: employeeInfo?.role === "IT" ? "1" : "0",
       };
       dispatch(getGroupInspectors(obj));
-      setTimeout(()=>{
+      setTimeout(() => {
         dispatch(setReceiveNoticeStatus(""))
-      },3000)
-      
-    } catch (error:any) {
-     
+      }, 3000)
+
+    } catch (error: any) {
+
       dispatch(setReceiveNoticeStatusError(error.message))
-      setTimeout(()=>{
+      setTimeout(() => {
         setNotices(defaultNoticeValue);
         dispatch(setReceiveNoticeStatusError(""))
-      },3000)
-    
+      }, 3000)
+
       dispatch(setReceiveNoticeLoading(false))
     }
   }

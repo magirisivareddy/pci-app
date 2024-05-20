@@ -61,10 +61,17 @@ const FailedDevicesReport = () => {
   const [failedDevicesReportData, setData] = useState([])
   const [isLoading, setLoading] = useState(true)
   const employeeNumber = employeeInfo?.employeeNumber
+  const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector"]
+  useEffect(() => {
+    setFormData({
+      venueId: 'All',
+      inspectorId: isViewList.includes(employeeInfo?.role) ? employeeInfo.employeeNumber : 'All'
+    })
+  }, [employeeInfo])
   const onClear = () => {
     setFormData({
       venueId: 'All',
-      inspectorId: 'All'
+      inspectorId: isViewList.includes(employeeInfo?.role) ? employeeInfo.employeeNumber : 'All'
     })
   }
   const getVenueInspectorList = async (
@@ -83,7 +90,15 @@ const FailedDevicesReport = () => {
 
   useEffect(() => {
     if (employeeNumber) {
-      getVenueInspectorList()
+      let venueId = formData.venueId
+      let inspectorId = formData.inspectorId
+      if (formData.venueId === "All") {
+        venueId = "" 
+      }
+      if (formData.inspectorId === "All") {
+        inspectorId = ""
+      }
+      getVenueInspectorList(venueId, inspectorId)
     }
   }, [employeeNumber])
   useEffect(() => {

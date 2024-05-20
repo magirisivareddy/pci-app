@@ -12,6 +12,7 @@ const DeviceLocationCell = ({ row }: any) => {
     const defaultPciLabeled = row.pciLabeled === 1 ? true : false
     const [pciLabeled, setPciLabeled] = useState(defaultPciLabeled)
     const employeeNumber = employeeInfo?.employeeNumber;
+    const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
     const onChangeDeviceLocation = async (e: any) => {
         setPciLabeled(e.target.checked);
         dispatch(setDeviceLocationStatus(true))
@@ -20,7 +21,7 @@ const DeviceLocationCell = ({ row }: any) => {
             dispatch(setDeviceLocationSuccessMessage(res.message))
             dispatch(setDeviceLocationStatus(false))
             const obj = {
-                "is_It": "1",
+                "is_It": employeeInfo?.role === "IT" ? "1" : "0",
                 "venueId": "All",
                 "commonAssetName": "",
                 "serialNumber": "",
@@ -51,6 +52,7 @@ const DeviceLocationCell = ({ row }: any) => {
             <Typography>{row.deviceLocation}</Typography>
             <Checkbox
                 onChange={onChangeDeviceLocation}
+                disabled={isViewList.includes(employeeInfo?.role)}
                 sx={{ paddingTop: "0", paddingBottom: "0" }}
                 {...label}
                 checked={pciLabeled}

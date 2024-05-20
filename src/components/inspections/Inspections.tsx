@@ -11,8 +11,6 @@ import { getVenue, getInspectors } from '@/redux/features/CommonSlice';
 import { handlePreviousWeek } from '@/utils/helpers';
 
 
-
-
 const Inspections = () => {
     const dispatch = useAppDispatch()
     const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
@@ -20,16 +18,17 @@ const Inspections = () => {
     const { isloading } = useAppSelector(state => state.common)
     const [startDate, endDate] = selectedDateRange;
     let dateRange = selectedDateRange
-    // const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
+    const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
     const previousWeekRange: any = handlePreviousWeek(startDate);
 
     const initialPayload = {
+        
         FromDate: format(dateRange[0], 'yyyy/MM/dd'),
         ToDate: format(dateRange[1], 'yyyy/MM/dd'),
-        InspectorNumber: "All",
+        InspectorNumber:roles?.includes("Admin") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
         ReportStatus: "to be inspected",
         VenueId: "All",
-        Is_it: "1",
+        Is_it: employeeInfo?.role === "IT" ? "1" : "0",
         EmployeeNumber: employeeInfo?.employeeNumber,
         AdminLevel: "1"
     }
@@ -38,6 +37,8 @@ const Inspections = () => {
             const previousWeekRange = handlePreviousWeek(startDate);
             dateRange = previousWeekRange
             dispatch(setSelectedDateRange(dateRange));
+            const value = roles?.includes("Audit") ? "inspected" : "to be inspected"
+            dispatch(setInspectionFilterFormData({ name: "reportStatus", value: value }))
         }
     }, [employeeInfo]);
     useEffect(() => {
@@ -45,45 +46,38 @@ const Inspections = () => {
             const auditPayload = {
                 FromDate: format(previousWeekRange[0], 'yyyy/MM/dd'),
                 ToDate: format(previousWeekRange[1], 'yyyy/MM/dd'),
-                InspectorNumber: "All",
+                InspectorNumber:roles?.includes("Admin") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
                 ReportStatus: "inspected",
                 VenueId: "All",
-                Is_it: "1",
+                Is_it: employeeInfo?.role === "IT" ? "1" : "0",
                 EmployeeNumber: employeeInfo?.employeeNumber,
                 AdminLevel: "1"
             };
             dispatch(getInspections(auditPayload));
         }
     }, [employeeInfo]);
+
     useEffect(() => {
         if (employeeInfo?.role && employeeInfo.role !== "Audit") {
             dispatch(getInspections(initialPayload));
         }
     }, [employeeInfo]);
-
-
     useEffect(() => {
         dispatch(getVenue());
         dispatch(getInspectors());
     }, []); // Empty dependency array to ensure it runs only once
-
-
-    useEffect(() => {
-        dispatch(getVenue())
-        dispatch(getInspectors())
-    }, []);
-
     const handelSubmit = async () => {
         const obj = {
             FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
             ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
-            InspectorNumber: inspectionForm.inspector.toString(),
+            InspectorNumber:roles?.includes("Admin") || roles?.includes("Audit") ?  inspectionForm.inspector.toString() : employeeInfo?.employeeNumber?.toString(),
             ReportStatus: inspectionForm.reportStatus,
             VenueId: inspectionForm.venue.toString(),
-            Is_it: "1",
+            Is_it: employeeInfo?.role === "IT" ? "1" : "0",
             EmployeeNumber: employeeInfo?.employeeNumber,
             AdminLevel: "1"
         }
+
         dispatch(getInspections(obj))
     }
     return (

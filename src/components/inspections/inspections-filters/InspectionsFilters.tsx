@@ -5,7 +5,7 @@ import { Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import SelectInput from '@/components/common/input/SelectInput';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getInspections, setInspectionFilterFormData, setIntialFilterFormData, setSelectedDateRange } from '@/redux/features/InspectionsSlice';
-import { getDefaultWeekRange, handlePreviousWeek } from '@/utils/helpers';
+import { getDefaultWeekRange, getPreviousWeekRange, handlePreviousWeek } from '@/utils/helpers';
 import { format } from 'date-fns';
 
 interface InspectionsFiltersProps {
@@ -20,15 +20,15 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   const { inspectionForm, selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
   const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
   const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
+  console.log("inspectionForm",inspectionForm)
   useEffect(() => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
-      inspector: 'All',
+      inspector: roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
       reportStatus: roles?.includes("Audit") ? "inspected" : "to be inspected",
     }))
     const date = getDefaultWeekRange()
     dispatch(setSelectedDateRange(date))
-
   }, []);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
@@ -48,26 +48,32 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
   const handleClear = () => {
     dispatch(setIntialFilterFormData({
       venue: 'All',
-      inspector: 'All',
+      inspector: roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
       reportStatus: 'to be inspected',
     }))
     const date = getDefaultWeekRange()
-    dispatch(setSelectedDateRange(date))
+    if (roles?.includes("Audit")) {
+      const currentDate = new Date();
+      const previousWeekRange = getPreviousWeekRange(currentDate);
+      dispatch(setSelectedDateRange(previousWeekRange))
+    } else {
+      dispatch(setSelectedDateRange(date))
+    }
+
     const initialPayload = {
       FromDate: date[0] ? format(date[0], 'yyyy/MM/dd') : null,
       ToDate: date[1] ? format(date[1], 'yyyy/MM/dd') : null,
-      InspectorNumber: "All",
+      InspectorNumber: employeeInfo?.role === "Admin" ? "All" : employeeInfo?.employeeNumber?.toString(),
       ReportStatus: "to be inspected",
       VenueId: "All",
-      Is_it: "1",
+      Is_it: employeeInfo?.role === "IT" ? "1" : "0",
       EmployeeNumber: employeeInfo?.employeeNumber,
       AdminLevel: "1"
     }
     if (!roles?.includes("Audit")) {
+
       dispatch(getInspections(initialPayload))
     }
-
-
   }
   const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
   const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
@@ -98,7 +104,12 @@ const InspectionsFilters: React.FC<InspectionsFiltersProps> = ({
           options={updatedInspectorsDropdown}
           name={'inspector'}
           id={'inspector'}
-          size={'small'} />
+          size={'small'}
+          disabled={!roles?.includes("Admin") && !roles?.includes("Audit") && !roles?.includes("IT")}
+
+
+
+        />
       </Grid>
       <Grid item xs={12} md={2}>
         <SelectInput

@@ -33,7 +33,7 @@ const Auth = (props: any) => {
   const { accounts } = useMsal();
   const getEmployeeInfo = async () => {
     try {
-       dispatch(getEmployeeRole(accounts[0]?.username))
+      dispatch(getEmployeeRole(accounts[0]?.username))
     } catch (error: any) {
       console.log("error")
     }

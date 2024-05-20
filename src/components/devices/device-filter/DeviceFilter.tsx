@@ -16,8 +16,9 @@ interface DeviceFilterProps {
 const DeviceFilter: React.FC<DeviceFilterProps> = ({ onChange, handelSubmit }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
 
-  const is_it = "1"
+  const is_it = employeeInfo?.role === "IT" ? "1" : "0";
   const { formData } = useAppSelector(state => state.devices);
   const { venueDropdown } = useAppSelector(state => state.common)
   const assignedVenue = [

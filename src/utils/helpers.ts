@@ -25,3 +25,18 @@ export function handlePreviousWeek(startDate: Date | null): DateRange {
     return [newStartDate, newEndDate];
   }
   
+  export function getPreviousWeekRange(baseDate: Date): DateRange {
+    const previousWeekDate = new Date(baseDate);
+    previousWeekDate.setDate(baseDate.getDate() - 7);
+    return getDefaultWeekRangeFromBase(previousWeekDate);
+}
+
+function getDefaultWeekRangeFromBase(baseDate: Date): DateRange {
+    const startOfWeek = new Date(baseDate);
+    const dayOfWeek = baseDate.getDay();
+    const diff = (dayOfWeek + 6) % 7; // Calculate the difference from Sunday to Monday
+    startOfWeek.setDate(baseDate.getDate() - diff);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 5); // Set to Saturday of the current week
+    return [startOfWeek, endOfWeek];
+}

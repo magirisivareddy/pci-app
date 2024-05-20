@@ -40,22 +40,32 @@ const Venues = () => {
     const [selectedRow, setSelectedRow] = useState<any>(null)
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const openPopOver = Boolean(anchorEl);
+    const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
     const isViewList = ["Inspector", "GroupInspector", "BackupInspector", "MainInspector", "Audit"]
     useEffect(() => {
-        dispatch(clearVenueFilterFormData())
+        const formData = {
+            venueId: 'All',
+            inspectorEmployeeNumber:  roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
+        }
+        dispatch(clearVenueFilterFormData(formData))
     }, [])
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClear = () => {
-        dispatch(clearVenueFilterFormData())
+        const formData = {
+            venueId: 'All',
+            inspectorEmployeeNumber: roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
+            // inspectorEmployeeNumber: employeeInfo?.role === "Admin" ? "All" : employeeInfo?.employeeNumber?.toString(),
+        }
+        dispatch(clearVenueFilterFormData(formData))
     }
     const onChange = (value: any, name: any) => {
         dispatch(setVenueFilterFormData({ value, name }));
     }
     const handelSubmit = () => {
         const obj: any = {
-            ...formData, employeeNumber: employeeInfo?.employeeNumber, is_it: "1", adminLevel: "1", inspectorType: "1"
+            ...formData, employeeNumber: employeeInfo?.employeeNumber, is_it: employeeInfo?.role === "IT" ? "1" : "0", adminLevel: "1", inspectorType: "1"
         }
         Object.keys(obj).forEach(key => {
             obj[key] = String(obj[key]);
@@ -70,13 +80,16 @@ const Venues = () => {
     useEffect(() => {
         const obj = {
             "employeeNumber": employeeInfo?.employeeNumber,
-            "is_it": "1",
+            "is_it": employeeInfo?.role === "IT" ? "1" : "0",
             "adminLevel": "1",
-            "inspectorType": "1",
+            "inspectorType": roles?.includes("Admin") || roles?.includes("Audit") || roles?.includes("IT") ? "All" : employeeInfo?.employeeNumber?.toString(),
             "venueId": "All",
-            "inspectorEmployeeNumber": "All"
+            "inspectorEmployeeNumber": roles?.includes("Admin") || roles?.includes("Audit") || roles?.includes("IT") ? "All" : employeeInfo?.employeeNumber?.toString(),
         }
         if (employeeInfo) {
+            const name = "inspectorEmployeeNumber";
+            const value = roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString();
+            dispatch(setVenueFilterFormData({ value, name }));
             dispatch(getVenues(obj))
         }
 
@@ -91,8 +104,12 @@ const Venues = () => {
         dispatch(setAddOrEditVenueModal(true))
     }
     const onAddVenue = () => {
+        const formData = {
+            venueId: 'All',
+            inspectorEmployeeNumber:  roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
+        }
         setSelectedRow(null)
-        dispatch(clearVenueFilterFormData())
+        dispatch(clearVenueFilterFormData(formData))
         setModalTyep("Add")
         dispatch(setAddOrEditVenueModal(true))
     }

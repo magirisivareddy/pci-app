@@ -4,7 +4,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import EmailIcon from '@mui/icons-material/Email';
 
-import "./InspectorCell.css"
+import "./InspectorCell.css";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setDeletInspectionModal, setSelectedVenueInspector } from '@/redux/features/VenuesSlice';
 
@@ -13,6 +13,7 @@ interface Inspector {
     inspector: string;
     inspectorType: number; // Added inspectorType to interface
     email: string; // Added email to interface
+    employeeNumber: string; // Added employeeNumber to interface
 }
 
 interface InspectorCellProps {
@@ -22,8 +23,9 @@ interface InspectorCellProps {
 
 const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }) => {
     const dispatch = useAppDispatch();
-    const {  employeeInfo} = useAppSelector((state: { common: any; }) => state.common)
-    const isViewList = ["BackupInspector","MainInspector","Audit"]
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common);
+
+    const isViewList = ["BackupInspector", "MainInspector", "Audit"];
 
     // Check if MI is present
     const hasMainInspector = inspectorDetails.some((inspector: Inspector) => inspector.inspectorType === 1);
@@ -33,7 +35,6 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
 
     // Function to handle inspector deletion
     const onDelete = (inspector: Inspector) => {
- 
         dispatch(setDeletInspectionModal(true));
         dispatch(setSelectedVenueInspector(inspector));
     };
@@ -44,8 +45,26 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                 {hasMainInspector ? (
                     inspectorDetails.map((inspector: Inspector, index: number) => (
                         <Box key={inspector.inspectorId} sx={{ display: "flex", gap: "5px", textWrap: "nowrap" }}>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                                <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() => onDelete(inspector)} color='warning' />
+                            <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
+                                <RemoveCircleRoundedIcon
+                                    className={
+                                        (isViewList.includes(employeeInfo?.role) ||
+                                            (employeeInfo?.role === "GroupInspector" && employeeInfo?.employeeNumber.toString() === inspector.employeeNumber.toString()))
+                                            ? "disabled-icon" : ""
+                                    }
+                                    sx={{
+                                        cursor: (isViewList.includes(employeeInfo?.role) ||
+                                            (employeeInfo?.role === "GroupInspector" && employeeInfo?.employeeNumber.toString() === inspector.employeeNumber.toString()))
+                                            ? "not-allowed" : "pointer"
+                                    }}
+                                    onClick={() => {
+                                        if (!(isViewList.includes(employeeInfo?.role) ||
+                                            (employeeInfo?.role === "GroupInspector" && employeeInfo?.employeeNumber.toString() === inspector.employeeNumber.toString()))) {
+                                            onDelete(inspector);
+                                        }
+                                    }}
+                                    color='warning'
+                                />
                                 <Avatar
                                     sx={{
                                         width: 20,
@@ -58,14 +77,15 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                                 </Avatar>
                                 <span>{inspector.inspector}</span>
                                 {inspector.email === "0" && (
-                                    <span>
-                                        <EmailIcon sx={{
+                                    <EmailIcon
+                                        sx={{
                                             width: "0.8rem",
                                             height: "0.8rem",
                                             marginTop: "3px",
                                             marginRight: "8px"
-                                        }} color={'error'} />
-                                    </span>
+                                        }}
+                                        color={'error'}
+                                    />
                                 )}
                             </Box>
                         </Box>
@@ -83,28 +103,40 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                             >MI</Avatar>
                             <span style={{ textWrap: "nowrap", color: "red" }}> Missing main inspector</span>
 
-                            {
-                                inspectorDetails.map((inspector: Inspector, index: number) => (
-                                    <Box key={inspector.inspectorId} sx={{ display: "flex", gap: "5px", textWrap: "nowrap" }}>
-                                        <RemoveCircleRoundedIcon sx={{ cursor: "pointer" }} onClick={() => onDelete(inspector)} color='warning' />
-                                        <Avatar
-                                            sx={{
-                                                width: 20,
-                                                height: 20,
-                                                fontSize: "12px",
-                                                backgroundColor: inspector.inspectorType === 1 ? "green" : (inspector.inspectorType === 2 ? "#bc48bc" : "#4c74b5"),
-                                            }}
-                                        >
-                                            {inspector.inspectorType === 2 ? "GI" : "BI"}
-                                        </Avatar>
-                                        <span>
-                                            {inspector.inspector}
-                                        </span>
-
-                                    </Box>
-                                ))
-                            }
-
+                            {inspectorDetails.map((inspector: Inspector, index: number) => (
+                                <Box key={inspector.inspectorId} sx={{ display: "flex", gap: "5px", textWrap: "nowrap" }}>
+                                    <RemoveCircleRoundedIcon
+                                        className={
+                                            (isViewList.includes(employeeInfo?.role) ||
+                                                (employeeInfo?.role === "GroupInspector" && employeeInfo?.employeeNumber === inspector.employeeNumber))
+                                                ? "disabled-icon" : ""
+                                        }
+                                        sx={{
+                                            cursor: (isViewList.includes(employeeInfo?.role) ||
+                                                (employeeInfo?.role === "GroupInspector" && employeeInfo?.employeeNumber === inspector.employeeNumber))
+                                                ? "not-allowed" : "pointer"
+                                        }}
+                                        onClick={() => {
+                                            if (!(isViewList.includes(employeeInfo?.role) ||
+                                                (employeeInfo?.role === "GroupInspector" && employeeInfo?.employeeNumber === inspector.employeeNumber))) {
+                                                onDelete(inspector);
+                                            }
+                                        }}
+                                        color='warning'
+                                    />
+                                    <Avatar
+                                        sx={{
+                                            width: 20,
+                                            height: 20,
+                                            fontSize: "12px",
+                                            backgroundColor: inspector.inspectorType === 1 ? "green" : (inspector.inspectorType === 2 ? "#bc48bc" : "#4c74b5"),
+                                        }}
+                                    >
+                                        {inspector.inspectorType === 2 ? "GI" : "BI"}
+                                    </Avatar>
+                                    <span>{inspector.inspector}</span>
+                                </Box>
+                            ))}
                         </>
                     ) : (
                         <Box sx={{ display: "flex", gap: "5px" }}>
@@ -115,17 +147,18 @@ const InspectorCell: React.FC<InspectorCellProps> = ({ inspectorDetails, onAdd }
                                     fontSize: "12px",
                                     backgroundColor: "green",
                                 }}
-
                             >MI</Avatar>
-                            <span style={{ textWrap: "nowrap", color: "red" }}> Missing main inspector</span></Box>
+                            <span style={{ textWrap: "nowrap", color: "red" }}> Missing main inspector</span>
+                        </Box>
                     )
                 )}
             </div>
             <Box className='add-inspector-btn'>
-            {!isViewList.includes(employeeInfo?.role) ?
-                <Tooltip color='primary' title="Add Inspector...">
-                    <AddCircleOutlineIcon sx={{ cursor: "pointer" }} color='primary' onClick={() => onAdd()} />
-                </Tooltip>:null}
+                {!isViewList.includes(employeeInfo?.role) ? (
+                    <Tooltip color='primary' title="Add Inspector...">
+                        <AddCircleOutlineIcon sx={{ cursor: "pointer" }} color='primary' onClick={() => onAdd()} />
+                    </Tooltip>
+                ) : null}
             </Box>
         </div>
     );

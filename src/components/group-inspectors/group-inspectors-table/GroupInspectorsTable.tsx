@@ -21,28 +21,28 @@ import Loading from '@/app/loading';
 
 const myHeaders = [
     {
-        id: "firstName", label: "Inspectors", width:"100px", customRender: (_: any, row: any) => {
+        id: "firstName", label: "Inspectors", width: "100px", customRender: (_: any, row: any) => {
             return <>{row.lastName} {row.firstName} </>
         }
     },
     {
-        id: "department", label: "Department",width:"100px",
+        id: "department", label: "Department", width: "100px",
     },
     {
-        id: "jobTitle", label: "Job Title",width:"100px",
+        id: "jobTitle", label: "Job Title", width: "100px",
     },
     {
-        id: "venues", label: "Venues",width:"350px", customRender: (_: any, row: any) => (
+        id: "venues", label: "Venues", width: "350px", customRender: (_: any, row: any) => (
             <AddAndDeleteVenue row={row} />
         )
     },
     {
-        id: "receive_notices", label: "Receive Notices",width:"100px", customRender: (_: any, row: any) => (
+        id: "receive_notices", label: "Receive Notices", width: "100px", customRender: (_: any, row: any) => (
             <ReceiveNotices row={row} />
         )
     },
     {
-        id: "actions", label: "Actions",width:"100px", customRender: (_: any, row: any) => (
+        id: "actions", label: "Actions", width: "100px", customRender: (_: any, row: any) => (
             <InspectorDelete row={row} />
         )
     },
@@ -52,12 +52,13 @@ const myHeaders = [
 
 export const GroupInspectorsTable = ({ venues, isloading }: any) => {
     const dispatch = useAppDispatch();
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
     const { groupInspectorsData, status } = useAppSelector(state => state.groupInspector)
     const [isLoading, setLoading] = useState(false)
     const [message, setMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
-    const { isAddVenueToInspectorModal,formData, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId, receiveNoticeStatus,receiveNoticeLoading,receiveNoticeStatusError } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
+    const { isAddVenueToInspectorModal, formData, selectedGroupInspector, isDeleteInspectorModal, isdeleteVenuModal, deletedVenuId, receiveNoticeStatus, receiveNoticeLoading, receiveNoticeStatusError } = useAppSelector(state => state.groupInspector.groupInspectorsInfo)
     const handleClose = () => {
         dispatch(setAddVenuToInspectorModal(false))
         dispatch(setDeleteInspectorModal(false))
@@ -78,7 +79,7 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                     const obj: any = {
                         venueId: formData.venue.toString(),
                         inspectorEmployeeNumber: formData.inspector.toString(),
-                        is_It: '1'
+                        is_It: employeeInfo?.role === "IT" ? "1" : "0",
                     }
                     Object.keys(obj).forEach(key => {
                         obj[key] = String(obj[key]);
@@ -87,7 +88,7 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
                     setMessage("")
                     handleClose()
                 }, 3000)
-               
+
 
             } catch (error: any) {
                 setLoading(false)
@@ -119,14 +120,14 @@ export const GroupInspectorsTable = ({ venues, isloading }: any) => {
     }
     return (
         <>
-            {receiveNoticeLoading&& <Loading/>}
-            {receiveNoticeStatus && <Alert sx={{ marginTop: "10px" ,marginBottom:"10px" }} variant="filled" severity="success">
-                    {receiveNoticeStatus}
-                </Alert>}
+            {receiveNoticeLoading && <Loading />}
+            {receiveNoticeStatus && <Alert sx={{ marginTop: "10px", marginBottom: "10px" }} variant="filled" severity="success">
+                {receiveNoticeStatus}
+            </Alert>}
 
-                {receiveNoticeStatusError && <Alert sx={{ marginTop: "10px",marginBottom:"10px" }} variant="filled" severity="error">
-                    {receiveNoticeStatusError}
-                </Alert>}
+            {receiveNoticeStatusError && <Alert sx={{ marginTop: "10px", marginBottom: "10px" }} variant="filled" severity="error">
+                {receiveNoticeStatusError}
+            </Alert>}
             <CustomTable data={groupInspectorsData} headers={myHeaders} isloading={status === "loading"} />
             <Modal
                 title={`Group Inspector -Add venue: ${selectedGroupInspector?.lastName} ${selectedGroupInspector?.firstName}`}

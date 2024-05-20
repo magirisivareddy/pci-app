@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import { helpDeskTicket } from '@/actions/api';
 import Loading from '@/app/loading';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useAppSelector } from '@/redux/hooks';
 
 interface HelpDeskFormState {
     reason: string;
@@ -21,6 +22,7 @@ interface HelpDeskFormState {
 
 const HelpdeskTicketForm: React.FC<{ handleModalClose: () => void }> = ({ handleModalClose }) => {
     const [entryDate, setEntryDate] = useState(new Date());
+    const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common);
     const [message, setMessage] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [isloading, setLoading] = useState<boolean>(false);
@@ -67,7 +69,7 @@ const HelpdeskTicketForm: React.FC<{ handleModalClose: () => void }> = ({ handle
         const payload = {
             ...helpDeskForm,
             entryDate,
-            employeeNumber: "3752"
+            employeeNumber:employeeInfo?.employeeNumber
 
         };
 

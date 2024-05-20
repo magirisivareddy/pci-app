@@ -17,16 +17,25 @@ const MissedInspectionFilter: React.FC<InspectionsFiltersProps> = ({
 }) => {
     const dispatch = useAppDispatch()
     const { inspectionForm, selectedDateRange } = useAppSelector(state => state.Inspections?.inspectionFilterData)
-    const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
+    const { venueDropdown, inspectorDropdown, employeeInfo } = useAppSelector(state => state.common)
+    const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
+    // useEffect(() => {
+    //     dispatch(setIntialFilterFormData({
+    //         venue: 'All',
+    //         inspector: 'All',
+    //         reportStatus: 'to be inspected',
+    //     }))
+    //     const date = getDefaultWeekRange()
+    //     dispatch(setSelectedDateRange(date))
+
+    // }, []);
     useEffect(() => {
         dispatch(setIntialFilterFormData({
             venue: 'All',
-            inspector: 'All',
-            reportStatus: 'to be inspected',
+            inspector: roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
         }))
         const date = getDefaultWeekRange()
         dispatch(setSelectedDateRange(date))
-
     }, []);
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
@@ -40,12 +49,12 @@ const MissedInspectionFilter: React.FC<InspectionsFiltersProps> = ({
     const handleClear = () => {
         dispatch(setIntialFilterFormData({
             venue: 'All',
-            inspector: 'All',
-            
+            inspector: roles?.includes("Admin") || roles?.includes("IT") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
+
         }))
         const date = getDefaultWeekRange()
         dispatch(setSelectedDateRange(date))
-      
+
 
     }
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
@@ -77,7 +86,9 @@ const MissedInspectionFilter: React.FC<InspectionsFiltersProps> = ({
                     options={updatedInspectorsDropdown}
                     name={'inspector'}
                     id={'inspector'}
-                    size={'small'} />
+                    size={'small'}
+                    disabled={!roles?.includes("Admin") && !roles?.includes("Audit") && !roles?.includes("IT")}
+                />
             </Grid>
 
             <Grid item xs={12} md={2.2} gap={2}>

@@ -1,9 +1,11 @@
-
+"use client";
 import CustomBreadcrumbs from "@/components/common/breadcrumb/Breadcrumb";
 import { Suspense } from "react";
 import Loading from "./loading";
 import Inspections from "@/components/inspections/Inspections";
-export default function Home() {
+import isAuth from "@/components/is-auth/IsAuth";
+
+  const Home = () => {
 
   return (
     <main >
@@ -15,4 +17,4 @@ export default function Home() {
     </main>
   );
 }
-
+export default isAuth(Home);

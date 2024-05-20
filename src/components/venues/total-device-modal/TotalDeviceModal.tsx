@@ -10,6 +10,8 @@ import BookOnlineOutlinedIcon from '@mui/icons-material/BookOnlineOutlined';
 import Modal from '@/components/common/modal/Modal';
 import HelpdeskTicketForm from '@/components/inspections/helpdesk-ticket/HelpdeskTicketForm';
 
+import "./totalDeviceModal.css"
+
 type Header = {
     id: string;
     label: string;
@@ -101,19 +103,26 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
                 scroll={'paper'}
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
+                ref={componentRef}
             >
                 <IconButton
                     edge="end"
                     color="inherit"
                     onClick={handleClose}
                     aria-label="close"
+                    className='hide-on-print'
                     sx={{ position: 'absolute', top: 8, right: 20 }}
                 >
                     <CloseIcon />
                 </IconButton>
 
-                <DialogTitle color={"primary"} id="scroll-dialog-title">
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <DialogTitle component={"div"} color={"primary"} id="scroll-dialog-title">
+                    <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px"
+
+                    }}>
                         <Typography sx={{
                             '@media screen and (max-width: 500px)': { // Adjust the max-width as needed
                                 fontSize: ".54rem",
@@ -123,6 +132,7 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
                             color="inherit"
                             aria-label="menu"
                             onClick={onHelpDeskModal}
+                            className='hide-on-print'
                             sx={{
                                 marginLeft: "521px",
                                 marginTop: "-5px",
@@ -149,7 +159,7 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
                                 }
                             }}>RAISE A TICKET</Typography>
                         </IconButton>
-                        <Typography sx={{ marginRight: "30px" }} > <ReactToPrint trigger={() => <PrintOutlinedIcon sx={{
+                        <Typography  className='hide-on-print' sx={{ marginRight: "30px" }} > <ReactToPrint trigger={() => <PrintOutlinedIcon sx={{
                             cursor: "pointer", '@media screen and (max-width: 500px)': {
                                 width: ".9rem", height: "0.9rem", marginTop: "3px"
                             }
@@ -158,7 +168,7 @@ const TotalDeviceModal = ({ open, handleClose }: any) => {
                 </DialogTitle>
 
                 <DialogContent dividers={true} sx={{ overflowX: 'hidden' }}>
-                    <div ref={componentRef}>
+                    <div >
 
                         <TableContainer component={Paper}  >
                             <Table>

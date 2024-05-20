@@ -21,7 +21,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
             adminId: row.adminId.toString(),
             adminLevel: e.target.value
         }
-   
+
         try {
             dispatch(setAdminLevelStatusLoader(true))
             const res = await changeAdminLevel(paylaod)
@@ -35,7 +35,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
                 firstName: "",
                 badgeNumber: "",
                 employeeNumber: employeeInfo?.employeeNumber,
-                is_It: "2"
+                is_It: employeeInfo?.role === "IT" ? "1" : "0",
             };
 
             dispatch(getAdminList(obj))
@@ -56,7 +56,7 @@ const InspectorAdminLevelCell = ({ row }: any) => {
         }
     }
     return (
-        <Box sx={{ width: "65%", margin:"0 auto" }}>
+        <Box sx={{ width: "65%", margin: "0 auto" }}>
             <Select
                 size='small'
                 value={row.adminLevel ?? adminLevel}

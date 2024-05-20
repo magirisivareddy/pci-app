@@ -7,12 +7,13 @@ import { useAppSelector } from '@/redux/hooks';
 // Function to get the default date range for the current week
 
 const FailedDevicesFilter = ({ handelSubmit, formData, onChange, onClear }: any) => {
-    const { venueDropdown, inspectorDropdown } = useAppSelector(state => state.common)
+    const { venueDropdown, inspectorDropdown, employeeInfo } = useAppSelector(state => state.common)
+    
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const updatedVenueDropdown = [{ label: "All", value: "All" }, ...venueDropdown];
     const updatedInspectorsDropdown = [{ label: "All", value: "All" }, ...inspectorDropdown];
- 
+    const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector"]
 
     return (<>
  
@@ -35,7 +36,9 @@ const FailedDevicesFilter = ({ handelSubmit, formData, onChange, onClear }: any)
                     options={updatedInspectorsDropdown}
                     name={'inspectorId'}
                     id={'inspectorId'}
-                    size={'small'} />
+                    size={'small'}
+                    disabled={isViewList.includes(employeeInfo?.role)} 
+                    />
             </Grid>
             <Grid item xs={12} md={2} sx={{ display: "flex", gap: "5px" }} >
                 <Button onClick={onClear} sx={{ marginTop: "22px", width: isDesktop ? "auto" : "100%", padding: "6px 16px " }} variant='outlined'>Clear</Button>

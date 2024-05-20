@@ -24,10 +24,10 @@ const Header = ({ onMenuClick }: any) => {
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [notificationPopoverAnchor, setNotificationPopoverAnchor] = useState<null | HTMLElement>(null);
   const { instance, accounts } = useMsal();
-  const imageUrl= false
-  const name:any = accounts[0]?.name??"";
+  const imageUrl = false
+  const name: any = accounts[0]?.name ?? "";
   const namesArray = name.split(" ");
-console.log("accounts",accounts)
+
   // Extract the first letter of the first name
   const firstNameFirstLetter = namesArray[0].charAt(0);
 
@@ -148,7 +148,7 @@ console.log("accounts",accounts)
                       key={index}
                       onClick={() => {
                         // Handle click action for the notification item
-                      
+
                       }}
                       sx={{
                         width: '100%',
@@ -191,11 +191,11 @@ console.log("accounts",accounts)
               aria-label="menu"
               onClick={handleMenu}
               size='small'
-              // onError={() => setAvatarError(true)}
+            // onError={() => setAvatarError(true)}
             >
               {!imageUrl ? (
                 <div style={{ backgroundColor: '#fff', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold', textTransform:"uppercase", fontSize:"1rem", color: "#004f56" }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', textTransform: "uppercase", fontSize: "1rem", color: "#004f56" }}>
                     {iltials}
                   </Typography>
                 </div>
@@ -211,25 +211,23 @@ console.log("accounts",accounts)
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-             <MenuItem  sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
-              <AccountCircleOutlinedIcon  sx={{
+            <MenuItem sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <AccountCircleOutlinedIcon sx={{
                 color: '#008c99'
               }} /> {accounts[0]?.name}
             </MenuItem>
-            <MenuItem  sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
-              <EmailOutlinedIcon  sx={{
+            <MenuItem sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <EmailOutlinedIcon sx={{
                 color: '#008c99'
               }} /> {accounts[0]?.username}
             </MenuItem>
-            <MenuItem  sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
-              <ManageAccountsOutlinedIcon  sx={{
+            <MenuItem sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
+              <ManageAccountsOutlinedIcon sx={{
                 color: '#008c99'
-              }} /> {employeeInfo?.role}
+              }} /> {employeeInfo?.role === "Audit" ? "Auditor" : employeeInfo?.role}
             </MenuItem>
-            
-            
             <MenuItem onClick={handleLogout} sx={{ gap: "0.5rem", '&:hover': { backgroundColor: '#f5f5f5', color: '#000' } }} >
-              <LogoutIcon  sx={{
+              <LogoutIcon sx={{
                 color: '#008c99'
               }} /> Logout
             </MenuItem>

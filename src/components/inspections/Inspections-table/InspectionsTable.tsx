@@ -59,7 +59,7 @@ const InspectionsTable = () => {
   const [isHelpDeskModal, setHelpDeskModal] = useState(false)
   const [open, setOpen] = useState(false);
   const [isSaturday, setIsSaturday] = useState(false)
-
+  const roles = employeeInfo?.role?.split(",").map((role: string) => role?.trim());
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const handleModalClose = () => {
     setHelpDeskModal(false)
@@ -116,7 +116,7 @@ const InspectionsTable = () => {
   //   }
   // }
 
-  console.log("inspectionsList",inspectionsList)
+
 
 
 
@@ -156,7 +156,7 @@ const InspectionsTable = () => {
   const submitReport = async () => {
     setIsSaturday(false)
     const obj = {
-      inspectorENumber: selectedInspector?.inspector_enumber,
+      inspectorENumber: employeeInfo?.employeeNumber,
       reportId: selectedInspector.reportId,
       venueId: selectedInspector.venue_id,
       venueName: selectedInspector.venue_name,
@@ -186,9 +186,9 @@ const InspectionsTable = () => {
           FromDate: selectedDateRange[0] ? format(selectedDateRange[0], 'yyyy/MM/dd') : null,
           ToDate: selectedDateRange[1] ? format(selectedDateRange[1], 'yyyy/MM/dd') : null,
           ReportStatus: inspectionForm.reportStatus,
-          InspectorNumber: inspectionForm.inspector.toString() ?? "All",
+          InspectorNumber: roles?.includes("Admin") || roles?.includes("Audit") ? "All" : employeeInfo?.employeeNumber?.toString(),
           VenueId: inspectionForm.venue.toString() ?? "All",
-          Is_it: "1",
+          Is_it: employeeInfo?.role === "IT" ? "1" : "0",
           EmployeeNumber: employeeInfo?.employeeNumber,
           AdminLevel: "1"
         }
@@ -361,7 +361,7 @@ const InspectionsTable = () => {
             title = "View";
           }
         }
-      
+
         // const isDisabled = title === "Inspect" && !checkDateInRange();
         const isDisabled = (
           (title === "Inspect" && !checkDateInRange()) ||

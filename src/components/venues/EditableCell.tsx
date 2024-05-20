@@ -9,7 +9,7 @@ interface EditableCellProps {
 
 const EditableCell: React.FC<EditableCellProps> = ({ onEdit }) => {
   const { employeeInfo } = useAppSelector((state: { common: any; }) => state.common)
-  const isViewList = ["Inspector", "GroupInspector","BackupInspector","Audit"]
+  const isViewList = ["Inspector", "GroupInspector","BackupInspector","MainInspector","Audit"]
 
   return (
     <IconButton
